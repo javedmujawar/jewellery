@@ -48,8 +48,9 @@ const Customer = () => (
                 </Typography>
             </Stack>
         </Grid>
-        <Grid item xs={12}></Grid>
-        <Table columns={columns} dataSource={data} bordered />;
+        <Grid item xs={12}>
+            <Table columns={columns} dataSource={data} bordered />
+        </Grid>
     </Grid>
 );
 export default Customer;

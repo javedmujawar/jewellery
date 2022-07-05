@@ -1,6 +1,7 @@
 import { Table, Button } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import 'antd/dist/antd.css';
 // material-ui
 import { Grid, Stack, Typography } from '@mui/material';
 //import AuthWrapper from './AuthWrapper';

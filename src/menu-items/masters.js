@@ -16,7 +16,7 @@ const masters = {
             type: 'item',
             url: '/customer',
             icon: icons.ProfileOutlined,
-            target: true
+            target: false
         },
         {
             id: 'product',

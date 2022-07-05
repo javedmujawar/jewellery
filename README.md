@@ -1,161 +1,130 @@
-<p align="center">
-  <a href="https://ant.design">
-    <img width="200" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">
-  </a>
-</p>
+# Mantis Free React Material UI Dashboard Template [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Download%20Mantis%20React%20-%20The%20professional%20Material%20designed%20React%20Admin%20Dashboard%20Template%20&url=https://mantisdashboard.io&via=codedthemes&hashtags=reactjs,webdev,developers,javascript)
 
-<h1 align="center">Ant Design</h1>
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Price](https://img.shields.io/badge/price-FREE-0098f7.svg)](https://github.com/codedthemes/mantis-free-react-admin-template/blob/main/LICENSE)
+[![GitHub package version](https://img.shields.io/github/package-json/v/codedthemes/mantis-free-react-admin-template)](https://github.com/codedthemes/mantis-free-react-admin-template/)
 
-<div align="center">
+Mantis is a free and open source React redux dashboard template made using the Material UI React component library with aim of flexibility and better customizability.
 
-An enterprise-class UI design language and React UI library.
+### Name Derived From Nature
 
-[![CI status][github-action-image]][github-action-url] [![codecov][codecov-image]][codecov-url] [![NPM version][npm-image]][npm-url] [![NPM downloads][download-image]][download-url]
+Mantis Logo is inspired from the insect name - 'Mantises' as they have triangular heads with flexible Necks. Also, the name is derived from two popular UI frameworks, Material UI and Ant Design (M-Ant-is).
 
-[![Renovate status][renovate-image]][renovate-dashboard-url] [![Total alerts][lgtm-image]][lgtm-url] [![][bundlesize-js-image]][unpkg-js-url] [![][bundlesize-css-image]][unpkg-css-url]
+Mantis has Ant Design principal on top of the MAterial UI React component library.
 
-[![Follow Twitter][twitter-image]][twitter-url] [![FOSSA Status][fossa-image]][fossa-url] [![Discussions][discussions-image]][discussions-url] [![][issues-helper-image]][issues-helper-url] [![Issues need help][help-wanted-image]][help-wanted-url]
+:star: :star: :star: Support us by giving star (Top right of this page) if you like the theme :star: :star: :star:
 
-[npm-image]: http://img.shields.io/npm/v/antd.svg?style=flat-square
-[npm-url]: http://npmjs.org/package/antd
-[github-action-image]: https://github.com/ant-design/ant-design/workflows/%E2%9C%85%20test/badge.svg
-[github-action-url]: https://github.com/ant-design/ant-design/actions?query=workflow%3A%22%E2%9C%85+test%22
-[codecov-image]: https://img.shields.io/codecov/c/github/ant-design/ant-design/master.svg?style=flat-square
-[codecov-url]: https://codecov.io/gh/ant-design/ant-design/branch/master
-[download-image]: https://img.shields.io/npm/dm/antd.svg?style=flat-square
-[download-url]: https://npmjs.org/package/antd
-[lgtm-image]: https://flat.badgen.net/lgtm/alerts/g/ant-design/ant-design
-[lgtm-url]: https://lgtm.com/projects/g/ant-design/ant-design/alerts/
-[fossa-image]: https://app.fossa.io/api/projects/git%2Bgithub.com%2Fant-design%2Fant-design.svg?type=shield
-[fossa-url]: https://app.fossa.io/projects/git%2Bgithub.com%2Fant-design%2Fant-design?ref=badge_shield
-[help-wanted-image]: https://flat.badgen.net/github/label-issues/ant-design/ant-design/help%20wanted/open
-[help-wanted-url]: https://github.com/ant-design/ant-design/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22
-[twitter-image]: https://img.shields.io/twitter/follow/AntDesignUI.svg?label=Ant%20Design&style=social
-[twitter-url]: https://twitter.com/AntDesignUI
-[discussions-image]: https://img.shields.io/badge/discussions-on%20github-blue?style=flat-square
-[discussions-url]: https://github.com/ant-design/ant-design/discussions
-[bundlesize-js-image]: https://img.badgesize.io/https:/unpkg.com/antd/dist/antd.min.js?label=antd.min.js&compression=gzip&style=flat-square
-[bundlesize-css-image]: https://img.badgesize.io/https:/unpkg.com/antd/dist/antd.min.css?label=antd.min.css&compression=gzip&style=flat-square
-[unpkg-js-url]: https://unpkg.com/browse/antd/dist/antd.min.js
-[unpkg-css-url]: https://unpkg.com/browse/antd/dist/antd.min.css
-[issues-helper-image]: https://img.shields.io/badge/using-issues--helper-orange?style=flat-square
-[issues-helper-url]: https://github.com/actions-cool/issues-helper
-[renovate-image]: https://img.shields.io/badge/renovate-enabled-brightgreen.svg?style=flat-square
-[renovate-dashboard-url]: https://github.com/ant-design/ant-design/issues/32498
+![mantis-free-react-dashboard-template.jpg](https://mantisdashboard.io/adv-banner-images/og-social.png)
 
-</div>
+The [Pro version](https://mantisdashboard.io) of Mantis react template includes features such as TypeScript, apps, authentication methods (i.e. JWT, Auth0, Firebase), advance components, form plugins, layouts, widgets, and more.
 
-[![](https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*Yl83RJhUE7kAAAAAAAAAAABkARQnAQ)](https://ant.design)
+| [Mantis Free](https://mantisdashboard.io/free) | [Mantis Pro](https://mantisdashboard.io)                          |
+| ---------------------------------------------- | :---------------------------------------------------------------- |
+| **9** Demo pages                               | **130+** Demo pages                                               |
+| -                                              | ✓ Multi-language                                                  |
+| -                                              | ✓ Dark/Light Mode 🌓                                              |
+| -                                              | ✓ TypeScript version                                              |
+| -                                              | ✓ Design files (Figma)                                            |
+| -                                              | ✓ Multiple color options                                          |
+| -                                              | ✓ RTL                                                             |
+| -                                              | ✓ JWT, Firebase, Auth0, AWS authentication                        |
+| -                                              | ✓ [More components](https://mantisdashboard.io/dashboard/default) |
+| ✓ MIT License                                  | ✓ [Pro License](https://mui.com/store/license/)                   |
 
-English | [Português](./README-pt_BR.md) | [简体中文](./README-zh_CN.md) | [Українською](./README-uk_UA.md) | [Spanish](./README-sp_MX.md) | [日本語](./README-ja_JP.md)
+## Why Mantis?
 
-## ✨ Features
+Mantis offers everything needed to build an advanced dashboard application. In the initial release, we included following high-end features,
 
-- 🌈 Enterprise-class UI designed for web applications.
-- 📦 A set of high-quality React components out of the box.
-- 🛡 Written in TypeScript with predictable static types.
-- ⚙️ Whole package of design resources and development tools.
-- 🌍 Internationalization support for dozens of languages.
-- 🎨 Powerful theme customization in every detail.
+-   Professional user interface.
+-   Material UI React components.
+-   Fully responsive, all modern browser supported.
+-   Easy to use code structure
+-   Flexible & high-Performance code
+-   Simple documentation
 
-## 🖥 Environment Support
+## Free Mantis React version
 
-- Modern browsers and Internet Explorer 11 (with [polyfills](https://stackoverflow.com/questions/57020976/polyfills-in-2019-for-ie11))
-- Server-side Rendering
-- [Electron](https://www.electronjs.org/)
+#### Preview
 
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br>Electron |
-| --- | --- | --- | --- | --- |
-| IE11, Edge | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
+-   [Demo](https://mantisdashboard.io/free)
 
-## 📦 Install
+#### Download
 
-```bash
-npm install antd
+-   [Download from GitHub](https://github.com/codedthemes/mantis-free-react-admin-template)
+
+## Mantis Pro version
+
+#### Preview
+
+-   [Demo](https://mantisdashboard.io)
+
+#### Purchase
+
+-   [Buy now](https://mui.com/store/items/mantis-react-admin-dashboard-template/)
+
+## Table of contents
+
+-   [Getting started](#getting-started)
+-   [Documentation](#documentation)
+-   [Technology stack](#technology-stack)
+-   [Author](#author)
+-   [Issues?](#issues)
+-   [License](#license)
+-   [More products](#more-free-react-material-admin-templates)
+-   [Follow us](#follow-us)
+
+## Getting started
+
+Clone from GitHub
+
+```
+git clone https://github.com/codedthemes/mantis-free-react-admin-template.git
+yarn
+yarn start
 ```
 
-```bash
-yarn add antd
-```
+## Documentation
 
-## 🔨 Usage
+[Mantis documentation](https://codedthemes.gitbook.io/mantis-react/) helps you out in all aspects from Installation to deployment.
 
-```jsx
-import { Button, DatePicker } from 'antd';
+## Technology stack
 
-const App = () => (
-  <>
-    <Button type="primary">PRESS ME</Button>
-    <DatePicker placeholder="select date" />
-  </>
-);
-```
+-   [Material UI V5](https://mui.com/core/)
+-   Built with React Hooks API.
+-   Redux & React context API for state management.
+-   Redux toolkit.
+-   React Router for navigation routing.
+-   Support for react-script.
+-   Code splitting.
+-   CSS-in-JS.
 
-And import style manually:
+## Author
 
-```jsx
-import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
-```
+Mantis is managed by team [CodedThemes](https://codedthemes.com).
 
-### TypeScript
+## Issues
 
-`antd` is written in TypeScript with complete definitions, check [Use in TypeScript](https://ant.design/docs/react/use-in-typescript) to get started.
+Please generate a [GitHub issue](https://github.com/codedthemes/mantis-free-react-admin-template/issues) if you found a bug in any version. We are try our best to resolve the issue.
 
-## 🌍 Internationalization
+## License
 
-Dozens of languages supported in `antd`, see [i18n](https://ant.design/docs/react/i18n).
+-   Licensed under [MIT](https://github.com/codedthemes/datta-able-bootstrap-dashboard/blob/master/LICENSE)
 
-## 🔗 Links
+## Checkout free React Material admin templates
 
-- [Home page](https://ant.design/)
-- [Components Overview](https://ant.design/components/overview)
-- [Ant Design Pro](http://pro.ant.design/)
-- [Change Log](CHANGELOG.en-US.md)
-- [rc-components](http://react-component.github.io/)
-- [Mobile UI](http://mobile.ant.design)
-- [Ant Design Pro Components](https://procomponents.ant.design)
-- [Ant Design Charts](https://charts.ant.design)
-- [Ant Design Icons](https://github.com/ant-design/ant-design-icons)
-- [Ant Design Colors](https://github.com/ant-design/ant-design-colors)
-- [Landing Pages](https://landing.ant.design)
-- [Motion](https://motion.ant.design)
-- [Scaffold Market](http://scaffold.ant.design)
-- [Developer Instruction](https://github.com/ant-design/ant-design/wiki/Development)
-- [Versioning Release Note](https://github.com/ant-design/ant-design/wiki/%E8%BD%AE%E5%80%BC%E8%A7%84%E5%88%99%E5%92%8C%E7%89%88%E6%9C%AC%E5%8F%91%E5%B8%83%E6%B5%81%E7%A8%8B)
-- [FAQ](https://ant.design/docs/react/faq)
-- [CodeSandbox Template](https://u.ant.design/codesandbox-repro) for bug reports
-- [Customize Theme](https://ant.design/docs/react/customize-theme)
-- [How to Apply for Being A Collaborator](https://github.com/ant-design/ant-design/wiki/Collaborators#how-to-apply-for-being-a-collaborator)
+-   [Free Materially](https://codedthemes.com/item/materially-free-reactjs-admin-template/)
+-   [Free Berry](https://mui.com/store/items/berry-react-material-admin-free/)
 
-## ⌨️ Development
+## Checkout premium React Material admin templates
 
-Use Gitpod, a free online dev environment for GitHub.
+-   [Materially](https://codedthemes.com/item/materially-reactjs-admin-dashboard/)
+-   [Berry](https://mui.com/store/items/berry-react-material-admin/)
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ant-design/ant-design)
+## Follow us
 
-Or clone locally:
-
-```bash
-$ git clone git@github.com:ant-design/ant-design.git
-$ cd ant-design
-$ npm install
-$ npm start
-```
-
-Open your browser and visit http://127.0.0.1:8001 , see more at [Development](https://github.com/ant-design/ant-design/wiki/Development).
-
-## 🤝 Contributing [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-
-Read our [contributing guide](https://ant.design/docs/react/contributing) and let's build a better antd together.
-
-We welcome all contributions. Please read our [CONTRIBUTING.md](https://github.com/ant-design/ant-design/blob/master/.github/CONTRIBUTING.md) first. You can submit any ideas as [pull requests](https://github.com/ant-design/ant-design/pulls) or as [GitHub issues](https://github.com/ant-design/ant-design/issues). If you'd like to improve code, check out the [Development Instructions](https://github.com/ant-design/ant-design/wiki/Development) and have a good time! :)
-
-If you are a collaborator, please follow our [Pull Request principle](https://github.com/ant-design/ant-design/wiki/PR-principle) to create a Pull Request with [collaborator template](https://github.com/ant-design/ant-design/compare?expand=1&template=collaborator.md).
-
-[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/34526884)
-
-## ❤️ Sponsors and Backers [![](https://opencollective.com/ant-design/tiers/sponsors/badge.svg?label=Sponsors&color=brightgreen)](https://opencollective.com/ant-design#support) [![](https://opencollective.com/ant-design/tiers/backers/badge.svg?label=Backers&color=brightgreen)](https://opencollective.com/ant-design#support)
-
-[![](https://opencollective.com/ant-design/tiers/sponsors.svg?avatarHeight=36)](https://opencollective.com/ant-design#support)
-
-[![](https://opencollective.com/ant-design/tiers/backers.svg?avatarHeight=36)](https://opencollective.com/ant-design#support)
+-   Website [https://mantisdashboard.io](https://mantisdashboard.io)
+-   Blog [https://blog.mantisdashboard.io](https://blog.mantisdashboard.io)
+-   CodedThemes [https://codedthemes.com](https://codedthemes.com)
+-   Dribbble [https://dribbble.com/codedthemes](https://dribbble.com/codedthemes)
+-   Facebook [https://www.facebook.com/codedthemes](https://www.facebook.com/codedthemes)
+-   Twitter [https://twitter.com/codedthemes](https://twitter.com/codedthemes)

@@ -15,6 +15,8 @@ const Typography = Loadable(lazy(() => import('pages/components-overview/Typogra
 const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
 const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
 const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
+const CustomerList = Loadable(lazy(() => import('pages/masters/customer/index')));
+const Customer = Loadable(lazy(() => import('pages/masters/customer/create')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -25,6 +27,14 @@ const MainRoutes = {
         {
             path: '/',
             element: <DashboardDefault />
+        },
+        {
+            path: 'customer',
+            element: <CustomerList />
+        },
+        {
+            path: 'customer-create',
+            element: <Customer />
         },
         {
             path: 'color',

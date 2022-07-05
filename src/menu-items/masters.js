@@ -5,28 +5,27 @@ const icons = {
     ProfileOutlined
 };
 // ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
-const pages = {
-    id: 'authentication',
-    title: 'Authentication',
+const masters = {
+    id: 'masters',
+    title: 'Masters',
     type: 'group',
     children: [
         {
-            id: 'login1',
-            title: 'Login',
+            id: 'customer',
+            title: 'Customer',
             type: 'item',
-            url: '/login',
-            icon: icons.LoginOutlined,
+            url: '/customer',
+            icon: icons.ProfileOutlined,
             target: true
         },
-
         {
-            id: 'register1',
-            title: 'Register',
+            id: 'product',
+            title: 'Product',
             type: 'item',
-            url: '/register',
+            url: '/product',
             icon: icons.ProfileOutlined,
             target: true
         }
     ]
 };
-export default pages;
+export default masters;

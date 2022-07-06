@@ -17,6 +17,11 @@ const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
 const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
 const CustomerList = Loadable(lazy(() => import('pages/masters/customer/index')));
 const Customer = Loadable(lazy(() => import('pages/masters/customer/create')));
+const ProductGroupList = Loadable(lazy(() => import('pages/masters/productgroup/index')));
+const ProductGroup = Loadable(lazy(() => import('pages/masters/productgroup/create')));
+
+const ProductMainGroupList = Loadable(lazy(() => import('pages/masters/productmaingroup/index')));
+const ProductMainGroup = Loadable(lazy(() => import('pages/masters/productmaingroup/create')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -35,6 +40,22 @@ const MainRoutes = {
         {
             path: 'customer-create',
             element: <Customer />
+        },
+        {
+            path: 'productgroup',
+            element: <ProductGroupList />
+        },
+        {
+            path: 'productgroup-create',
+            element: <ProductGroup />
+        },
+        {
+            path: 'product-main-group',
+            element: <ProductMainGroupList />
+        },
+        {
+            path: 'product-main-group-create',
+            element: <ProductMainGroup />
         },
         {
             path: 'color',

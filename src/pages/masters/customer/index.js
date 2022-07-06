@@ -1,7 +1,7 @@
 import { Table, Button } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import 'antd/dist/antd.css';
+
 // material-ui
 import { Grid, Stack, Typography } from '@mui/material';
 //import AuthWrapper from './AuthWrapper';
@@ -49,7 +49,7 @@ const Customer = () => (
             </Stack>
         </Grid>
         <Grid item xs={12}>
-            <Table columns={columns} dataSource={data} bordered />
+            <Table columns={columns} dataSource={data} bordered />;
         </Grid>
     </Grid>
 );

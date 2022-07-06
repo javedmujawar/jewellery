@@ -18,13 +18,29 @@ const masters = {
             icon: icons.ProfileOutlined,
             target: false
         },
-        {
+        /* {
             id: 'product',
             title: 'Product',
             type: 'item',
             url: '/product',
             icon: icons.ProfileOutlined,
             target: true
+        }, */
+        {
+            id: 'productgroup',
+            title: 'Product Group',
+            type: 'item',
+            url: '/productgroup',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'product-main-group',
+            title: 'Product Main Group',
+            type: 'item',
+            url: '/product-main-group',
+            icon: icons.ProfileOutlined,
+            target: false
         }
     ]
 };

@@ -35,7 +35,7 @@ const data = [
 
 const columns = [
     {
-        title: 'SrNo',
+        title: 'Sr.No',
         dataIndex: 'id',
         key: 'id',
         //defaultSortOrder: 'descend',
@@ -60,7 +60,7 @@ const columns = [
         key: 'description'
     }
 ];
-const Customer = () => (
+const ProductGroupList = () => (
     <Grid container spacing={3}>
         <Grid item xs={12}>
             <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
@@ -78,4 +78,4 @@ const Customer = () => (
         </Grid>
     </Grid>
 );
-export default Customer;
+export default ProductGroupList;

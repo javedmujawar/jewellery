@@ -23,6 +23,9 @@ const ProductGroup = Loadable(lazy(() => import('pages/masters/productgroup/crea
 const ProductMainGroupList = Loadable(lazy(() => import('pages/masters/productmaingroup/index')));
 const ProductMainGroup = Loadable(lazy(() => import('pages/masters/productmaingroup/create')));
 
+const UnitList = Loadable(lazy(() => import('pages/masters/unit/index')));
+const UnitMaster = Loadable(lazy(() => import('pages/masters/unit/create')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -56,6 +59,14 @@ const MainRoutes = {
         {
             path: 'product-main-group-create',
             element: <ProductMainGroup />
+        },
+        {
+            path: 'unitmaster',
+            element: <UnitList />
+        },
+        {
+            path: 'unit-create',
+            element: <UnitMaster />
         },
         {
             path: 'color',

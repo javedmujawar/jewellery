@@ -26,6 +26,15 @@ const masters = {
             icon: icons.ProfileOutlined,
             target: true
         }, */
+
+        {
+            id: 'product-main-group',
+            title: 'Product Main Group',
+            type: 'item',
+            url: '/product-main-group',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
         {
             id: 'productgroup',
             title: 'Product Group',
@@ -34,11 +43,12 @@ const masters = {
             icon: icons.ProfileOutlined,
             target: false
         },
+
         {
-            id: 'product-main-group',
-            title: 'Product Main Group',
+            id: 'unitmaster',
+            title: 'Unit Master',
             type: 'item',
-            url: '/product-main-group',
+            url: '/unitmaster',
             icon: icons.ProfileOutlined,
             target: false
         }

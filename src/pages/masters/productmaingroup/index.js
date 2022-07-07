@@ -1,7 +1,8 @@
 import { Table, Button } from 'antd';
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
+import ProductMainGroupApi from 'services/ProductMainGroupApi';
+import BaseApi from 'services/BaseApi';
 // material-ui
 import { Grid, Stack, Typography } from '@mui/material';
 //import AuthWrapper from './AuthWrapper';
@@ -78,22 +79,96 @@ const columns = [
         key: 'description'
     }
 ];
-const ProductMainGroupList = () => (
-    <Grid container spacing={3}>
-        <Grid item xs={12}>
-            <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
-                <Typography variant="h3">Product Main Group Details List</Typography>
-                {/* <Typography component={Link} to="/productgroup-create" variant="body1" sx={{ textDecoration: 'none' }} color="primary">
+//const ProductMainGroupList  = () => (
+class ProductMainGroupList extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            productmaingroup: []
+        };
+    }
+    componentDidMount() {
+        console.log(BaseApi.test());
+        ProductMainGroupApi.getAll().then((res) => {
+            this.setState({ productmaingroup: res.data });
+        });
+    }
+    render() {
+        return (
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
+                        <Typography variant="h3">Product Main Group Details List</Typography>
+                        {/* <Typography component={Link} to="/productgroup-create" variant="body1" sx={{ textDecoration: 'none' }} color="primary">
                     Create
                 </Typography> */}
-                <Link to={'//product-main-group-create'}>
-                    <Button type="primary">Create</Button>
-                </Link>
-            </Stack>
-        </Grid>
-        <Grid item xs={12}>
-            <Table columns={columns} dataSource={data} bordered />;
-        </Grid>
-    </Grid>
-);
+                        <Link to={'//product-main-group-create'}>
+                            <Button type="primary">Create</Button>
+                        </Link>
+                    </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                    <Table columns={columns} dataSource={data} bordered />;
+                </Grid>
+                <Grid item xs={12}>
+                    <div>
+                        <h2 className="text-center">List</h2>
+                        <div className="row">
+                            <button className="btn btn-primary" onClick={this.addproductmaingroup}>
+                                {' '}
+                                Add
+                            </button>
+                        </div>
+                        <br></br>
+                        <div className="row">
+                            <table className="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th> Name</th>
+                                        <th> Short Name</th>
+                                        <th> Description</th>
+                                        <th> Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {this.state.productmaingroup.map((productmaingroup) => (
+                                        <tr key={productmaingroup.id}>
+                                            <td> {productmaingroup.name} </td>
+                                            <td> {productmaingroup.shortName}</td>
+                                            <td> {productmaingroup.description}</td>
+                                            <td>
+                                                <button
+                                                    onClick={() => this.editproductmaingroup(productmaingroup.id)}
+                                                    className="btn btn-info"
+                                                >
+                                                    Update{' '}
+                                                </button>
+                                                <button
+                                                    style={{ marginLeft: '10px' }}
+                                                    onClick={() => this.deleteproductmaingroup(productmaingroup.id)}
+                                                    className="btn btn-danger"
+                                                >
+                                                    Delete{' '}
+                                                </button>
+                                                <button
+                                                    style={{ marginLeft: '10px' }}
+                                                    onClick={() => this.viewproductmaingroup(productmaingroup.id)}
+                                                    className="btn btn-info"
+                                                >
+                                                    View{' '}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </Grid>
+            </Grid>
+        );
+    }
+}
+
 export default ProductMainGroupList;

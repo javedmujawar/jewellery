@@ -6,7 +6,7 @@ class BaseApi {
         console.log('constant', constant.apiBaseUrl);
     }
     getAll(url) {
-        axios
+        return axios
             .get(constant.apiBaseUrl + url)
             .then((response) => {
                 console.log(response.data);

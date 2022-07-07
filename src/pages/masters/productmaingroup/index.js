@@ -52,8 +52,8 @@ const ProductMainGroupList = () => {
     const getAllList = async () => {
         const b = new BaseApi();
         const result = await b.getAll('productmaingroups');
-        console.log(result?.data);
-        setData(result?.data);
+        console.log(result);
+        setData(result);
     };
 
     useEffect(() => {
@@ -66,12 +66,14 @@ const ProductMainGroupList = () => {
                 <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
                     <Typography variant="h3">Product Main Group Details List</Typography>
                     <Link to={'//product-main-group-create'}>
-                        <Button type="primary">Create</Button>
+                        <Button type="primary" id="btnCreate" name="btnCreate">
+                            Create
+                        </Button>
                     </Link>
                 </Stack>
             </Grid>
             <Grid item xs={12}>
-                <Table columns={columns} dataSource={data} bordered />;
+                <Table rowKey="id" columns={columns} dataSource={data} bordered="true" />;
             </Grid>
         </Grid>
     );

@@ -1,10 +1,6 @@
-import { Table, Button } from 'antd';
-import React from 'react';
+import { Table } from 'antd';
 import { Link } from 'react-router-dom';
-
-// material-ui
 import { Grid, Stack, Typography } from '@mui/material';
-//import AuthWrapper from './AuthWrapper';
 
 const data = [
     {

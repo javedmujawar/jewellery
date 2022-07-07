@@ -1,13 +1,13 @@
 import axios from 'axios';
-import config from '../constant.js';
-console.log(config.baseurl);
+import constant from '../constant.js';
+
 class BaseApi {
     test() {
-        console.log('config', config);
+        console.log('constant', constant.apiBaseUrl);
     }
-    getAll(param) {
+    getAll(url) {
         axios
-            .get(baseurl + param)
+            .get(constant.apiBaseUrl + url)
             .then((response) => {
                 console.log(response.data);
                 return response.data;

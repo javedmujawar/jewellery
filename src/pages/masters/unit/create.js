@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 // material-ui
 import { Grid } from '@mui/material';
 import { MDBInput } from 'mdbreact';
-
 const onFinish = (values) => {
     console.log('Success:', values);
 };
@@ -54,7 +53,26 @@ const UnitMasterAdd = () => (
                         </Link>
                     </Space>
                 </Form.Item>
-                {/* <Form.Item
+
+                {/* <Form.Item>
+                    <MDBInput label="Unit Name" name="name" size="lg" required />
+                </Form.Item>
+
+                <Form.Item>
+                    <MDBInput
+                        label="Unit Short Name"
+                        name="short_name"
+                        size="lg"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input unit short  name.'
+                            }
+                        ]}
+                    />
+                </Form.Item> */}
+
+                <Form.Item
                     label="Unit Name"
                     name="name"
                     rules={[
@@ -78,22 +96,6 @@ const UnitMasterAdd = () => (
                     ]}
                 >
                     <Input />
-                </Form.Item> */}
-                <Form.Item>
-                    <MDBInput label="Unit Name" name="name" size="lg" />
-                </Form.Item>
-                <Form.Item>
-                    <MDBInput
-                        label="Unit Short Name"
-                        name="short_name"
-                        size="lg"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input unit short  name.'
-                            }
-                        ]}
-                    />
                 </Form.Item>
             </Form>
         </Grid>

@@ -1,8 +1,6 @@
-import { Button, Checkbox, Form, Input, Space } from 'antd';
-import React from 'react';
+import { Button, Form, Input, Space } from 'antd';
 const { TextArea } = Input;
 import { Link } from 'react-router-dom';
-// material-ui
 import { Grid } from '@mui/material';
 
 const onFinish = (values) => {

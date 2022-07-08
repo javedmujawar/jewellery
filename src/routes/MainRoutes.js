@@ -57,7 +57,11 @@ const MainRoutes = {
             element: <ProductMainGroupList />
         },
         {
-            path: 'product-main-group-create',
+            path: 'product-main-group-create/add',
+            element: <ProductMainGroup />
+        },
+        {
+            path: 'product-main-group-create/edit/:id',
             element: <ProductMainGroup />
         },
         {

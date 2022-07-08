@@ -9,7 +9,18 @@ class BaseApi {
         return axios
             .get(constant.apiBaseUrl + url + '?' + 'filter=' + '%7B%22where%22%3A%7B%22isDeleted%22%3A0%7D%7D')
             .then((response) => {
-                console.log(response.data);
+                //console.log(response.data);
+                return response.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+    getById(url, id) {
+        return axios
+            .get(constant.apiBaseUrl + url + '/' + id)
+            .then((response) => {
+                //console.log(response.data);
                 return response.data;
             })
             .catch((err) => {

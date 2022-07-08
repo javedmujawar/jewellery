@@ -45,8 +45,15 @@ const ProductMainGroupList = () => {
             render: (text, record) => {
                 return (
                     <span>
-                        <Link to={'/productmaingroup/edit/' + record.id}>
-                            <Button type="primary" id="btnEdit" name="btnEdit" icon={<EditOutlined />} size="small"></Button>
+                        <Link to={'/product-main-group-create/edit/' + record.id}>
+                            <Button
+                                type="primary"
+                                id="btnEdit"
+                                name="btnEdit"
+                                icon={<EditOutlined />}
+                                size="small"
+                                //onClick={() => setActiveRecord(record.id)}
+                            ></Button>
                         </Link>
 
                         <Divider type="vertical" />
@@ -67,15 +74,18 @@ const ProductMainGroupList = () => {
     const getAllList = async () => {
         const b = new BaseApi();
         const result = await b.getAll('productmaingroups');
-        console.log(result);
+        //  console.log(result);
         setData(result);
     };
 
     useEffect(() => {
         getAllList();
-        visible: false;
     }, []);
 
+    /* const setActiveRecord = (id) => {
+        setCurrentRecordId(id);
+        console.log(' setCurrentRecordId : ' + id);
+    }; */
     const showModal = (recordId) => {
         /* confirm({
             title: 'Are you sure delete this record?',
@@ -91,7 +101,7 @@ const ProductMainGroupList = () => {
                 handleCancel();
             }
         }); */
-        console.log('id=', recordId);
+        //console.log('id=', recordId);
         setDeletedId(recordId);
         setModalVisible(true);
     };
@@ -102,16 +112,14 @@ const ProductMainGroupList = () => {
 
     const handleOk = async () => {
         try {
-            console.log('selected id : ', deletedId);
+            // console.log('selected id : ', deletedId);
             const b = new BaseApi();
             const postData = { isDeleted: true, id: deletedId };
-            console.log('postData=', postData);
-            const method = 'patch';
+            //console.log('postData=', postData);
             const msg = 'Record has been deleted successfully.';
-            const res = await b.request('productmaingroups', postData, method);
+            const res = await b.request('productmaingroups', postData, 'patch');
             if (res.status === 200) {
                 getAllList();
-
                 message.success(msg, 5);
             }
             setModalVisible(false);
@@ -123,7 +131,7 @@ const ProductMainGroupList = () => {
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
                     <Typography variant="h3">Product Main Group Details List</Typography>
-                    <Link to={'//product-main-group-create'}>
+                    <Link to={'//product-main-group-create/add'}>
                         <Button type="primary" id="btnCreate" name="btnCreate">
                             Create
                         </Button>

@@ -44,6 +44,7 @@
         "simplebar": "^5.3.5",
         "simplebar-react": "^2.3.6",
         "typescript": "4.4.4",
+        "umi-router": "^0.1.2",
         "web-vitals": "^1.0.1",
         "yup": "^0.32.11"
     },

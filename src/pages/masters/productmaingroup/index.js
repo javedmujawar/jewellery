@@ -22,14 +22,14 @@ const ProductMainGroupList = () => {
             sorter: (a, b) => a.id - b.id
         },
         {
-            title: 'Product Main Group Name',
+            title: 'Name',
             dataIndex: 'name',
             key: 'name',
             sorter: (a, b) => a.name.length - b.name.length,
             defaultSortOrder: 'descend'
         },
         {
-            title: 'Product Main Group Short Name',
+            title: 'Short Name',
             dataIndex: 'shortName',
             key: 'shortName'
         },
@@ -37,6 +37,11 @@ const ProductMainGroupList = () => {
             title: 'Description',
             dataIndex: 'description',
             key: 'description'
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status'
         },
         {
             title: 'Action',
@@ -130,7 +135,7 @@ const ProductMainGroupList = () => {
         <Grid container spacing={3}>
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
-                    <Typography variant="h3">Product Main Group Details List</Typography>
+                    <Typography variant="h3">Main Group List</Typography>
                     <Link to={'//product-main-group-create/add'}>
                         <Button type="primary" id="btnCreate" name="btnCreate">
                             Create

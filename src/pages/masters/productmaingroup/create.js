@@ -2,12 +2,14 @@ import { useEffect } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
+import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
 //import router from 'umi/router';
 const { TextArea } = Input;
 
 //const ProductMainGroupAdd = () => (
 const ProductMainGroupAdd = () => {
+    const navigate = useNavigate();
     const { id } = useParams();
     const isAddMode = !id;
     const [form] = Form.useForm();
@@ -64,7 +66,7 @@ const ProductMainGroupAdd = () => {
         const result = await baseApi.request('productmaingroups', postData, 'post');
         if (result.status === 200) {
             // router.push('/product-main-group');
-            message.success('Record is save successfully..!', 5);
+            navigate('/product-main-group', { state: { message:'Record is successfully created.' }})
         }
     };
     const updateData = async (id, data) => {
@@ -81,8 +83,7 @@ const ProductMainGroupAdd = () => {
         const baseApi = new BaseApi();
         const result = await baseApi.request('productmaingroups', postData, 'patch');
         if (result.status === 200) {
-            //router.push('/product-main-group');
-            message.success('Record is save successfully..!', 5);
+            navigate('/product-main-group', { state: { message:'Record is successfully updated.' }})
         }
     };
 

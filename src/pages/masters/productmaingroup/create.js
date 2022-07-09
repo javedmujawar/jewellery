@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Button, Form, Input, Space, message } from 'antd';
+import { useEffect } from 'react';
+import { Button, Form, Input, message } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { Grid } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
+import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
 //import router from 'umi/router';
 const { TextArea } = Input;
 
 //const ProductMainGroupAdd = () => (
 const ProductMainGroupAdd = () => {
+    const navigate = useNavigate();
     const { id } = useParams();
     const isAddMode = !id;
     const [form] = Form.useForm();
@@ -64,7 +66,7 @@ const ProductMainGroupAdd = () => {
         const result = await baseApi.request('productmaingroups', postData, 'post');
         if (result.status === 200) {
             // router.push('/product-main-group');
-            message.success('Record is save successfully..!', 5);
+            navigate('/product-main-group', { state: { message:'Record is successfully created.' }})
         }
     };
     const updateData = async (id, data) => {
@@ -81,99 +83,10 @@ const ProductMainGroupAdd = () => {
         const baseApi = new BaseApi();
         const result = await baseApi.request('productmaingroups', postData, 'patch');
         if (result.status === 200) {
-            //router.push('/product-main-group');
-            message.success('Record is save successfully..!', 5);
+            navigate('/product-main-group', { state: { message:'Record is successfully updated.' }})
         }
     };
 
-    // return (
-    //     <Grid container spacing={3}>
-    //         <Grid item xs={12}>
-    //             <Form
-    //                 name="frmproductmaingroup"
-    //                 labelCol={{
-    //                     span: 22
-    //                 }}
-    //                 wrapperCol={{
-    //                     span: 22
-    //                 }}
-    //                 initialValues={{
-    //                     remember: true
-    //                 }}
-    //                 form={form} // Add this!
-    //                 layout="vertical"
-    //                 //onSubmit={handleSubmit}
-    //                 onFinish={onFinish}
-    //                 onFinishFailed={onFinishFailed}
-    //                 autoComplete="off"
-    //             >
-    //                 <Form.Item
-    //                     wrapperCol={{
-    //                         offset: 8,
-    //                         span: 8
-    //                     }}
-    //                 >
-    //                     <Space
-    //                         direction="horizontal"
-    //                         size="middle"
-    //                         align="end"
-    //                         style={{
-    //                             display: 'flex'
-    //                         }}
-    //                     >
-    //                         <h1>{isAddMode ? 'Create' : 'Edit'}</h1>
-
-    //                         <Button type="primary" htmlType="submit">
-    //                             Save
-    //                         </Button>
-    //                         <Link to={'//product-main-group'}>
-    //                             <Button type="danger">Cancel</Button>
-    //                         </Link>
-    //                     </Space>
-    //                 </Form.Item>
-    //                 <Form.Item
-    //                     label="Product Main Group Name"
-    //                     name="name"
-    //                     rules={[
-    //                         {
-    //                             required: true,
-    //                             message: 'Please enter group name.'
-    //                         }
-    //                     ]}
-    //                 >
-    //                     <Input />
-    //                 </Form.Item>
-
-    //                 <Form.Item
-    //                     label="Product Main Group Short Name"
-    //                     name="shortName"
-    //                     id="shortName"
-    //                     rules={[
-    //                         {
-    //                             required: true,
-    //                             message: 'Please enter group short name.'
-    //                         }
-    //                     ]}
-    //                 >
-    //                     <Input />
-    //                 </Form.Item>
-
-    //                 <Form.Item
-    //                     label="Description"
-    //                     name="description"
-    //                     rules={[
-    //                         {
-    //                             required: true,
-    //                             message: 'Please enter description.'
-    //                         }
-    //                     ]}
-    //                 >
-    //                     <TextArea rows={4} />
-    //                 </Form.Item>
-    //             </Form>
-    //         </Grid>
-    //     </Grid>
-    // );
     return (
         <Form
             name="frmproductmaingroup"
@@ -190,25 +103,20 @@ const ProductMainGroupAdd = () => {
             autoComplete="off"
         >
             <Grid container spacing={2}>
-                <Grid item xs={8}></Grid>
-                <Grid item xs={4}>
-                    {/* <Space
-                        direction="horizontal"
-                        size="middle"
-                        align="end"
-                        style={{
-                            display: 'flex'
-                        }}
-                    > */}
-                    <h4>{isAddMode ? 'Create Main Group' : 'Edit Main Group'}</h4>
-                    <Button type="primary" htmlType="submit" align="right">
-                        Save
-                    </Button>
-                    <Link to={'//product-main-group'}>
-                        <Button type="danger">Cancel</Button>
-                    </Link>
-                    {/* </Space> */}
+                <Grid item xs={12}>
+                    <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
+                        <Typography variant="h3">{isAddMode ? 'Create Main Group' : 'Edit Main Group'}</Typography>
+                        <div>
+                            <Button type="primary" htmlType="submit" style={{marginRight:'10px'}}>
+                                Save
+                            </Button>
+                            <Link to={'//product-main-group'}>
+                                <Button type="danger">Cancel</Button>
+                            </Link>
+                        </div>
+                    </Stack>
                 </Grid>
+
                 <Grid item xs={4}>
                     <Form.Item
                         label="Name"

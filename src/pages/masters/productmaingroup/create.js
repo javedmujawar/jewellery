@@ -86,92 +86,174 @@ const ProductMainGroupAdd = () => {
         }
     };
 
+    // return (
+    //     <Grid container spacing={3}>
+    //         <Grid item xs={12}>
+    //             <Form
+    //                 name="frmproductmaingroup"
+    //                 labelCol={{
+    //                     span: 22
+    //                 }}
+    //                 wrapperCol={{
+    //                     span: 22
+    //                 }}
+    //                 initialValues={{
+    //                     remember: true
+    //                 }}
+    //                 form={form} // Add this!
+    //                 layout="vertical"
+    //                 //onSubmit={handleSubmit}
+    //                 onFinish={onFinish}
+    //                 onFinishFailed={onFinishFailed}
+    //                 autoComplete="off"
+    //             >
+    //                 <Form.Item
+    //                     wrapperCol={{
+    //                         offset: 8,
+    //                         span: 8
+    //                     }}
+    //                 >
+    //                     <Space
+    //                         direction="horizontal"
+    //                         size="middle"
+    //                         align="end"
+    //                         style={{
+    //                             display: 'flex'
+    //                         }}
+    //                     >
+    //                         <h1>{isAddMode ? 'Create' : 'Edit'}</h1>
+
+    //                         <Button type="primary" htmlType="submit">
+    //                             Save
+    //                         </Button>
+    //                         <Link to={'//product-main-group'}>
+    //                             <Button type="danger">Cancel</Button>
+    //                         </Link>
+    //                     </Space>
+    //                 </Form.Item>
+    //                 <Form.Item
+    //                     label="Product Main Group Name"
+    //                     name="name"
+    //                     rules={[
+    //                         {
+    //                             required: true,
+    //                             message: 'Please enter group name.'
+    //                         }
+    //                     ]}
+    //                 >
+    //                     <Input />
+    //                 </Form.Item>
+
+    //                 <Form.Item
+    //                     label="Product Main Group Short Name"
+    //                     name="shortName"
+    //                     id="shortName"
+    //                     rules={[
+    //                         {
+    //                             required: true,
+    //                             message: 'Please enter group short name.'
+    //                         }
+    //                     ]}
+    //                 >
+    //                     <Input />
+    //                 </Form.Item>
+
+    //                 <Form.Item
+    //                     label="Description"
+    //                     name="description"
+    //                     rules={[
+    //                         {
+    //                             required: true,
+    //                             message: 'Please enter description.'
+    //                         }
+    //                     ]}
+    //                 >
+    //                     <TextArea rows={4} />
+    //                 </Form.Item>
+    //             </Form>
+    //         </Grid>
+    //     </Grid>
+    // );
     return (
-        <Grid container spacing={3}>
-            <h1>{isAddMode ? 'Add Functionality' : 'Edit Functionality'}</h1>
-            <Grid item xs={12}>
-                <Form
-                    name="frmproductmaingroup"
-                    labelCol={{
-                        span: 8
-                    }}
-                    wrapperCol={{
-                        span: 8
-                    }}
-                    initialValues={{
-                        remember: true
-                    }}
-                    form={form} // Add this!
-                    layout="vertical"
-                    //onSubmit={handleSubmit}
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                >
-                    <Form.Item
-                        wrapperCol={{
-                            offset: 8,
-                            span: 8
+        <Form
+            name="frmproductmaingroup"
+            initialValues={{
+                remember: true
+            }}
+            form={form} // Add this!
+            layout="vertical"
+            labelCol={{ span: 22 }}
+            wrapperCol={{ span: 22 }}
+            //onSubmit={handleSubmit}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+        >
+            <Grid container spacing={2}>
+                <Grid item xs={8}></Grid>
+                <Grid item xs={4}>
+                    {/* <Space
+                        direction="horizontal"
+                        size="middle"
+                        align="end"
+                        style={{
+                            display: 'flex'
                         }}
-                    >
-                        <Space
-                            direction="horizontal"
-                            size="middle"
-                            align="end"
-                            style={{
-                                display: 'flex'
-                            }}
-                        >
-                            <Button type="primary" htmlType="submit">
-                                Save
-                            </Button>
-                            <Link to={'//product-main-group'}>
-                                <Button type="danger">Cancel</Button>
-                            </Link>
-                        </Space>
-                    </Form.Item>
+                    > */}
+                    <h4>{isAddMode ? 'Create Main Group' : 'Edit Main Group'}</h4>
+                    <Button type="primary" htmlType="submit" align="right">
+                        Save
+                    </Button>
+                    <Link to={'//product-main-group'}>
+                        <Button type="danger">Cancel</Button>
+                    </Link>
+                    {/* </Space> */}
+                </Grid>
+                <Grid item xs={4}>
                     <Form.Item
-                        label="Product Main Group Name"
+                        label="Name"
                         name="name"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input product main group name.'
+                                message: 'Please enter group name.'
                             }
                         ]}
                     >
                         <Input />
                     </Form.Item>
-
+                </Grid>
+                <Grid item xs={4}>
                     <Form.Item
-                        label="Product Main Group Short Name"
+                        label="Short Name"
                         name="shortName"
                         id="shortName"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input product main group short name.'
+                                message: 'Please enter short name.'
                             }
                         ]}
                     >
                         <Input />
                     </Form.Item>
-
+                </Grid>
+                <Grid item xs={4}>
                     <Form.Item
                         label="Description"
                         name="description"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input description.'
+                                message: 'Please enter description.'
                             }
                         ]}
                     >
                         <TextArea rows={4} />
                     </Form.Item>
-                </Form>
+                </Grid>
             </Grid>
-        </Grid>
+        </Form>
     );
 };
 

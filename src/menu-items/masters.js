@@ -43,12 +43,51 @@ const masters = {
             icon: icons.ProfileOutlined,
             target: false
         },
-
         {
-            id: 'unitmaster',
-            title: 'Unit Master',
+            id: 'unit',
+            title: 'Unit',
             type: 'item',
-            url: '/unitmaster',
+            url: '/unit',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'purity',
+            title: 'Purity',
+            type: 'item',
+            url: '/purity',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'category',
+            title: 'Category',
+            type: 'item',
+            url: '/category',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'subcategory',
+            title: 'Sub Category',
+            type: 'item',
+            url: '/subcategory',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'color',
+            title: 'Color',
+            type: 'item',
+            url: '/color',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'size',
+            title: 'Size',
+            type: 'item',
+            url: '/size',
             icon: icons.ProfileOutlined,
             target: false
         }

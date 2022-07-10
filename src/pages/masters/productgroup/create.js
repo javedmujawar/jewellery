@@ -11,24 +11,24 @@ const ProductGroupAdd = () => {
     const { id } = useParams();
     const isAddMode = !id;
     const [form] = Form.useForm();
-    const initialFormState = {
+    const initialFormValues = {
         id: null,
         name: '',
         shortName: '',
         description: ''
     };
-    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormState);
+    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
     const getRecordData = async (id) => {
         const b = new BaseApi();
         const result = await b.getById('productgroups', id);
-        initialFormState.name = result.name;
-        initialFormState.shortName = result.shortName;
-        initialFormState.description = result.description;
+        initialFormValues.name = result.name;
+        initialFormValues.shortName = result.shortName;
+        initialFormValues.description = result.description;
 
         form.setFieldsValue({
-            name: initialFormState.name,
-            shortName: initialFormState.shortName,
-            description: initialFormState.description
+            name: initialFormValues.name,
+            shortName: initialFormValues.shortName,
+            description: initialFormValues.description
         });
     };
 

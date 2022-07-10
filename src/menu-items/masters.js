@@ -90,7 +90,33 @@ const masters = {
             url: '/size',
             icon: icons.ProfileOutlined,
             target: false
+        },
+        {
+            id: 'shape',
+            title: 'Shape',
+            type: 'item',
+            url: '/shape',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'hsnsac',
+            title: 'HSN / SAC',
+            type: 'item',
+            url: '/hsnsac',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'gst',
+            title: 'GST',
+            type: 'item',
+            url: '/gst',
+            icon: icons.ProfileOutlined,
+            target: false
         }
+
+
     ]
 };
 export default masters;

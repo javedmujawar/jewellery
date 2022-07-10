@@ -1,38 +1,57 @@
 import { useEffect } from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Select  } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
 const { TextArea } = Input;
+const { Option } = Select;
 
 const SubCategoryAdd = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const isAddMode = !id;
     const [form] = Form.useForm();
-    const initialFormState = {
+    const _categorylist  = [];
+    const initialFormValues = {
         id: null,
         name: '',
+        categoryId :'',
+        categoryList : [],
         shortName: '',
         description: ''
     };
-    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormState);
+    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
     const getRecordData = async (id) => {
         const b = new BaseApi();
         const result = await b.getById('subcategories', id);
-        initialFormState.name = result.name;
-        initialFormState.shortName = result.shortName;
-        initialFormState.description = result.description;
+        initialFormValues.name = result.name;
+        initialFormValues.shortName = result.shortName;
+        initialFormValues.categoryId = result.categoryId;
+        initialFormValues.description = result.description;
 
         form.setFieldsValue({
-            name: initialFormState.name,
-            shortName: initialFormState.shortName,
-            description: initialFormState.description
+            name: initialFormValues.name,
+            shortName: initialFormValues.shortName,
+            description: initialFormValues.description
         });
     };
+    const getCategoryList = async () => {
+        const b = new BaseApi();
+        const result = await b.getAll('categories');
+        initialFormValues.categoryList = result;
+        console.log(initialFormValues.categoryList);   
+        
+    for (var i = 0; i < initialFormValues.categoryList.length; i++) {
+       
+        _categorylist.push(<Option value={initialFormValues.categoryList[i].id}> {initialFormValues.categoryList[i].name}</Option>);
+    }
+    //console.log(_categorylist);   
+       
+    };
 
-    useEffect(() => {        
+    useEffect(() => { 
+        getCategoryList();
         if (!isAddMode) {
             getRecordData(id);
         }
@@ -78,11 +97,12 @@ const SubCategoryAdd = () => {
         if (result.status === 200) {
             navigate('/subcategory', { state: { message:'Record is successfully updated.' }})
         }
-    };
-
+    };    
+    
     return (
+        
         <Form
-            name="frmcategory"
+            name="frmsubcategory"
             initialValues={{
                 remember: true
             }}
@@ -110,7 +130,7 @@ const SubCategoryAdd = () => {
                     </Stack>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                     <Form.Item
                         label="Name"
                         name="name"
@@ -125,7 +145,16 @@ const SubCategoryAdd = () => {
                     </Form.Item>
                 </Grid>
                
-                <Grid item xs={6}>
+                <Grid item xs={4}>
+                    <Form.Item
+                        label="Category"                        
+                    >
+                       <Select>
+                       {_categorylist}               
+                        </Select>
+                    </Form.Item>
+                </Grid>
+                <Grid item xs={4}>
                     <Form.Item
                         label="Description"
                         name="description"                        
@@ -135,7 +164,7 @@ const SubCategoryAdd = () => {
                 </Grid>
             </Grid>
         </Form>
-    );
+    ); 
 };
 
 export default SubCategoryAdd;

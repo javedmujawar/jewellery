@@ -1,45 +1,39 @@
-import { useEffect, useState } from "react";
-import { Button, Form, Input, Select } from "antd";
+import { useEffect } from "react";
+import { Button, Form, Input } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 const { TextArea } = Input;
-const SubCategoryAdd = () => {
+
+const BankAdd = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isAddMode = !id;
   const [form] = Form.useForm();
-  const [categoryList, setCategoryList] = useState([]);
   const initialFormValues = {
     id: null,
     name: "",
-    categoryId: "",   
-    description: "",
+    shortName: "",
+    address: "",
   };
- 
+  //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
   const getRecordData = async (id) => {
     const b = new BaseApi();
-    const result = await b.getById("subcategories", id);
+    const result = await b.getById("banks", id);
     initialFormValues.name = result.name;
-    initialFormValues.categoryId = result.categoryId;
-    initialFormValues.description = result.description;
+    initialFormValues.shortName = result.shortName;
+    initialFormValues.address = result.address;
 
     form.setFieldsValue({
       name: initialFormValues.name,
-      categoryId: initialFormValues.categoryId,
-      description: initialFormValues.description,
+      shortName: initialFormValues.shortName,
+      address: initialFormValues.address,
     });
-  };
-  const getCategoryList = async () => {
-    const b = new BaseApi();
-    const result = await b.getListKV("categories");
-    //console.log(result);
-    setCategoryList(result);
   };
 
   useEffect(() => {
-    getCategoryList();
+    // console.log('test by rashid');
     if (!isAddMode) {
       getRecordData(id);
     }
@@ -55,20 +49,19 @@ const SubCategoryAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
-    // console.log('insert functio is call :', data);
+    //  console.log('insert functio is call :', data);
     let postData = {
       id: id,
       name: data.name,
-      categoryId: data.categoryId,
-      description: data.description,
+      shortName: data.shortName,
+      address: data.address,
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
-
     const baseApi = new BaseApi();
-    const result = await baseApi.request("subcategories", postData, "post");
+    const result = await baseApi.request("banks", postData, "post");
     if (result.status === 200) {
-      navigate("/subcategory", {
+      navigate("/bank", {
         state: { message: "Record is successfully created." },
       });
     }
@@ -77,15 +70,19 @@ const SubCategoryAdd = () => {
     let postData = {
       id: id,
       name: data.name,
-      categoryId: data.categoryId,
-      description: data.description,
+      shortName: data.shortName,
+      address: data.address,
       updatedDttm: "" + new Date().getTime(),
       updatedBy: 1,
     };
     const baseApi = new BaseApi();
-    const result = await baseApi.request("subcategories", postData, "patch");
+    const result = await baseApi.request(
+      "banks",
+      postData,
+      "patch"
+    );
     if (result.status === 200) {
-      navigate("/subcategory", {
+      navigate("/bank", {
         state: { message: "Record is successfully updated." },
       });
     }
@@ -93,7 +90,7 @@ const SubCategoryAdd = () => {
 
   return (
     <Form
-      name="frmsubcategory"
+      name="frmbank"
       initialValues={{
         remember: true,
       }}
@@ -115,7 +112,7 @@ const SubCategoryAdd = () => {
             sx={{ mb: { xs: -0.5, sm: 0.5 } }}
           >
             <Typography variant="h3">
-              {isAddMode ? "Create Sub Category" : "Edit Sub Category"}
+              {isAddMode ? "Create Bank" : "Edit Bank"}
             </Typography>
             <div>
               <Button
@@ -125,7 +122,7 @@ const SubCategoryAdd = () => {
               >
                 Save
               </Button>
-              <Link to={"/subcategory"}>
+              <Link to={"/bank"}>
                 <Button type="danger">Cancel</Button>
               </Link>
             </div>
@@ -146,33 +143,13 @@ const SubCategoryAdd = () => {
             <Input />
           </Form.Item>
         </Grid>
-
-        <Grid item xs={4}>
-          <Form.Item
-            label="Category"
-            id="categoryId"
-            name="categoryId"
-            rules={[
-              {
-                required: true,
-                message: "Please select category.",
-              },
-            ]}
-          >
-            <Select placeholder="--- Select ---">
-              {categoryList &&
-                categoryList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
+        <Grid item xs={2}>
+          <Form.Item label="Short Name" name="shortName" id="shortName">
+            <Input />
           </Form.Item>
         </Grid>
-        <Grid item xs={4}>
-          <Form.Item label="Description" name="description">
+        <Grid item xs={6}>
+          <Form.Item label="Address" name="address">
             <TextArea rows={4} />
           </Form.Item>
         </Grid>
@@ -181,4 +158,4 @@ const SubCategoryAdd = () => {
   );
 };
 
-export default SubCategoryAdd;
+export default BankAdd;

@@ -12,7 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
 
-const ShapeList = () => {
+const PaymentTypeList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -58,7 +58,7 @@ const ShapeList = () => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/shape/edit/" + record.id}>
+            <Link to={"/payment-type/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
@@ -85,7 +85,7 @@ const ShapeList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("shapes");
+    const result = await b.getAll("paymenttypes");
     //  console.log(result);
     setData(result);
   };
@@ -109,7 +109,7 @@ const ShapeList = () => {
       const b = new BaseApi();
       const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
       //console.log('postData=', postData);     
-      const res = await b.request("shapes", postData, "patch");
+      const res = await b.request("paymenttypes", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
@@ -131,14 +131,14 @@ const ShapeList = () => {
           alignItems="baseline"
           sx={{ mb: { xs: -0.5, sm: 0.5 } }}
         >
-          <Typography variant="h3">Shape List</Typography>
+          <Typography variant="h3">Payment Type List</Typography>
 
           <Button
             type="primary"
             id="btnCreate"
             name="btnCreate"
             onClick={() => {
-              navigate("/shape/add");
+              navigate("/payment-type/add");
             }}
           >
             Create
@@ -163,4 +163,4 @@ const ShapeList = () => {
   );
 };
 
-export default ShapeList;
+export default PaymentTypeList;

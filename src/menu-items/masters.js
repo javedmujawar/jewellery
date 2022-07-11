@@ -44,6 +44,14 @@ const masters = {
             target: false
         },
         {
+            id: 'productsubgroup',
+            title: 'Product Sub Group',
+            type: 'item',
+            url: '/productsubgroup',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
             id: 'unit',
             title: 'Unit',
             type: 'item',
@@ -112,6 +120,46 @@ const masters = {
             title: 'GST',
             type: 'item',
             url: '/gst',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'warehouse',
+            title: 'WareHouse',
+            type: 'item',
+            url: '/warehouse',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'bank',
+            title: 'Bank',
+            type: 'item',
+            url: '/bank',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'payment-type',
+            title: 'Payment Type',
+            type: 'item',
+            url: '/payment-type',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'counter',
+            title: 'Counter',
+            type: 'item',
+            url: '/counter',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'country',
+            title: 'Country',
+            type: 'item',
+            url: '/country',
             icon: icons.ProfileOutlined,
             target: false
         }

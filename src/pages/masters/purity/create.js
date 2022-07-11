@@ -6,28 +6,25 @@ import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
 const { TextArea } = Input;
 
-const ProductGroupAdd = () => {
+const PurityAdd = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const isAddMode = !id;
     const [form] = Form.useForm();
     const initialFormValues = {
         id: null,
-        name: '',
-        shortName: '',
+        name: '',        
         description: ''
     };
     //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
     const getRecordData = async (id) => {
         const b = new BaseApi();
         const result = await b.getById('purities', id);
-        initialFormValues.name = result.name;
-        initialFormValues.shortName = result.shortName;
+        initialFormValues.name = result.name;        
         initialFormValues.description = result.description;
 
         form.setFieldsValue({
-            name: initialFormValues.name,
-            shortName: initialFormValues.shortName,
+            name: initialFormValues.name,            
             description: initialFormValues.description
         });
     };
@@ -52,7 +49,6 @@ const ProductGroupAdd = () => {
         let postData = {
             id: id,
             name: data.name,
-            shortName: data.shortName,
             description: data.description,
             createdDttm: '' + new Date().getTime(),
             createdBy: 1
@@ -67,8 +63,7 @@ const ProductGroupAdd = () => {
       
         let postData = {
             id: id,
-            name: data.name,
-            shortName: data.shortName,
+            name: data.name,            
             description: data.description,
             updatedDttm: '' + new Date().getTime(),
             updatedBy: 1
@@ -144,4 +139,4 @@ const ProductGroupAdd = () => {
     );
 };
 
-export default ProductGroupAdd;
+export default PurityAdd;

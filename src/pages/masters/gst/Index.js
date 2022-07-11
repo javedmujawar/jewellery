@@ -11,7 +11,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid, Stack, Typography } from "@mui/material";
 
-const ProductGroupList = () => {
+const GstList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -42,11 +42,27 @@ const ProductGroupList = () => {
       dataIndex: "shortName",
       key: "shortName",
     },
+    
+      {
+        title: "Percantage",
+        dataIndex: "percentageValue",
+        key: "percentageValue",
+      },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "IGST Value",
+      dataIndex: "igstValue",
+      key: "igstValue",
     },
+    {
+        title: "CGST Value",
+        dataIndex: "cgstValue",
+        key: "cgstValue",
+      },
+      {
+        title: "SGST Value",
+        dataIndex: "sgstValue",
+        key: "sgstValue",
+      },
     {
       title: "Status",
       dataIndex: "status",
@@ -59,7 +75,7 @@ const ProductGroupList = () => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/productgroup/edit/" + record.id}>
+            <Link to={"/gst/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
@@ -86,7 +102,7 @@ const ProductGroupList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("productgroups");
+    const result = await b.getAll("gsts");
     //  console.log(result);
     setData(result);
   };
@@ -110,7 +126,7 @@ const ProductGroupList = () => {
       const b = new BaseApi();
       const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
       //console.log('postData=', postData);     
-      const res = await b.request("productgroups", postData, "patch");
+      const res = await b.request("gsts", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
@@ -132,14 +148,14 @@ const ProductGroupList = () => {
           alignItems="baseline"
           sx={{ mb: { xs: -0.5, sm: 0.5 } }}
         >
-          <Typography variant="h3">Group List</Typography>
+          <Typography variant="h3">GST List</Typography>
 
           <Button
             type="primary"
             id="btnCreate"
             name="btnCreate"
             onClick={() => {
-              navigate("/productgroup/add");
+              navigate("/gst/add");
             }}
           >
             Create
@@ -164,4 +180,4 @@ const ProductGroupList = () => {
   );
 };
 
-export default ProductGroupList;
+export default GstList;

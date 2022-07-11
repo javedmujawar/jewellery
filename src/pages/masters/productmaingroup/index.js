@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Table, Button, Divider, Modal, Alert } from "antd";
 import {
   EditOutlined,
@@ -10,9 +10,8 @@ import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid, Stack, Typography } from "@mui/material";
-//const { confirm } = Modal;
 
-const ProductMainGroupList = (props) => {
+const ProductMainGroupList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -21,7 +20,7 @@ const ProductMainGroupList = (props) => {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [deletedId, setDeletedId] = useState(0);
-  //const [currentRecordId, setCurrentRecordId] = useState(0);
+  
   const columns = [
     {
       title: "Sr.No",
@@ -60,14 +59,13 @@ const ProductMainGroupList = (props) => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/product-main-group-create/edit/" + record.id}>
+            <Link to={"/product-main-group/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"
-                //onClick={() => setActiveRecord(record.id)}
+                size="small"               
               ></Button>
             </Link>
 
@@ -96,28 +94,9 @@ const ProductMainGroupList = (props) => {
   useEffect(() => {
     getAllList();
   }, []);
-
-  /* const setActiveRecord = (id) => {
-        setCurrentRecordId(id);
-        console.log(' setCurrentRecordId : ' + id);
-    }; */
+  
   const showModal = (recordId) => {
-    /* confirm({
-            title: 'Are you sure delete this record?',
-            icon: <ExclamationCircleOutlined />,
-            content: '',
-            okText: 'Yes',
-            okType: 'danger',
-            cancelText: 'No',
-            onOk() {
-                handleOk();
-            },
-            onCancel() {
-                handleCancel();
-            }
-        }); */
-    //console.log('id=', recordId);
-    setDeletedId(recordId);
+        setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -129,16 +108,16 @@ const ProductMainGroupList = (props) => {
     try {
       // console.log('selected id : ', deletedId);
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId };
-      //console.log('postData=', postData);
-      const msg = "Record has been deleted successfully.";
+      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
+      //console.log('postData=', postData);     
       const res = await b.request("productmaingroups", postData, "patch");
       if (res.status === 200) {
-        getAllList();
-        message.success(msg, 5);
+        setModalVisible(false);
+        setDeletedId(0);
+        getAllList();        
+       
       }
-      setModalVisible(false);
-      setDeletedId(0);
+
     } catch (error) {}
   };
   return (
@@ -160,7 +139,7 @@ const ProductMainGroupList = (props) => {
             id="btnCreate"
             name="btnCreate"
             onClick={() => {
-              navigate("/product-main-group-create/add");
+              navigate("/product-main-group/add");
             }}
           >
             Create

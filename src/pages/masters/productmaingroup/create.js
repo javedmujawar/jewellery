@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
@@ -13,26 +13,24 @@ const ProductMainGroupAdd = () => {
     const { id } = useParams();
     const isAddMode = !id;
     const [form] = Form.useForm();
-    const initialFormState = {
+    const initialFormValues = {
         id: null,
         name: '',
         shortName: '',
         description: ''
     };
-    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormState);
+    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
     const getRecordData = async (id) => {
         const b = new BaseApi();
         const result = await b.getById('productmaingroups', id);
-        //console.log(initialFormState.name);
-
-        initialFormState.name = result.name;
-        initialFormState.shortName = result.shortName;
-        initialFormState.description = result.description;
+        initialFormValues.name = result.name;
+        initialFormValues.shortName = result.shortName;
+        initialFormValues.description = result.description;
 
         form.setFieldsValue({
-            name: initialFormState.name,
-            shortName: initialFormState.shortName,
-            description: initialFormState.description
+            name: initialFormValues.name,
+            shortName: initialFormValues.shortName,
+            description: initialFormValues.description
         });
     };
 
@@ -41,7 +39,7 @@ const ProductMainGroupAdd = () => {
         if (!isAddMode) {
             getRecordData(id);
         }
-    }, [id]);
+    },[id]);
 
     const onFinish = (values) => {
         //console.log('Success:', values);
@@ -64,13 +62,12 @@ const ProductMainGroupAdd = () => {
         };
         const baseApi = new BaseApi();
         const result = await baseApi.request('productmaingroups', postData, 'post');
-        if (result.status === 200) {
-            // router.push('/product-main-group');
+        if (result.status === 200) {            
             navigate('/product-main-group', { state: { message:'Record is successfully created.' }})
         }
     };
     const updateData = async (id, data) => {
-        //console.log('update function is call:', id + isAddMode);
+      
         let postData = {
             id: id,
             name: data.name,
@@ -78,8 +75,7 @@ const ProductMainGroupAdd = () => {
             description: data.description,
             updatedDttm: '' + new Date().getTime(),
             updatedBy: 1
-        };
-        //console.log(postData);
+        };        
         const baseApi = new BaseApi();
         const result = await baseApi.request('productmaingroups', postData, 'patch');
         if (result.status === 200) {
@@ -110,7 +106,7 @@ const ProductMainGroupAdd = () => {
                             <Button type="primary" htmlType="submit" style={{marginRight:'10px'}}>
                                 Save
                             </Button>
-                            <Link to={'//product-main-group'}>
+                            <Link to={'/product-main-group'}>
                                 <Button type="danger">Cancel</Button>
                             </Link>
                         </div>

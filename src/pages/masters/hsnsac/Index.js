@@ -11,7 +11,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid, Stack, Typography } from "@mui/material";
 
-const ProductGroupList = () => {
+const HsnSacList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -43,6 +43,16 @@ const ProductGroupList = () => {
       key: "shortName",
     },
     {
+        title: "Code",
+        dataIndex: "code",
+        key: "code",
+      },
+      {
+        title: "Percantage",
+        dataIndex: "percentageValue",
+        key: "percentageValue",
+      },
+    {
       title: "Description",
       dataIndex: "description",
       key: "description",
@@ -59,7 +69,7 @@ const ProductGroupList = () => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/productgroup/edit/" + record.id}>
+            <Link to={"/hsnsac/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
@@ -86,7 +96,7 @@ const ProductGroupList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("productgroups");
+    const result = await b.getAll("hsnsacs");
     //  console.log(result);
     setData(result);
   };
@@ -110,7 +120,7 @@ const ProductGroupList = () => {
       const b = new BaseApi();
       const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
       //console.log('postData=', postData);     
-      const res = await b.request("productgroups", postData, "patch");
+      const res = await b.request("hsnsacs", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
@@ -132,14 +142,14 @@ const ProductGroupList = () => {
           alignItems="baseline"
           sx={{ mb: { xs: -0.5, sm: 0.5 } }}
         >
-          <Typography variant="h3">Group List</Typography>
+          <Typography variant="h3">HSN / SAC List</Typography>
 
           <Button
             type="primary"
             id="btnCreate"
             name="btnCreate"
             onClick={() => {
-              navigate("/productgroup/add");
+              navigate("/hsnsac/add");
             }}
           >
             Create
@@ -164,4 +174,4 @@ const ProductGroupList = () => {
   );
 };
 
-export default ProductGroupList;
+export default HsnSacList;

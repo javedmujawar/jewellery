@@ -36,7 +36,7 @@ const utilities = {
             id: 'util-color',
             title: 'Color',
             type: 'item',
-            url: '/color',
+            url: '/util-color',
             icon: icons.BgColorsOutlined
         },
         {

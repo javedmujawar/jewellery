@@ -36,7 +36,12 @@ const SubCategoryList = () => {
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       defaultSortOrder: "descend",
-    },    
+    }, 
+    {
+      title: "Category Name",
+      dataIndex: "categoryName",
+      key: "categoryName",
+    },   
     {
       title: "Description",
       dataIndex: "description",
@@ -81,7 +86,7 @@ const SubCategoryList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("subcategories");
+    const result = await b.getJoinList("subcategories");
     //  console.log(result);
     setData(result);
   };

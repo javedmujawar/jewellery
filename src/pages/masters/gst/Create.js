@@ -23,7 +23,7 @@ const GstAdd = () => {
         sgstValue :'',
         description: ''
     };
-    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
+    
     const getRecordData = async (id) => {
         const b = new BaseApi();
         const result = await b.getById('gsts', id);

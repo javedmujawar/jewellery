@@ -13,21 +13,18 @@ const SizeAdd = () => {
     const [form] = Form.useForm();
     const initialFormValues = {
         id: null,
-        name: '',
-        shortName: '',
+        name: '',        
         description: ''
     };
-    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
+    
     const getRecordData = async (id) => {
         const b = new BaseApi();
         const result = await b.getById('sizes', id);
-        initialFormValues.name = result.name;
-        initialFormValues.shortName = result.shortName;
+        initialFormValues.name = result.name;       
         initialFormValues.description = result.description;
 
         form.setFieldsValue({
-            name: initialFormValues.name,
-            shortName: initialFormValues.shortName,
+            name: initialFormValues.name,           
             description: initialFormValues.description
         });
     };
@@ -51,8 +48,7 @@ const SizeAdd = () => {
         //  console.log('insert functio is call :', data);
         let postData = {
             id: id,
-            name: data.name,
-            shortName: data.shortName,
+            name: data.name,            
             description: data.description,
             createdDttm: '' + new Date().getTime(),
             createdBy: 1
@@ -67,8 +63,7 @@ const SizeAdd = () => {
       
         let postData = {
             id: id,
-            name: data.name,
-            shortName: data.shortName,
+            name: data.name,            
             description: data.description,
             updatedDttm: '' + new Date().getTime(),
             updatedBy: 1

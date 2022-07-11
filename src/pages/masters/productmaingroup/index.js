@@ -10,6 +10,7 @@ import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid, Stack, Typography } from "@mui/material";
+import { statusTag } from "../../../utility/Common";
 
 const ProductMainGroupList = () => {
   const location = useLocation();
@@ -51,6 +52,9 @@ const ProductMainGroupList = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (text, statusValue) => {
+        return statusTag(statusValue.status);
+      },
     },
     {
       title: "Action",

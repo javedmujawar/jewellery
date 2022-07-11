@@ -38,7 +38,7 @@ const SubCategoryAdd = () => {
     };
     const getCategoryList = async () => {
         const b = new BaseApi();
-        const result = await b.getAll('categories');
+        const result = await b.getListKV('categories');
         initialFormValues.categoryList = result;
         console.log(initialFormValues.categoryList);   
         

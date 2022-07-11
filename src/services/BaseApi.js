@@ -16,6 +16,28 @@ class BaseApi {
                 console.log(err);
             });
     }
+    getListKV(url) {
+        return axios
+            .get(constant.apiBaseUrl + url + '/'+'getListKV' )
+            .then((response) => {
+              
+                return response.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+    getJoinList(url) {
+        return axios
+            .get(constant.apiBaseUrl + url + '/'+'getJoinList' )
+            .then((response) => {
+              
+                return response.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
     getById(url, id) {
         return axios
             .get(constant.apiBaseUrl + url + '/' + id)

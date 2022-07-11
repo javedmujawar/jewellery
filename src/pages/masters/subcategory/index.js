@@ -38,6 +38,11 @@ const SubCategoryList = () => {
       defaultSortOrder: "descend",
     }, 
     {
+      title: "Category Id",
+      dataIndex: "categoryId",
+      key: "categoryId",
+    },  
+    {
       title: "Category Name",
       dataIndex: "categoryName",
       key: "categoryName",

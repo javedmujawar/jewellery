@@ -12,7 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
 
-const WareHouseList = () => {
+const StateList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -21,7 +21,7 @@ const WareHouseList = () => {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [deletedId, setDeletedId] = useState(0);
-
+  
   const columns = [
     {
       title: "Sr.No",
@@ -39,9 +39,19 @@ const WareHouseList = () => {
       defaultSortOrder: "descend",
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "Short Name",
+      dataIndex: "shortName",
+      key: "shortName",
+    },
+    {
+      title: "Code",
+      dataIndex: "code",
+      key: "code",
+    },
+    {
+      title: "Country",
+      dataIndex: "countryName",
+      key: "countryName",
     },
     {
       title: "Status",
@@ -58,13 +68,13 @@ const WareHouseList = () => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/warehouse/edit/" + record.id}>
+            <Link to={"/state/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"
+                size="small"               
               ></Button>
             </Link>
 
@@ -85,7 +95,7 @@ const WareHouseList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("warehouses");
+    const result = await b.getJoinList("states");
     //  console.log(result);
     setData(result);
   };
@@ -93,9 +103,9 @@ const WareHouseList = () => {
   useEffect(() => {
     getAllList();
   }, []);
-
+  
   const showModal = (recordId) => {
-    setDeletedId(recordId);
+        setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -107,37 +117,25 @@ const WareHouseList = () => {
     try {
       // console.log('selected id : ', deletedId);
       const b = new BaseApi();
-      const postData = {
-        isDeleted: true,
-        id: deletedId,
-        deletedBy: 1,
-        deletedDttm: "" + new Date().getTime(),
-      };
-      //console.log('postData=', postData);
-      const res = await b.request("warehouses", postData, "patch");
+      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
+      //console.log('postData=', postData);     
+      const res = await b.request("states", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
-        //getAllList();
-        navigate('/warehouse', { state: { message:'Record is deleted successfully.' }}) 
-       window.location.reload();  
+       // getAllList(); 
+       navigate('/state', { state: { message:'Record is deleted successfully.' }}) 
+       window.location.reload();         
+       
       }
+
     } catch (error) {}
   };
   return (
     <Grid container spacing={3}>
-      {message && (
-        <Grid item xs={12}>
-          <Alert
-            message={message}
-            type="success"
-            closable
-            onClose={() => {
-              setMessage("");
-            }}
-          />
-        </Grid>
-      )}
+      {message && <Grid item xs={12}>
+        <Alert message={message} type="success" closable onClose={()=>{setMessage("")}} />
+      </Grid>}
       <Grid item xs={12}>
         <Stack
           direction="row"
@@ -145,14 +143,14 @@ const WareHouseList = () => {
           alignItems="baseline"
           sx={{ mb: { xs: -0.5, sm: 0.5 } }}
         >
-          <Typography variant="h3">WareHouse List</Typography>
+          <Typography variant="h3">State List</Typography>
 
           <Button
             type="primary"
             id="btnCreate"
             name="btnCreate"
             onClick={() => {
-              navigate("/warehouse/add");
+              navigate("/state/add");
             }}
           >
             Create
@@ -176,5 +174,4 @@ const WareHouseList = () => {
     </Grid>
   );
 };
-
-export default WareHouseList;
+export default StateList;

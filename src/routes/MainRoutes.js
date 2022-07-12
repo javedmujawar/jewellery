@@ -16,10 +16,13 @@ const UtilColor = Loadable(lazy(() => import('pages/components-overview/Color'))
 const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
 const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
 
-const ProductGroupList = Loadable(lazy(() => import('pages/masters/productgroup/index')));
-const ProductGroup = Loadable(lazy(() => import('pages/masters/productgroup/create')));
+
 const ProductMainGroupList = Loadable(lazy(() => import('pages/masters/productmaingroup/index')));
 const ProductMainGroup = Loadable(lazy(() => import('pages/masters/productmaingroup/create')));
+const ProductGroupList = Loadable(lazy(() => import('pages/masters/productgroup/index')));
+const ProductGroup = Loadable(lazy(() => import('pages/masters/productgroup/create')));
+const ProductSubGroupList = Loadable(lazy(() => import('pages/masters/productsubgroup/index')));
+const ProductSubGroup = Loadable(lazy(() => import('pages/masters/productsubgroup/create')));
 const UnitList = Loadable(lazy(() => import('pages/masters/unit/index')));
 const Unit = Loadable(lazy(() => import('pages/masters/unit/create')));
 const PurityList = Loadable(lazy(() => import('pages/masters/purity/index')));
@@ -38,8 +41,21 @@ const HsnSacList = Loadable(lazy(() => import('pages/masters/hsnsac/index')));
 const HsnSac = Loadable(lazy(() => import('pages/masters/hsnsac/create')));
 const GstList = Loadable(lazy(() => import('pages/masters/gst/index')));
 const Gst = Loadable(lazy(() => import('pages/masters/gst/create')));
+const WareHouseList = Loadable(lazy(() => import('pages/masters/warehouse/index')));
+const WareHouse = Loadable(lazy(() => import('pages/masters/warehouse/create')));
+
+const BankList = Loadable(lazy(() => import('pages/masters/bank/index')));
+const Bank = Loadable(lazy(() => import('pages/masters/bank/create')));
+const PaymentTypeList = Loadable(lazy(() => import('pages/masters/paymenttype/index')));
+const PaymentType = Loadable(lazy(() => import('pages/masters/paymenttype/create')));
+const CounterList = Loadable(lazy(() => import('pages/masters/counter/index')));
+const Counter = Loadable(lazy(() => import('pages/masters/counter/create')));
+const CountryList = Loadable(lazy(() => import('pages/masters/country/index')));
+const Country = Loadable(lazy(() => import('pages/masters/country/create')));
 
 
+
+//PaymentTypeList
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -74,6 +90,18 @@ const MainRoutes = {
         {
             path: 'productgroup/edit/:id',
             element: <ProductGroup />
+        },
+        {
+            path: 'productsubgroup',
+            element: <ProductSubGroupList />
+        },
+        {
+            path: 'productsubgroup/add',
+            element: <ProductSubGroup />
+        },
+        {
+            path: 'productsubgroup/edit/:id',
+            element: <ProductSubGroup />
         },
         {
             path: 'unit',
@@ -182,6 +210,66 @@ const MainRoutes = {
         {
             path: 'gst/edit/:id',
             element: <Gst/>
+        },
+        {
+            path: 'warehouse',
+            element: <WareHouseList/>
+        },        
+        {
+            path: 'warehouse/add',
+            element: <WareHouse/>
+        },
+        {
+            path: 'warehouse/edit/:id',
+            element: <WareHouse/>
+        },
+        {
+            path: 'bank',
+            element: <BankList/>
+        },        
+        {
+            path: 'bank/add',
+            element: <Bank/>
+        },
+        {
+            path: 'bank/edit/:id',
+            element: <Bank/>
+        },
+        {
+            path: 'payment-type',
+            element: <PaymentTypeList/>
+        },        
+        {
+            path: 'payment-type/add',
+            element: <PaymentType/>
+        },
+        {
+            path: 'payment-type/edit/:id',
+            element: <PaymentType/>
+        },
+        {
+            path: 'counter',
+            element: <CounterList/>
+        },        
+        {
+            path: 'counter/add',
+            element: <Counter/>
+        },
+        {
+            path: 'counter/edit/:id',
+            element: <Counter/>
+        },
+        {
+            path: 'country',
+            element: <CountryList/>
+        },        
+        {
+            path: 'country/add',
+            element: <Country/>
+        },
+        {
+            path: 'country/edit/:id',
+            element: <Country/>
         },
         {
             path: 'util-color',

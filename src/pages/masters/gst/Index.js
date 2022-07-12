@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Divider, Modal, Alert } from "antd";
+import { Table, Button, Divider, Modal, Alert, Tag } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -10,6 +10,8 @@ import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid, Stack, Typography } from "@mui/material";
+import { statusTag } from "../../../utility/Common";
+
 
 const GstList = () => {
   const location = useLocation();
@@ -67,6 +69,9 @@ const GstList = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (text, statusValue) => {
+        return statusTag(statusValue.status);
+      },
     },
     {
       title: "Action",

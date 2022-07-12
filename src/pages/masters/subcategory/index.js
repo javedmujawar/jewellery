@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Table, Button, Divider, Modal, Alert } from "antd";
+import { statusTag } from "../../../utility/Common";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -20,7 +21,7 @@ const SubCategoryList = () => {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [deletedId, setDeletedId] = useState(0);
-  
+
   const columns = [
     {
       title: "Sr.No",
@@ -36,17 +37,13 @@ const SubCategoryList = () => {
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       defaultSortOrder: "descend",
-    }, 
-    {
-      title: "Category Id",
-      dataIndex: "categoryId",
-      key: "categoryId",
-    },  
+    },
+
     {
       title: "Category Name",
       dataIndex: "categoryName",
       key: "categoryName",
-    },   
+    },
     {
       title: "Description",
       dataIndex: "description",
@@ -56,6 +53,9 @@ const SubCategoryList = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (text, statusValue) => {
+        return statusTag(statusValue.status);
+      },
     },
     {
       title: "Action",
@@ -70,7 +70,7 @@ const SubCategoryList = () => {
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"               
+                size="small"
               ></Button>
             </Link>
 
@@ -99,9 +99,9 @@ const SubCategoryList = () => {
   useEffect(() => {
     getAllList();
   }, []);
-  
+
   const showModal = (recordId) => {
-        setDeletedId(recordId);
+    setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -113,23 +113,35 @@ const SubCategoryList = () => {
     try {
       // console.log('selected id : ', deletedId);
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-      //console.log('postData=', postData);     
+      const postData = {
+        isDeleted: true,
+        id: deletedId,
+        deletedBy: 1,
+        deletedDttm: "" + new Date().getTime(),
+      };
+      //console.log('postData=', postData);
       const res = await b.request("subcategories", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
-        getAllList();        
-       
+        getAllList();
       }
-
     } catch (error) {}
   };
   return (
     <Grid container spacing={3}>
-      {message && <Grid item xs={12}>
-        <Alert message={message} type="success" closable onClose={()=>{setMessage("")}} />
-      </Grid>}
+      {message && (
+        <Grid item xs={12}>
+          <Alert
+            message={message}
+            type="success"
+            closable
+            onClose={() => {
+              setMessage("");
+            }}
+          />
+        </Grid>
+      )}
       <Grid item xs={12}>
         <Stack
           direction="row"

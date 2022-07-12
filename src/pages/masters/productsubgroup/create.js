@@ -5,41 +5,55 @@ import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 const { TextArea } = Input;
-const SubCategoryAdd = () => {
+const ProductSubGroupAdd = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isAddMode = !id;
   const [form] = Form.useForm();
-  const [categoryList, setCategoryList] = useState([]);
+  const [maingroupList, setMainGroupList] = useState([]);
+  const [groupList, setGroupList] = useState([]);  
   const initialFormValues = {
     id: null,
     name: "",
-    categoryId: "",   
+    shortName: "",
+    maingroupId: "",
+    groupId: "",
     description: "",
   };
- 
+  
   const getRecordData = async (id) => {
     const b = new BaseApi();
-    const result = await b.getById("subcategories", id);
+    const result = await b.getById("productsubgroups", id);
     initialFormValues.name = result.name;
-    initialFormValues.categoryId = result.categoryId;
+    initialFormValues.shortName = result.shortName;
+    initialFormValues.maingroupId = result.maingroupId;
+    initialFormValues.groupId = result.groupId;
     initialFormValues.description = result.description;
 
     form.setFieldsValue({
       name: initialFormValues.name,
-      categoryId: initialFormValues.categoryId,
+      shortName: initialFormValues.shortName,
+      maingroupId: initialFormValues.maingroupId,
+      groupId: initialFormValues.groupId,
       description: initialFormValues.description,
     });
   };
-  const getCategoryList = async () => {
+  const getMainGroupList = async () => {
     const b = new BaseApi();
-    const result = await b.getListKV("categories");
-    //console.log(result);
-    setCategoryList(result);
+    const mainresult = await b.getListKV("productmaingroups");
+    // console.log(mainresult);
+    setMainGroupList(mainresult);
+  };
+  const getGroupList = async () => {
+    const b = new BaseApi();
+    const groupresult = await b.getListKV("productgroups");
+    // console.log(groupresult);
+    setGroupList(groupresult);
   };
 
   useEffect(() => {
-    getCategoryList();
+    getMainGroupList();
+    getGroupList();
     if (!isAddMode) {
       getRecordData(id);
     }
@@ -59,16 +73,17 @@ const SubCategoryAdd = () => {
     let postData = {
       id: id,
       name: data.name,
-      categoryId: data.categoryId,
+      maingroupId: data.maingroupId,
+      groupId: data.groupId,
       description: data.description,
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
 
     const baseApi = new BaseApi();
-    const result = await baseApi.request("subcategories", postData, "post");
+    const result = await baseApi.request("productsubgroups", postData, "post");
     if (result.status === 200) {
-      navigate("/subcategory", {
+      navigate("/productsubgroup", {
         state: { message: "Record is successfully created." },
       });
     }
@@ -77,23 +92,23 @@ const SubCategoryAdd = () => {
     let postData = {
       id: id,
       name: data.name,
-      categoryId: data.categoryId,
+      maingroupId: data.maingroupId,
+      groupId: data.groupId,
       description: data.description,
       updatedDttm: "" + new Date().getTime(),
       updatedBy: 1,
     };
     const baseApi = new BaseApi();
-    const result = await baseApi.request("subcategories", postData, "patch");
+    const result = await baseApi.request("productsubgroups", postData, "patch");
     if (result.status === 200) {
-      navigate("/subcategory", {
+      navigate("/productsubgroup", {
         state: { message: "Record is successfully updated." },
       });
     }
   };
-
   return (
     <Form
-      name="frmsubcategory"
+      name="frmproductsubgroup"
       initialValues={{
         remember: true,
       }}
@@ -115,7 +130,7 @@ const SubCategoryAdd = () => {
             sx={{ mb: { xs: -0.5, sm: 0.5 } }}
           >
             <Typography variant="h3">
-              {isAddMode ? "Create Sub Category" : "Edit Sub Category"}
+              {isAddMode ? "Create Sub Group" : "Edit Sub Group"}
             </Typography>
             <div>
               <Button
@@ -125,14 +140,14 @@ const SubCategoryAdd = () => {
               >
                 Save
               </Button>
-              <Link to={"/subcategory"}>
+              <Link to={"/productsubgroup"}>
                 <Button type="danger">Cancel</Button>
               </Link>
             </div>
           </Stack>
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Form.Item
             label="Name"
             name="name"
@@ -146,22 +161,29 @@ const SubCategoryAdd = () => {
             <Input />
           </Form.Item>
         </Grid>
+        <Grid item xs={3}>
+          <Form.Item label="Short Name" name="shortName">
+            <Input />
+          </Form.Item>
+        </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Form.Item
-            label="Category"
-            id="categoryId"
-            name="categoryId"
+            label="Main Group"
+            id="maingroupId"
+            name="maingroupId"
             rules={[
               {
                 required: true,
-                message: "Please select category.",
+                message: "Please select main group.",
               },
             ]}
           >
-            <Select placeholder="--- Select ---">
-              {categoryList &&
-                categoryList.map((row, index) => {
+            <Select
+              placeholder="--- Select ---"              
+            >
+              {maingroupList &&
+                maingroupList.map((row, index) => {
                   return (
                     <option key={index} value={row.id}>
                       {row.name}
@@ -171,7 +193,35 @@ const SubCategoryAdd = () => {
             </Select>
           </Form.Item>
         </Grid>
-        <Grid item xs={4}>
+
+        
+        <Grid item xs={3}>
+          <Form.Item
+            label="Group"
+            id="groupId"
+            name="groupId"
+            rules={[
+              {
+                required: true,
+                message: "Please select group.",
+              },
+            ]}
+          >
+            <Select
+              placeholder="--- Select ---"              
+            >
+              {groupList &&
+                groupList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+          </Form.Item>
+        </Grid>
+        <Grid item xs={6}>
           <Form.Item label="Description" name="description">
             <TextArea rows={4} />
           </Form.Item>
@@ -181,4 +231,4 @@ const SubCategoryAdd = () => {
   );
 };
 
-export default SubCategoryAdd;
+export default ProductSubGroupAdd;

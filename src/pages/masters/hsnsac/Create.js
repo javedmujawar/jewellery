@@ -20,8 +20,7 @@ const HsnSacAdd = () => {
         code :'',
         percentageValue : '',
         description: ''
-    };
-    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
+    };    
     const getRecordData = async (id) => {
         const b = new BaseApi();
         const result = await b.getById('hsnsacs', id);
@@ -163,7 +162,11 @@ const HsnSacAdd = () => {
                             {
                                 required: true,
                                 message: 'Please enter code.'
-                            }
+                            },
+                            {
+                                pattern:new RegExp(/^[0-9]*$/),
+                                message: "Please enter valid percentage value."
+                              }
                         ]}
                     >
                         <Input />

@@ -12,7 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
 
-const ShapeList = () => {
+const WareHouseList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -21,7 +21,7 @@ const ShapeList = () => {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [deletedId, setDeletedId] = useState(0);
-  
+
   const columns = [
     {
       title: "Sr.No",
@@ -37,7 +37,7 @@ const ShapeList = () => {
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       defaultSortOrder: "descend",
-    },    
+    },
     {
       title: "Description",
       dataIndex: "description",
@@ -58,13 +58,13 @@ const ShapeList = () => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/shape/edit/" + record.id}>
+            <Link to={"/warehouse/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"               
+                size="small"
               ></Button>
             </Link>
 
@@ -85,7 +85,7 @@ const ShapeList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("shapes");
+    const result = await b.getAll("warehouses");
     //  console.log(result);
     setData(result);
   };
@@ -93,9 +93,9 @@ const ShapeList = () => {
   useEffect(() => {
     getAllList();
   }, []);
-  
+
   const showModal = (recordId) => {
-        setDeletedId(recordId);
+    setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -107,23 +107,35 @@ const ShapeList = () => {
     try {
       // console.log('selected id : ', deletedId);
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-      //console.log('postData=', postData);     
-      const res = await b.request("shapes", postData, "patch");
+      const postData = {
+        isDeleted: true,
+        id: deletedId,
+        deletedBy: 1,
+        deletedDttm: "" + new Date().getTime(),
+      };
+      //console.log('postData=', postData);
+      const res = await b.request("warehouses", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
-        getAllList();        
-       
+        getAllList();
       }
-
     } catch (error) {}
   };
   return (
     <Grid container spacing={3}>
-      {message && <Grid item xs={12}>
-        <Alert message={message} type="success" closable onClose={()=>{setMessage("")}} />
-      </Grid>}
+      {message && (
+        <Grid item xs={12}>
+          <Alert
+            message={message}
+            type="success"
+            closable
+            onClose={() => {
+              setMessage("");
+            }}
+          />
+        </Grid>
+      )}
       <Grid item xs={12}>
         <Stack
           direction="row"
@@ -131,14 +143,14 @@ const ShapeList = () => {
           alignItems="baseline"
           sx={{ mb: { xs: -0.5, sm: 0.5 } }}
         >
-          <Typography variant="h3">Shape List</Typography>
+          <Typography variant="h3">WareHouse List</Typography>
 
           <Button
             type="primary"
             id="btnCreate"
             name="btnCreate"
             onClick={() => {
-              navigate("/shape/add");
+              navigate("/warehouse/add");
             }}
           >
             Create
@@ -163,4 +175,4 @@ const ShapeList = () => {
   );
 };
 
-export default ShapeList;
+export default WareHouseList;

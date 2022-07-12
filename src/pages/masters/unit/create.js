@@ -13,8 +13,8 @@ const UnitAdd = () => {
     const initialFormValues = {
         id: null,
         name: '',
-        shortName: '',
-        description: ''
+        shortName: ''
+        
     };
     //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
     const getRecordData = async (id) => {
@@ -25,8 +25,7 @@ const UnitAdd = () => {
        
         form.setFieldsValue({
             name: initialFormValues.name,
-            shortName: initialFormValues.shortName,
-            
+            shortName: initialFormValues.shortName,            
         });
     };
 
@@ -65,8 +64,7 @@ const UnitAdd = () => {
         let postData = {
             id: id,
             name: data.name,
-            shortName: data.shortName,
-            description: data.description,
+            shortName: data.shortName,            
             updatedDttm: '' + new Date().getTime(),
             updatedBy: 1
         };        

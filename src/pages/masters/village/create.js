@@ -15,7 +15,7 @@ const VillageAdd = () => {
   const [stateList, setStateList] = useState([]);
   const [selectedStateId, setStateId] = useState(0);
 
-  const [districtList, setDistrictList] = useState([]);
+  const [districtList, setDistrictList] = useState(['']);
   const [selectedDistrictId, setDistrictId] = useState(0);
 
   const [talukaList, setTalukaList] = useState([]);
@@ -41,9 +41,9 @@ const VillageAdd = () => {
     initialFormValues.districtId = result.districtId;
     initialFormValues.talukaId = result.talukaId;
 
-    changeCountryHandler(initialFormValues.countryId);   
+    changeCountryHandler(initialFormValues.countryId);
     changeStateHandler(result.stateId);
-    changeDistrictHandler(result.districtId); 
+    changeDistrictHandler(result.districtId);
 
     form.setFieldsValue({
       name: initialFormValues.name,
@@ -58,84 +58,86 @@ const VillageAdd = () => {
 
   const getCountryList = async () => {
     const b = new BaseApi();
-    const counrtyresult = await b.getListKV("countries");    
+    const counrtyresult = await b.getListKV("countries");
     setCountryList(counrtyresult);
   };
   const getStateList = async (id) => {
-    const b = new BaseApi();    
+    const b = new BaseApi();
     const stateresult = await b.getListByParentId(
       "states",
       "getListByCountryId",
       id
     );
     //console.log(stateresult);
-    setStateList(stateresult);  
+    setStateList(stateresult);
   };
 
   const getDistrictList = async (id) => {
-    const b = new BaseApi();    
+    const b = new BaseApi();
     const result = await b.getListByParentId(
       "districts",
       "getListByStateId",
       id
     );
     //console.log(result);
-    setDistrictList(result); 
-   
+    setDistrictList(result);
   };
 
   const getTalukaList = async (id) => {
-    const b = new BaseApi();    
+    const b = new BaseApi();
     const result = await b.getListByParentId(
       "talukas",
       "getListByDistrictId",
       id
     );
     console.log(result);
-    setTalukaList(result);  
-   
+    setTalukaList(result);
   };
   useEffect(() => {
     getCountryList();
     if (!isAddMode) {
-      getRecordData(id);      
+      getRecordData(id);
     }
   }, [id]);
 
   const changeCountryHandler = (value) => {
-  //  console.log("Selected Country Id :" + value);
-    if (value > 0) { 
-        form.setFieldsValue({            
-            stateId: '--- Select ---',
-            districtId: '--- Select ---',
-            talukaId: '--- Select ---',
-         });        
+    //  console.log("Selected Country Id :" + value);
+    if (value > 0) {
+      form.setFieldsValue({
+        stateId: "--- Select ---",
+       districtId: "--- Select ---",
+        talukaId: "--- Select ---",
+       
+      });
       setCountryId(value);
+      setDistrictList('');  
+      setTalukaList('');     
       getStateList(value);
     }
   };
   const changeStateHandler = (value) => {
-      //console.log("Selected State Id :" + value);
-      if (value > 0) { 
-          form.setFieldsValue({            
-              districtId: '--- Select ---',
-              talukaId: '--- Select ---',
-           });        
-        setStateId(value);
-        getDistrictList(value);
-      }
-    };
+    //console.log("Selected State Id :" + value);
+    if (value > 0) {
+      form.setFieldsValue({
+        districtId: "--- Select ---",
+        talukaId: "--- Select ---",
+      });
+      setStateId(value);
+      setTalukaList('');   
+      getDistrictList(value);
+    }
+  };
 
-    const changeDistrictHandler = (value) => {
-        //console.log("Selected State Id :" + value);
-        if (value > 0) { 
-            form.setFieldsValue({            
-                talukaId: '--- Select ---',
-             });        
-          setDistrictId(value);
-          getTalukaList(value);
-        }
-      };
+  const changeDistrictHandler = (value) => {
+    //console.log("Selected State Id :" + value);
+    if (value > 0) {
+      form.setFieldsValue({
+        talukaId: "--- Select ---",
+      });
+      setDistrictId(value);
+      getTalukaList(value);
+    }
+  };
 
   const onFinish = (values) => {
     // console.log('Success:', id + isAddMode);
@@ -194,7 +196,7 @@ const VillageAdd = () => {
     <Form
       name="frmtaluka"
       initialValues={{
-        remember: true       
+        remember: true,
       }}
       form={form} // Add this!
       layout="vertical"
@@ -300,7 +302,7 @@ const VillageAdd = () => {
           <Form.Item
             label="State"
             id="stateId"
-            name="stateId"           
+            name="stateId"
             rules={[
               {
                 required: true,
@@ -308,15 +310,15 @@ const VillageAdd = () => {
               },
             ]}
           >
-            <Select placeholder="--- Select ---"  onChange={changeStateHandler}>
-               {stateList &&
+            <Select placeholder="--- Select ---" onChange={changeStateHandler}>
+              {stateList &&
                 stateList.map((row, index) => {
                   return (
                     <option key={index} value={row.id}>
                       {row.name}
                     </option>
                   );
-                })} 
+                })}
             </Select>
           </Form.Item>
         </Grid>
@@ -324,7 +326,7 @@ const VillageAdd = () => {
           <Form.Item
             label="District"
             id="districtId"
-            name="districtId"           
+            name="districtId"
             rules={[
               {
                 required: true,
@@ -332,15 +334,18 @@ const VillageAdd = () => {
               },
             ]}
           >
-            <Select placeholder="--- Select ---" onChange={changeDistrictHandler}>
-               {districtList &&
+            <Select
+              placeholder="--- Select ---"
+              onChange={changeDistrictHandler}
+            >
+              {districtList &&
                 districtList.map((row, index) => {
                   return (
                     <option key={index} value={row.id}>
                       {row.name}
                     </option>
                   );
-                })} 
+                })}
             </Select>
           </Form.Item>
         </Grid>
@@ -348,7 +353,7 @@ const VillageAdd = () => {
           <Form.Item
             label="Taluka"
             id="talukaId"
-            name="talukaId"           
+            name="talukaId"
             rules={[
               {
                 required: true,
@@ -357,14 +362,14 @@ const VillageAdd = () => {
             ]}
           >
             <Select placeholder="--- Select ---">
-               {talukaList &&
+              {talukaList &&
                 talukaList.map((row, index) => {
                   return (
                     <option key={index} value={row.id}>
                       {row.name}
                     </option>
                   );
-                })} 
+                })}
             </Select>
           </Form.Item>
         </Grid>

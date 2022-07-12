@@ -88,9 +88,11 @@ const TalukaAdd = () => {
         form.setFieldsValue({            
             stateId: '--- Select ---',
             districtId: '--- Select ---',
-         });        
+         });  
+         setDistrictList('');       
       setCountryId(value);
       getStateList(value);
+
     }
   };
   const changeStateHandler = (value) => {

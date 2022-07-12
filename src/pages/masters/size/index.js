@@ -113,7 +113,9 @@ const SizeList = () => {
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
-        getAllList();        
+        //getAllList(); 
+        navigate('/size', { state: { message:'Record is deleted successfully.' }}) 
+       window.location.reload();         
        
       }
 

@@ -56,6 +56,10 @@ const StateList = Loadable(lazy(() => import('pages/masters/state/index')));
 const State = Loadable(lazy(() => import('pages/masters/state/create')));
 const DistrictList = Loadable(lazy(() => import('pages/masters/district/index')));
 const District = Loadable(lazy(() => import('pages/masters/district/create')));
+const TalukaList = Loadable(lazy(() => import('pages/masters/taluka/index')));
+const Taluka = Loadable(lazy(() => import('pages/masters/taluka/create')));
+const VillageList = Loadable(lazy(() => import('pages/masters/village/index')));
+const Village = Loadable(lazy(() => import('pages/masters/village/create')));
 
 
 
@@ -298,6 +302,30 @@ const MainRoutes = {
         {
             path: 'district/edit/:id',
             element: <District/>
+        },
+        {
+            path: 'taluka',
+            element: <TalukaList/>
+        }, 
+        {
+            path: 'taluka/add',
+            element: <Taluka/>
+        },
+        {
+            path: 'taluka/edit/:id',
+            element: <Taluka/>
+        },
+        {
+            path: 'village',
+            element: <VillageList/>
+        }, 
+        {
+            path: 'village/add',
+            element: <Village/>
+        },
+        {
+            path: 'village/edit/:id',
+            element: <Village/>
         },
         {
             path: 'util-color',

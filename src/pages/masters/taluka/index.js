@@ -12,7 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
 
-const WareHouseList = () => {
+const TalukaList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -39,10 +39,30 @@ const WareHouseList = () => {
       defaultSortOrder: "descend",
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "Short Name",
+      dataIndex: "shortName",
+      key: "shortName",
     },
+    {
+      title: "Code",
+      dataIndex: "code",
+      key: "code",
+    },
+    {
+      title: "Country",
+      dataIndex: "countryName",
+      key: "countryName",
+    },
+    {
+        title: "State",
+        dataIndex: "stateName",
+        key: "stateName",
+      },
+      {
+        title: "District",
+        dataIndex: "districtName",
+        key: "districtName",
+      },
     {
       title: "Status",
       dataIndex: "status",
@@ -58,7 +78,7 @@ const WareHouseList = () => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/warehouse/edit/" + record.id}>
+            <Link to={"/taluka/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
@@ -85,7 +105,7 @@ const WareHouseList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("warehouses");
+    const result = await b.getJoinList("talukas");
     //  console.log(result);
     setData(result);
   };
@@ -114,12 +134,12 @@ const WareHouseList = () => {
         deletedDttm: "" + new Date().getTime(),
       };
       //console.log('postData=', postData);
-      const res = await b.request("warehouses", postData, "patch");
+      const res = await b.request("talukas", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
-        //getAllList();
-        navigate('/warehouse', { state: { message:'Record is deleted successfully.' }}) 
+       // getAllList();
+       navigate('/taluka', { state: { message:'Record is deleted successfully.' }}) 
        window.location.reload();  
       }
     } catch (error) {}
@@ -145,14 +165,14 @@ const WareHouseList = () => {
           alignItems="baseline"
           sx={{ mb: { xs: -0.5, sm: 0.5 } }}
         >
-          <Typography variant="h3">WareHouse List</Typography>
+          <Typography variant="h3">Taluka List</Typography>
 
           <Button
             type="primary"
             id="btnCreate"
             name="btnCreate"
             onClick={() => {
-              navigate("/warehouse/add");
+              navigate("/taluka/add");
             }}
           >
             Create
@@ -176,5 +196,4 @@ const WareHouseList = () => {
     </Grid>
   );
 };
-
-export default WareHouseList;
+export default TalukaList;

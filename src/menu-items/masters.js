@@ -178,6 +178,22 @@ const masters = {
             url: '/district',
             icon: icons.ProfileOutlined,
             target: false
+        },
+        {
+            id: 'taluka',
+            title: 'Taluka',
+            type: 'item',
+            url: '/taluka',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'village',
+            title: 'Village',
+            type: 'item',
+            url: '/village',
+            icon: icons.ProfileOutlined,
+            target: false
         }
 
 

@@ -6,34 +6,30 @@ import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
 const { TextArea } = Input;
 
-const ProductMainGroupAdd = () => {
+const SizeAdd = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const isAddMode = !id;
     const [form] = Form.useForm();
     const initialFormValues = {
         id: null,
-        name: '',
-        shortName: '',
+        name: '',        
         description: ''
     };
-    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
+    
     const getRecordData = async (id) => {
         const b = new BaseApi();
-        const result = await b.getById('productmaingroups', id);
-        initialFormValues.name = result.name;
-        initialFormValues.shortName = result.shortName;
+        const result = await b.getById('sizes', id);
+        initialFormValues.name = result.name;       
         initialFormValues.description = result.description;
 
         form.setFieldsValue({
-            name: initialFormValues.name,
-            shortName: initialFormValues.shortName,
+            name: initialFormValues.name,           
             description: initialFormValues.description
         });
     };
 
-    useEffect(() => {
-        // console.log('test by rashid');
+    useEffect(() => {        
         if (!isAddMode) {
             getRecordData(id);
         }
@@ -52,38 +48,36 @@ const ProductMainGroupAdd = () => {
         //  console.log('insert functio is call :', data);
         let postData = {
             id: id,
-            name: data.name,
-            shortName: data.shortName,
+            name: data.name,            
             description: data.description,
             createdDttm: '' + new Date().getTime(),
             createdBy: 1
         };
         const baseApi = new BaseApi();
-        const result = await baseApi.request('productmaingroups', postData, 'post');
+        const result = await baseApi.request('sizes', postData, 'post');
         if (result.status === 200) {            
-            navigate('/product-main-group', { state: { message:'Record is successfully created.' }})
+            navigate('/size', { state: { message:'Record is successfully created.' }})
         }
     };
     const updateData = async (id, data) => {
       
         let postData = {
             id: id,
-            name: data.name,
-            shortName: data.shortName,
+            name: data.name,            
             description: data.description,
             updatedDttm: '' + new Date().getTime(),
             updatedBy: 1
         };        
         const baseApi = new BaseApi();
-        const result = await baseApi.request('productmaingroups', postData, 'patch');
+        const result = await baseApi.request('sizes', postData, 'patch');
         if (result.status === 200) {
-            navigate('/product-main-group', { state: { message:'Record is successfully updated.' }})
+            navigate('/size', { state: { message:'Record is successfully updated.' }})
         }
     };
 
     return (
         <Form
-            name="frmproductmaingroup"
+            name="frmsize"
             initialValues={{
                 remember: true
             }}
@@ -99,57 +93,37 @@ const ProductMainGroupAdd = () => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
-                        <Typography variant="h3">{isAddMode ? 'Create Main Group' : 'Edit Main Group'}</Typography>
+                        <Typography variant="h3">{isAddMode ? 'Create Size' : 'Edit Size'}</Typography>
                         <div>
                             <Button type="primary" htmlType="submit" style={{marginRight:'10px'}}>
                                 Save
                             </Button>
-                            <Link to={'/product-main-group'}>
+                            <Link to={'/size'}>
                                 <Button type="danger">Cancel</Button>
                             </Link>
                         </div>
                     </Stack>
                 </Grid>
 
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <Form.Item
                         label="Name"
                         name="name"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please enter group name.'
+                                message: 'Please enter name.'
                             }
                         ]}
                     >
                         <Input />
                     </Form.Item>
                 </Grid>
-                <Grid item xs={4}>
-                    <Form.Item
-                        label="Short Name"
-                        name="shortName"
-                        id="shortName"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please enter short name.'
-                            }
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                </Grid>
-                <Grid item xs={4}>
+               
+                <Grid item xs={6}>
                     <Form.Item
                         label="Description"
-                        name="description"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please enter description.'
-                            }
-                        ]}
+                        name="description"                        
                     >
                         <TextArea rows={4} />
                     </Form.Item>
@@ -159,4 +133,4 @@ const ProductMainGroupAdd = () => {
     );
 };
 
-export default ProductMainGroupAdd;
+export default SizeAdd;

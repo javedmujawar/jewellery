@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Divider, Modal, Alert } from "antd";
+import { Table, Button, Divider, Modal, Alert, Tag } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -12,7 +12,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
 
-const ProductMainGroupList = () => {
+
+const GstList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -43,11 +44,27 @@ const ProductMainGroupList = () => {
       dataIndex: "shortName",
       key: "shortName",
     },
+    
+      {
+        title: "Percantage",
+        dataIndex: "percentageValue",
+        key: "percentageValue",
+      },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "IGST Value",
+      dataIndex: "igstValue",
+      key: "igstValue",
     },
+    {
+        title: "CGST Value",
+        dataIndex: "cgstValue",
+        key: "cgstValue",
+      },
+      {
+        title: "SGST Value",
+        dataIndex: "sgstValue",
+        key: "sgstValue",
+      },
     {
       title: "Status",
       dataIndex: "status",
@@ -63,7 +80,7 @@ const ProductMainGroupList = () => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/product-main-group/edit/" + record.id}>
+            <Link to={"/gst/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
@@ -90,7 +107,7 @@ const ProductMainGroupList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("productmaingroups");
+    const result = await b.getAll("gsts");
     //  console.log(result);
     setData(result);
   };
@@ -114,7 +131,7 @@ const ProductMainGroupList = () => {
       const b = new BaseApi();
       const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
       //console.log('postData=', postData);     
-      const res = await b.request("productmaingroups", postData, "patch");
+      const res = await b.request("gsts", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
@@ -136,14 +153,14 @@ const ProductMainGroupList = () => {
           alignItems="baseline"
           sx={{ mb: { xs: -0.5, sm: 0.5 } }}
         >
-          <Typography variant="h3">Main Group List</Typography>
+          <Typography variant="h3">GST List</Typography>
 
           <Button
             type="primary"
             id="btnCreate"
             name="btnCreate"
             onClick={() => {
-              navigate("/product-main-group/add");
+              navigate("/gst/add");
             }}
           >
             Create
@@ -168,4 +185,4 @@ const ProductMainGroupList = () => {
   );
 };
 
-export default ProductMainGroupList;
+export default GstList;

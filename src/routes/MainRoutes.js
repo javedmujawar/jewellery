@@ -12,20 +12,50 @@ const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
 
 // render - utilities
 const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
-const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
+const UtilColor = Loadable(lazy(() => import('pages/components-overview/Color')));
 const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
 const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
-const CustomerList = Loadable(lazy(() => import('pages/masters/customer/index')));
-const Customer = Loadable(lazy(() => import('pages/masters/customer/create')));
-const ProductGroupList = Loadable(lazy(() => import('pages/masters/productgroup/index')));
-const ProductGroup = Loadable(lazy(() => import('pages/masters/productgroup/create')));
+
 
 const ProductMainGroupList = Loadable(lazy(() => import('pages/masters/productmaingroup/index')));
 const ProductMainGroup = Loadable(lazy(() => import('pages/masters/productmaingroup/create')));
-
+const ProductGroupList = Loadable(lazy(() => import('pages/masters/productgroup/index')));
+const ProductGroup = Loadable(lazy(() => import('pages/masters/productgroup/create')));
+const ProductSubGroupList = Loadable(lazy(() => import('pages/masters/productsubgroup/index')));
+const ProductSubGroup = Loadable(lazy(() => import('pages/masters/productsubgroup/create')));
 const UnitList = Loadable(lazy(() => import('pages/masters/unit/index')));
-const UnitMaster = Loadable(lazy(() => import('pages/masters/unit/create')));
+const Unit = Loadable(lazy(() => import('pages/masters/unit/create')));
+const PurityList = Loadable(lazy(() => import('pages/masters/purity/index')));
+const Purity = Loadable(lazy(() => import('pages/masters/purity/create')));
+const CategoryList = Loadable(lazy(() => import('pages/masters/category/index')));
+const Category = Loadable(lazy(() => import('pages/masters/category/create')));
+const SubCategoryList = Loadable(lazy(() => import('pages/masters/subcategory/index')));
+const SubCategory = Loadable(lazy(() => import('pages/masters/subcategory/create')));
+const ColorList = Loadable(lazy(() => import('pages/masters/color/index')));
+const Color = Loadable(lazy(() => import('pages/masters/color/create')));
+const SizeList = Loadable(lazy(() => import('pages/masters/size/index')));
+const Size = Loadable(lazy(() => import('pages/masters/size/create')));
+const ShapeList = Loadable(lazy(() => import('pages/masters/shape/index')));
+const Shape = Loadable(lazy(() => import('pages/masters/shape/create')));
+const HsnSacList = Loadable(lazy(() => import('pages/masters/hsnsac/index')));
+const HsnSac = Loadable(lazy(() => import('pages/masters/hsnsac/create')));
+const GstList = Loadable(lazy(() => import('pages/masters/gst/index')));
+const Gst = Loadable(lazy(() => import('pages/masters/gst/create')));
+const WareHouseList = Loadable(lazy(() => import('pages/masters/warehouse/index')));
+const WareHouse = Loadable(lazy(() => import('pages/masters/warehouse/create')));
 
+const BankList = Loadable(lazy(() => import('pages/masters/bank/index')));
+const Bank = Loadable(lazy(() => import('pages/masters/bank/create')));
+const PaymentTypeList = Loadable(lazy(() => import('pages/masters/paymenttype/index')));
+const PaymentType = Loadable(lazy(() => import('pages/masters/paymenttype/create')));
+const CounterList = Loadable(lazy(() => import('pages/masters/counter/index')));
+const Counter = Loadable(lazy(() => import('pages/masters/counter/create')));
+const CountryList = Loadable(lazy(() => import('pages/masters/country/index')));
+const Country = Loadable(lazy(() => import('pages/masters/country/create')));
+
+
+
+//PaymentTypeList
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -36,45 +66,214 @@ const MainRoutes = {
             path: '/',
             element: <DashboardDefault />
         },
+        
         {
-            path: 'customer',
-            element: <CustomerList />
+            path: 'product-main-group',
+            element: <ProductMainGroupList />
         },
         {
-            path: 'customer-create',
-            element: <Customer />
+            path: 'product-main-group/add',
+            element: <ProductMainGroup />
+        },
+        {
+            path: 'product-main-group/edit/:id',
+            element: <ProductMainGroup />
         },
         {
             path: 'productgroup',
             element: <ProductGroupList />
         },
         {
-            path: 'productgroup-create',
+            path: 'productgroup/add',
             element: <ProductGroup />
         },
         {
-            path: 'product-main-group',
-            element: <ProductMainGroupList />
+            path: 'productgroup/edit/:id',
+            element: <ProductGroup />
         },
         {
-            path: 'product-main-group-create/add',
-            element: <ProductMainGroup />
+            path: 'productsubgroup',
+            element: <ProductSubGroupList />
         },
         {
-            path: 'product-main-group-create/edit/:id',
-            element: <ProductMainGroup />
+            path: 'productsubgroup/add',
+            element: <ProductSubGroup />
         },
         {
-            path: 'unitmaster',
+            path: 'productsubgroup/edit/:id',
+            element: <ProductSubGroup />
+        },
+        {
+            path: 'unit',
             element: <UnitList />
+        },        
+        {
+            path: 'unit/add',
+            element: <Unit/>
         },
         {
-            path: 'unit-create',
-            element: <UnitMaster />
+            path: 'unit/edit/:id',
+            element: <Unit/>
+        },
+        {
+            path: 'purity',
+            element: <PurityList />
+        },        
+        {
+            path: 'purity/add',
+            element: <Purity/>
+        },
+        {
+            path: 'purity/edit/:id',
+            element: <Purity/>
+        },
+        {
+            path: 'category',
+            element: <CategoryList />
+        },        
+        {
+            path: 'category/add',
+            element: <Category/>
+        },
+        {
+            path: 'category/edit/:id',
+            element: <Category/>
+        },
+        {
+            path: 'subcategory',
+            element: <SubCategoryList />
+        },        
+        {
+            path: 'subcategory/add',
+            element: <SubCategory/>
+        },
+        {
+            path: 'subcategory/edit/:id',
+            element: <SubCategory/>
         },
         {
             path: 'color',
-            element: <Color />
+            element: <ColorList />
+        },        
+        {
+            path: 'color/add',
+            element: <Color/>
+        },
+        {
+            path: 'color/edit/:id',
+            element: <Color/>
+        },
+        {
+            path: 'size',
+            element: <SizeList />
+        },        
+        {
+            path: 'size/add',
+            element: <Size/>
+        },
+        {
+            path: 'size/edit/:id',
+            element: <Size/>
+        },
+        {
+            path: 'shape',
+            element: <ShapeList />
+        },        
+        {
+            path: 'shape/add',
+            element: <Shape/>
+        },
+        {
+            path: 'shape/edit/:id',
+            element: <Shape/>
+        },
+        {
+            path: 'hsnsac',
+            element: <HsnSacList />
+        },        
+        {
+            path: 'hsnsac/add',
+            element: <HsnSac/>
+        },
+        {
+            path: 'hsnsac/edit/:id',
+            element: <HsnSac/>
+        },
+        {
+            path: 'gst',
+            element: <GstList/>
+        },        
+        {
+            path: 'gst/add',
+            element: <Gst/>
+        },
+        {
+            path: 'gst/edit/:id',
+            element: <Gst/>
+        },
+        {
+            path: 'warehouse',
+            element: <WareHouseList/>
+        },        
+        {
+            path: 'warehouse/add',
+            element: <WareHouse/>
+        },
+        {
+            path: 'warehouse/edit/:id',
+            element: <WareHouse/>
+        },
+        {
+            path: 'bank',
+            element: <BankList/>
+        },        
+        {
+            path: 'bank/add',
+            element: <Bank/>
+        },
+        {
+            path: 'bank/edit/:id',
+            element: <Bank/>
+        },
+        {
+            path: 'payment-type',
+            element: <PaymentTypeList/>
+        },        
+        {
+            path: 'payment-type/add',
+            element: <PaymentType/>
+        },
+        {
+            path: 'payment-type/edit/:id',
+            element: <PaymentType/>
+        },
+        {
+            path: 'counter',
+            element: <CounterList/>
+        },        
+        {
+            path: 'counter/add',
+            element: <Counter/>
+        },
+        {
+            path: 'counter/edit/:id',
+            element: <Counter/>
+        },
+        {
+            path: 'country',
+            element: <CountryList/>
+        },        
+        {
+            path: 'country/add',
+            element: <Country/>
+        },
+        {
+            path: 'country/edit/:id',
+            element: <Country/>
+        },
+        {
+            path: 'util-color',
+            element: <UtilColor />
         },
         {
             path: 'dashboard',

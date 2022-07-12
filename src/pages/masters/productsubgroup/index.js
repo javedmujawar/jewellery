@@ -12,7 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
 
-const ProductMainGroupList = () => {
+const ProductSubGroupList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -44,6 +44,16 @@ const ProductMainGroupList = () => {
       key: "shortName",
     },
     {
+        title: "Main Group Name",
+        dataIndex: "maingroupName",
+        key: "maingroupName",
+      },
+      {
+        title: "Group Name",
+        dataIndex: "groupName",
+        key: "groupName",
+      },
+    {
       title: "Description",
       dataIndex: "description",
       key: "description",
@@ -63,7 +73,7 @@ const ProductMainGroupList = () => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/product-main-group/edit/" + record.id}>
+            <Link to={"/productsubgroup/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
@@ -90,7 +100,7 @@ const ProductMainGroupList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("productmaingroups");
+    const result = await b.getJoinList("productsubgroups");
     //  console.log(result);
     setData(result);
   };
@@ -114,7 +124,7 @@ const ProductMainGroupList = () => {
       const b = new BaseApi();
       const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
       //console.log('postData=', postData);     
-      const res = await b.request("productmaingroups", postData, "patch");
+      const res = await b.request("productsubgroups", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
@@ -136,14 +146,14 @@ const ProductMainGroupList = () => {
           alignItems="baseline"
           sx={{ mb: { xs: -0.5, sm: 0.5 } }}
         >
-          <Typography variant="h3">Main Group List</Typography>
+          <Typography variant="h3">Sub Group List</Typography>
 
           <Button
             type="primary"
             id="btnCreate"
             name="btnCreate"
             onClick={() => {
-              navigate("/product-main-group/add");
+              navigate("/productsubgroup/add");
             }}
           >
             Create
@@ -168,4 +178,4 @@ const ProductMainGroupList = () => {
   );
 };
 
-export default ProductMainGroupList;
+export default ProductSubGroupList;

@@ -1,66 +1,166 @@
-import { Table, Button } from 'antd';
-import { Link } from 'react-router-dom';
-
+import { useState, useEffect } from "react";
+import { Table, Button, Divider, Modal, Alert } from "antd";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import BaseApi from "services/BaseApi";
+import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
-import { Grid, Stack, Typography } from '@mui/material';
-//import AuthWrapper from './AuthWrapper';
+import { Grid, Stack, Typography } from "@mui/material";
+import { statusTag } from "../../../utility/Common";
 
-const data = [
+const UnitList = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [message, setMessage] = useState(
+    location.state?.message ? location.state?.message : ""
+  );
+  const [data, setData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [deletedId, setDeletedId] = useState(0);
+  
+  const columns = [
     {
-        id: '1',
-        name: '10 GM',
-        short_name: '10gm'
+      title: "Sr.No",
+      dataIndex: "id",
+      key: "id",
+      //defaultSortOrder: 'descend',
+      defaultSortOrder: "ascend",
+      sorter: (a, b) => a.id - b.id,
     },
     {
-        id: '2',
-        name: '50 GM',
-        short_name: '50gm'
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      sorter: (a, b) => a.name.length - b.name.length,
+      defaultSortOrder: "descend",
     },
     {
-        id: '3',
-        name: '100 GM',
-        short_name: '100gm'
-    }
-];
+      title: "Short Name",
+      dataIndex: "shortName",
+      key: "shortName",
+    },    
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text, statusValue) => {
+        return statusTag(statusValue.status);
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      render: (text, record) => {
+        return (
+          <span>
+            <Link to={"/unit/edit/" + record.id}>
+              <Button
+                type="primary"
+                id="btnEdit"
+                name="btnEdit"
+                icon={<EditOutlined />}
+                size="small"               
+              ></Button>
+            </Link>
 
-const columns = [
-    {
-        title: 'Sr.No',
-        dataIndex: 'id',
-        key: 'id',
-        //defaultSortOrder: 'descend',
-        defaultSortOrder: 'ascend',
-        sorter: (a, b) => a.id - b.id
+            <Divider type="vertical" />
+            <Button
+              type="danger"
+              id="btnDelete"
+              name="btnDelete"
+              size="small"
+              icon={<DeleteOutlined />}
+              onClick={() => showModal(record.id)}
+            ></Button>
+          </span>
+        );
+      },
     },
-    {
-        title: 'Unit Name',
-        dataIndex: 'name',
-        key: 'name',
-        sorter: (a, b) => a.name.length - b.name.length,
-        defaultSortOrder: 'descend'
-    },
-    {
-        title: 'Unit Short Name',
-        dataIndex: 'short_name',
-        key: 'short_name'
-    }
-];
-const UnitList = () => (
+  ];
+
+  const getAllList = async () => {
+    const b = new BaseApi();
+    const result = await b.getAll("units");
+    //  console.log(result);
+    setData(result);
+  };
+
+  useEffect(() => {
+    getAllList();
+  }, []);
+  
+  const showModal = (recordId) => {
+        setDeletedId(recordId);
+    setModalVisible(true);
+  };
+  const handleCancel = () => {
+    setDeletedId(0);
+    setModalVisible(false);
+  };
+
+  const handleOk = async () => {
+    try {
+      // console.log('selected id : ', deletedId);
+      const b = new BaseApi();
+      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
+      //console.log('postData=', postData);     
+      const res = await b.request("units", postData, "patch");
+      if (res.status === 200) {
+        setModalVisible(false);
+        setDeletedId(0);
+        getAllList();        
+       
+      }
+
+    } catch (error) {}
+  };
+  return (
     <Grid container spacing={3}>
-        <Grid item xs={12}>
-            <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
-                <Typography variant="h3">Unit Master List</Typography>
-                {/* <Typography component={Link} to="/productgroup-create" variant="body1" sx={{ textDecoration: 'none' }} color="primary">
-                    Create
-                </Typography> */}
-                <Link to={'//unit-create'}>
-                    <Button type="primary">Create</Button>
-                </Link>
-            </Stack>
-        </Grid>
-        <Grid item xs={12}>
-            <Table columns={columns} dataSource={data} bordered />;
-        </Grid>
+      {message && <Grid item xs={12}>
+        <Alert message={message} type="success" closable onClose={()=>{setMessage("")}} />
+      </Grid>}
+      <Grid item xs={12}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="baseline"
+          sx={{ mb: { xs: -0.5, sm: 0.5 } }}
+        >
+          <Typography variant="h3">Unit List</Typography>
+
+          <Button
+            type="primary"
+            id="btnCreate"
+            name="btnCreate"
+            onClick={() => {
+              navigate("/unit/add");
+            }}
+          >
+            Create
+          </Button>
+        </Stack>
+      </Grid>
+      <Grid item xs={12}>
+        <Table rowKey="id" columns={columns} dataSource={data} bordered />;
+      </Grid>
+
+      <Modal
+        visible={modalVisible}
+        title="Are you sure delete this record?"
+        icon={<ExclamationCircleOutlined />}
+        okText="Yes"
+        okType="danger"
+        cancelText="No"
+        onOk={() => handleOk()}
+        onCancel={() => handleCancel()}
+      ></Modal>
     </Grid>
-);
+  );
+};
+
 export default UnitList;

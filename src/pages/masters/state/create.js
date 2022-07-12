@@ -1,39 +1,49 @@
-import { useEffect } from "react";
-import { Button, Form, Input } from "antd";
+import { useEffect, useState } from "react";
+import { Button, Form, Input, Select } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
-const { TextArea } = Input;
 
-const CountryAdd = () => {
+
+const StateAdd = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isAddMode = !id;
   const [form] = Form.useForm();
+  const [countryList, setCountryList] = useState([]);
   const initialFormValues = {
     id: null,
     name: "",
     shortName: "",
-    phoneCode: "",
+    countryId : "",
+    code: "",
   };
-  //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
+  
   const getRecordData = async (id) => {
     const b = new BaseApi();
-    const result = await b.getById("countries", id);
+    const result = await b.getById("states", id);
     initialFormValues.name = result.name;
     initialFormValues.shortName = result.shortName;
-    initialFormValues.phoneCode = result.phoneCode;
+    initialFormValues.code = result.code;
+    initialFormValues.countryId = result.countryId;
 
     form.setFieldsValue({
       name: initialFormValues.name,
       shortName: initialFormValues.shortName,
-      phoneCode: initialFormValues.phoneCode,
+      code: initialFormValues.code,
+      countryId: initialFormValues.countryId,
     });
   };
 
+  const getCountryList = async () => {
+    const b = new BaseApi();
+    const counrtyresult = await b.getListKV("countries");
+    //console.log(counrtyresult);
+    setCountryList(counrtyresult);
+  };
   useEffect(() => {
-    // console.log('test by rashid');
+    getCountryList();
     if (!isAddMode) {
       getRecordData(id);
     }
@@ -54,14 +64,15 @@ const CountryAdd = () => {
       id: id,
       name: data.name,
       shortName: data.shortName,
-      phoneCode: data.phoneCode,
+      code: data.code,
+      countryId: data.countryId,
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
     const baseApi = new BaseApi();
-    const result = await baseApi.request("countries", postData, "post");
+    const result = await baseApi.request("states", postData, "post");
     if (result.status === 200) {
-      navigate("/country", {
+      navigate("/state", {
         state: { message: "Record is successfully created." },
       });
     }
@@ -71,18 +82,19 @@ const CountryAdd = () => {
       id: id,
       name: data.name,
       shortName: data.shortName,
-      phoneCode: data.phoneCode,
+      code: data.code,
+      countryId: data.countryId,
       updatedDttm: "" + new Date().getTime(),
       updatedBy: 1,
     };
     const baseApi = new BaseApi();
     const result = await baseApi.request(
-      "countries",
+      "states",
       postData,
       "patch"
     );
     if (result.status === 200) {
-      navigate("/country", {
+      navigate("/state", {
         state: { message: "Record is successfully updated." },
       });
     }
@@ -90,7 +102,7 @@ const CountryAdd = () => {
 
   return (
     <Form
-      name="frmcountry"
+      name="frmstate"
       initialValues={{
         remember: true,
       }}
@@ -112,7 +124,7 @@ const CountryAdd = () => {
             sx={{ mb: { xs: -0.5, sm: 0.5 } }}
           >
             <Typography variant="h3">
-              {isAddMode ? "Create Country" : "Edit Country"}
+              {isAddMode ? "Create State" : "Edit State"}
             </Typography>
             <div>
               <Button
@@ -122,14 +134,14 @@ const CountryAdd = () => {
               >
                 Save
               </Button>
-              <Link to={"/country"}>
+              <Link to={"/state"}>
                 <Button type="danger">Cancel</Button>
               </Link>
             </div>
           </Stack>
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Form.Item
             label="Name"
             name="name"
@@ -143,24 +155,48 @@ const CountryAdd = () => {
             <Input />
           </Form.Item>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Form.Item label="Short Name" name="shortName" id="shortName">
             <Input />
           </Form.Item>
         </Grid>
-        <Grid item xs={4}>
-          <Form.Item label="Phone Code" name="phoneCode" id="phoneCode"
+        <Grid item xs={3}>
+          <Form.Item label="Code" name="code" id="code"
           rules={[
             {
               required: true,
-              message: "Please enter Phone code.",
+              message: "Please enter code.",
             },
             {
                 pattern:new RegExp(/^[0-9]*$/),
-                message: "Please enter a valid  phone code value."
+                message: "Please enter a valid  code value."
               }
           ]}>
             <Input />
+          </Form.Item>
+        </Grid>
+        <Grid item xs={3}>
+          <Form.Item
+            label="Country"
+            id="countryId"
+            name="countryId"
+            rules={[
+              {
+                required: true,
+                message: "Please select country.",
+              },
+            ]}
+          >
+            <Select placeholder="--- Select ---">
+              {countryList &&
+                countryList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
           </Form.Item>
         </Grid>
        
@@ -169,4 +205,4 @@ const CountryAdd = () => {
   );
 };
 
-export default CountryAdd;
+export default StateAdd;

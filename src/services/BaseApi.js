@@ -38,6 +38,17 @@ class BaseApi {
                 console.log(err);
             });
     }
+    getListByParentId(url,methodname,parentId) {
+        return axios
+            .get(constant.apiBaseUrl + url + '/'+ methodname+'/'+parentId )
+            .then((response) => {
+              
+                return response.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
     getById(url, id) {
         return axios
             .get(constant.apiBaseUrl + url + '/' + id)

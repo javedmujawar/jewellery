@@ -52,6 +52,10 @@ const CounterList = Loadable(lazy(() => import('pages/masters/counter/index')));
 const Counter = Loadable(lazy(() => import('pages/masters/counter/create')));
 const CountryList = Loadable(lazy(() => import('pages/masters/country/index')));
 const Country = Loadable(lazy(() => import('pages/masters/country/create')));
+const StateList = Loadable(lazy(() => import('pages/masters/state/index')));
+const State = Loadable(lazy(() => import('pages/masters/state/create')));
+const DistrictList = Loadable(lazy(() => import('pages/masters/district/index')));
+const District = Loadable(lazy(() => import('pages/masters/district/create')));
 
 
 
@@ -272,9 +276,38 @@ const MainRoutes = {
             element: <Country/>
         },
         {
+            path: 'state',
+            element: <StateList/>
+        }, 
+        {
+            path: 'state/add',
+            element: <State/>
+        },
+        {
+            path: 'state/edit/:id',
+            element: <State/>
+        },
+        {
+            path: 'district',
+            element: <DistrictList/>
+        }, 
+        {
+            path: 'district/add',
+            element: <District/>
+        },
+        {
+            path: 'district/edit/:id',
+            element: <District/>
+        },
+        {
             path: 'util-color',
             element: <UtilColor />
         },
+        {
+            path: 'util-color',
+            element: <UtilColor />
+        },
+        
         {
             path: 'dashboard',
             children: [

@@ -162,6 +162,38 @@ const masters = {
             url: '/country',
             icon: icons.ProfileOutlined,
             target: false
+        },
+        {
+            id: 'state',
+            title: 'State',
+            type: 'item',
+            url: '/state',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'district',
+            title: 'District',
+            type: 'item',
+            url: '/district',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'taluka',
+            title: 'Taluka',
+            type: 'item',
+            url: '/taluka',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'village',
+            title: 'Village',
+            type: 'item',
+            url: '/village',
+            icon: icons.ProfileOutlined,
+            target: false
         }
 
 

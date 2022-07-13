@@ -116,9 +116,10 @@ const ProductMainGroupList = () => {
       //console.log('postData=', postData);     
       const res = await b.request("productmaingroups", postData, "patch");
       if (res.status === 200) {
-        setModalVisible(false);
-        setDeletedId(0);
-        getAllList();        
+        setModalVisible(false);        
+        setDeletedId(0);          
+        navigate('/product-main-group', { state: { message:'Record is deleted successfully.' }}) 
+        window.location.reload();     
        
       }
 

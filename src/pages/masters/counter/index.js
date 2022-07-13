@@ -113,7 +113,9 @@ const CounterList = () => {
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
-        getAllList();        
+        //getAllList(); 
+        navigate('/counter', { state: { message:'Record is deleted successfully.' }}) 
+        window.location.reload();       
        
       }
 

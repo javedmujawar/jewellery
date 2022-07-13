@@ -124,7 +124,9 @@ const SubCategoryList = () => {
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
-        getAllList();
+        //getAllList();
+        navigate('/subcategry', { state: { message:'Record is deleted successfully.' }}) 
+       window.location.reload();  
       }
     } catch (error) {}
   };

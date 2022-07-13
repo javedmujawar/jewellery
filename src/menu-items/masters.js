@@ -194,6 +194,14 @@ const masters = {
             url: '/village',
             icon: icons.ProfileOutlined,
             target: false
+        },
+        {
+            id: 'company',
+            title: 'Company',
+            type: 'item',
+            url: '/company',
+            icon: icons.ProfileOutlined,
+            target: false
         }
 
 

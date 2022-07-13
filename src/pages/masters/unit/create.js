@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
+import { UserOutlined } from '@ant-design/icons';
+
 
 const UnitAdd = () => {
     const navigate = useNavigate();
@@ -74,7 +76,25 @@ const UnitAdd = () => {
             navigate('/unit', { state: { message:'Record is successfully updated.' }})
         }
     };
+    
+      const handleChange = (e) => {      
+        
+        //console.log("eneterd :"+e.target.value);
+        const isInteger = /^[0-9]+$/;
+    if (e.target.value === '' || isInteger.test(e.target.value)) {
+//initialFormValues.name = e.target.value ;
 
+    }
+    else
+    {
+      return false;
+
+    }
+            
+        
+      };
+     
+      
     return (
         <Form
             name="frmunit"
@@ -105,9 +125,9 @@ const UnitAdd = () => {
                     </Stack>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                     <Form.Item
-                        label="Name"
+                        label="Name"                        
                         name="name"
                         rules={[
                             {
@@ -116,10 +136,10 @@ const UnitAdd = () => {
                             }
                         ]}
                     >
-                        <Input />
+                        <Input onChange={handleChange} />
                     </Form.Item>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                     <Form.Item
                         label="Short Name"
                         name="shortName"

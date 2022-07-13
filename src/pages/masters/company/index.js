@@ -12,7 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
 
-const UnitList = () => {
+const CompanyList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -21,7 +21,6 @@ const UnitList = () => {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [deletedId, setDeletedId] = useState(0);
-  const [visible, setVisible] = useState(true);
 
   const columns = [
     {
@@ -40,10 +39,36 @@ const UnitList = () => {
       defaultSortOrder: "descend",
     },
     {
-      title: "Short Name",
-      dataIndex: "shortName",
-      key: "shortName",
+      title: "Head Office",
+      dataIndex: "headOffice",
+      key: "headOffice",
     },
+    {
+      title: "Service Center",
+      dataIndex: "serviceCenter",
+      key: "serviceCenter",
+    },
+    {
+      title: "Center Name",
+      dataIndex: "centerName",
+      key: "centerName",
+    },
+    {
+      title: "Center Address",
+      dataIndex: "centerAddress",
+      key: "centerAddress",
+    },
+    {
+      title: "Contact Number",
+      dataIndex: "contactNumber",
+      key: "contactNumber",
+    },
+    {
+      title: "Service Center No",
+      dataIndex: "serviceCenterMobNo",
+      key: "serviceCenterMobNo",
+    },
+
     {
       title: "Status",
       dataIndex: "status",
@@ -59,7 +84,7 @@ const UnitList = () => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/unit/edit/" + record.id}>
+            <Link to={"/company/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
@@ -86,7 +111,8 @@ const UnitList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("units");
+    const result = await b.getAll("companies");
+    //  console.log(result);
     setData(result);
   };
 
@@ -114,12 +140,11 @@ const UnitList = () => {
         deletedDttm: "" + new Date().getTime(),
       };
       //console.log('postData=', postData);
-      const res = await b.request("units", postData, "patch");
+      const res = await b.request("companies", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
-        //getAllList();
-        navigate("/unit", {
+        navigate("/company", {
           state: { message: "Record is deleted successfully." },
         });
         window.location.reload();
@@ -136,7 +161,6 @@ const UnitList = () => {
             closable
             onClose={() => {
               setMessage("");
-              setVisible(false);
             }}
           />
         </Grid>
@@ -148,14 +172,14 @@ const UnitList = () => {
           alignItems="baseline"
           sx={{ mb: { xs: -0.5, sm: 0.5 } }}
         >
-          <Typography variant="h3">Unit List</Typography>
+          <Typography variant="h3">Company List</Typography>
 
           <Button
             type="primary"
             id="btnCreate"
             name="btnCreate"
             onClick={() => {
-              navigate("/unit/add");
+              navigate("/company/add");
             }}
           >
             Create
@@ -164,10 +188,6 @@ const UnitList = () => {
       </Grid>
       <Grid item xs={12}>
         <Table rowKey="id" columns={columns} dataSource={data} bordered />;
-        {/* <Table rowKey="id" onRow={(r) => ({
-            onClick : () => navigate('/unit/edit/'+r.id),
-            onDoubleClick : () => navigate('/unit/edit/'+r.id)
-          })} columns={columns} dataSource={data} bordered />; */}
       </Grid>
 
       <Modal
@@ -184,4 +204,4 @@ const UnitList = () => {
   );
 };
 
-export default UnitList;
+export default CompanyList;

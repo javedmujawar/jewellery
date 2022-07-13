@@ -61,6 +61,9 @@ const Taluka = Loadable(lazy(() => import('pages/masters/taluka/create')));
 const VillageList = Loadable(lazy(() => import('pages/masters/village/index')));
 const Village = Loadable(lazy(() => import('pages/masters/village/create')));
 
+const CompanyList = Loadable(lazy(() => import('pages/masters/company/index')));
+const Company = Loadable(lazy(() => import('pages/masters/company/create')));
+
 
 
 //PaymentTypeList
@@ -326,6 +329,18 @@ const MainRoutes = {
         {
             path: 'village/edit/:id',
             element: <Village/>
+        },
+        {
+            path: 'company',
+            element: <CompanyList/>
+        }, 
+        {
+            path: 'company/add',
+            element: <Company/>
+        },
+        {
+            path: 'company/edit/:id',
+            element: <Company/>
         },
         {
             path: 'util-color',

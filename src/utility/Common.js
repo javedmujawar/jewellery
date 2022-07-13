@@ -9,3 +9,7 @@ else{
     return <Tag color="red">inactive</Tag>
 }
 }
+// export function checkAlphabets(text)
+// {
+
+// }

@@ -28,15 +28,14 @@ const UnitList = () => {
       title: "Sr.No",
       dataIndex: "id",
       key: "id",
-      //defaultSortOrder: 'descend',
-      defaultSortOrder: "ascend",
+      defaultSortOrder: 'descend',     
       sorter: (a, b) => a.id - b.id,
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      sorter: (a, b) => a.name.length - b.name.length,
+     sorter: (a, b) => a.name.length - b.name.length,
       defaultSortOrder: "descend",
     },
     {
@@ -126,6 +125,13 @@ const UnitList = () => {
       }
     } catch (error) {}
   };
+  
+  const handleChoosedRow = (event) => {    
+    console.log('seelcted id :'+event);
+   
+  };
+  
+
   return (
     <Grid container spacing={3}>
       {message && (
@@ -163,11 +169,12 @@ const UnitList = () => {
         </Stack>
       </Grid>
       <Grid item xs={12}>
-        <Table rowKey="id" columns={columns} dataSource={data} bordered />;
-        {/* <Table rowKey="id" onRow={(r) => ({
+       
+        <Table rowKey="id"  columns={columns} dataSource={data} bordered ></Table>; 
+         {/* <Table rowKey="id" onRow={(r) => ({
             onClick : () => navigate('/unit/edit/'+r.id),
             onDoubleClick : () => navigate('/unit/edit/'+r.id)
-          })} columns={columns} dataSource={data} bordered />; */}
+          })} columns={columns} dataSource={data} bordered />;  */}
       </Grid>
 
       <Modal

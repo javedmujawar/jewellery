@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
+import { checkAlphabets } from "../../../utility/Common";
 const { TextArea } = Input;
 
 const ColorAdd = () => {
@@ -74,7 +75,14 @@ const ColorAdd = () => {
             navigate('/color', { state: { message:'Record is successfully updated.' }})
         }
     };
-
+    const handleAlphabets = (e) => {
+        return checkAlphabets(e);
+      };
+      const handleChange = (e) => {
+        form.setFieldsValue({
+          description: e.target.value,
+        });
+      };
     return (
         <Form
             name="frmcolor"
@@ -105,7 +113,7 @@ const ColorAdd = () => {
                     </Stack>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                     <Form.Item
                         label="Name"
                         name="name"
@@ -116,16 +124,16 @@ const ColorAdd = () => {
                             }
                         ]}
                     >
-                        <Input />
+                       <Input onKeyPress={handleAlphabets} onChange={handleChange} />
                     </Form.Item>
                 </Grid>
                
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                     <Form.Item
                         label="Description"
                         name="description"                        
                     >
-                        <TextArea rows={4} />
+                        <TextArea rows={2} />
                     </Form.Item>
                 </Grid>
             </Grid>

@@ -27,8 +27,7 @@ const ProductMainGroupList = () => {
       title: "Sr.No",
       dataIndex: "id",
       key: "id",
-      //defaultSortOrder: 'descend',
-      defaultSortOrder: "ascend",
+      defaultSortOrder: 'descend',     
       sorter: (a, b) => a.id - b.id,
     },
     {

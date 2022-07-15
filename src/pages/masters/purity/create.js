@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
+import { checkAlphabets } from "../../../utility/Common";
 const { TextArea } = Input;
 
 const PurityAdd = () => {
@@ -74,6 +75,14 @@ const PurityAdd = () => {
             navigate('/purity', { state: { message:'Record is successfully updated.' }})
         }
     };
+    const handleAlphabets = (e) => {
+        return checkAlphabets(e);
+      };
+      const handleChange = (e) => {
+        form.setFieldsValue({
+          description: e.target.value,
+        });
+      };
 
     return (
         <Form
@@ -105,7 +114,7 @@ const PurityAdd = () => {
                     </Stack>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                     <Form.Item
                         label="Name"
                         name="name"
@@ -120,7 +129,7 @@ const PurityAdd = () => {
                     </Form.Item>
                 </Grid>
                
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                     <Form.Item
                         label="Description"
                         name="description"

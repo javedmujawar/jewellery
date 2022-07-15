@@ -28,8 +28,8 @@ const GstList = () => {
       title: "Sr.No",
       dataIndex: "id",
       key: "id",
-      //defaultSortOrder: 'descend',
-      defaultSortOrder: "ascend",
+      defaultSortOrder: 'descend',
+     // defaultSortOrder: "ascend",
       sorter: (a, b) => a.id - b.id,
     },
     {

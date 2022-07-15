@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
+import { checkAlphabets } from "../../../utility/Common";
 const { TextArea } = Input;
 
 const BankAdd = () => {
@@ -87,7 +88,14 @@ const BankAdd = () => {
       });
     }
   };
-
+  const handleAlphabets = (e) => {
+    return checkAlphabets(e);
+  };
+  const handleChange = (e) => {
+    form.setFieldsValue({
+      shortName: e.target.value,
+    });
+  };
   return (
     <Form
       name="frmbank"
@@ -140,17 +148,17 @@ const BankAdd = () => {
               },
             ]}
           >
-            <Input />
+            <Input onKeyPress={handleAlphabets} onChange={handleChange} />
           </Form.Item>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={4}>
           <Form.Item label="Short Name" name="shortName" id="shortName">
             <Input />
           </Form.Item>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Form.Item label="Address" name="address">
-            <TextArea rows={4} />
+            <TextArea rows={2} />
           </Form.Item>
         </Grid>
       </Grid>

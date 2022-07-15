@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
+import { checkAlphabets, checkNumbers } from "../../../utility/Common";
 
 const DistrictAdd = () => {
   const navigate = useNavigate();
@@ -122,6 +123,18 @@ const DistrictAdd = () => {
     }
   };
 
+  const handleAlphabets = (e) => {
+    return checkAlphabets(e);
+  };
+  const handleNumbers = (e) => {
+    return checkNumbers(e);
+  };
+  const handleChange = (e) => {
+    form.setFieldsValue({
+      shortName: e.target.value,
+    });
+  };
+
   return (
     <Form
       name="frmdistrict"
@@ -174,7 +187,7 @@ const DistrictAdd = () => {
               },
             ]}
           >
-            <Input />
+             <Input onKeyPress={handleAlphabets} onChange={handleChange} />
           </Form.Item>
         </Grid>
         <Grid item xs={4}>
@@ -198,7 +211,7 @@ const DistrictAdd = () => {
               },
             ]}
           >
-            <Input />
+           <Input onKeyPress={handleNumbers} />
           </Form.Item>
         </Grid>
         <Grid item xs={4}>

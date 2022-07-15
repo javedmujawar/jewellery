@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
+import { checkAlphabets, checkNumbers } from "../../../utility/Common";
 
 
 const StateAdd = () => {
@@ -100,6 +101,18 @@ const StateAdd = () => {
     }
   };
 
+  const handleAlphabets = (e) => {
+    return checkAlphabets(e);
+  };
+  const handleNumbers = (e) => {
+    return checkNumbers(e);
+  };
+  const handleChange = (e) => {
+    form.setFieldsValue({
+      shortName: e.target.value,
+    });
+  };
+
   return (
     <Form
       name="frmstate"
@@ -152,7 +165,7 @@ const StateAdd = () => {
               },
             ]}
           >
-            <Input />
+            <Input onKeyPress={handleAlphabets} onChange={handleChange} />
           </Form.Item>
         </Grid>
         <Grid item xs={3}>
@@ -172,7 +185,7 @@ const StateAdd = () => {
                 message: "Please enter a valid  code value."
               }
           ]}>
-            <Input />
+          <Input onKeyPress={handleNumbers} />
           </Form.Item>
         </Grid>
         <Grid item xs={3}>

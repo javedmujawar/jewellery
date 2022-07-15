@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Divider, Modal, Alert } from "antd";
+import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -11,6 +11,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid, Stack, Typography } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
+import { map, get } from "lodash";
+
+const Search = Input.Search;
 
 const UnitList = () => {
   const location = useLocation();
@@ -18,24 +21,28 @@ const UnitList = () => {
   const [message, setMessage] = useState(
     location.state?.message ? location.state?.message : ""
   );
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]);  
+  const [searchText, setsearchText] = useState("");
+  const [filtered, setfiltered] = useState(false);
+  
   const [modalVisible, setModalVisible] = useState(false);
   const [deletedId, setDeletedId] = useState(0);
   const [visible, setVisible] = useState(true);
 
+  
   const columns = [
     {
       title: "Sr.No",
       dataIndex: "id",
       key: "id",
-      defaultSortOrder: 'descend',     
+      defaultSortOrder: "descend",
       sorter: (a, b) => a.id - b.id,
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-     sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.name.length - b.name.length,
       defaultSortOrder: "descend",
     },
     {
@@ -87,6 +94,7 @@ const UnitList = () => {
     const b = new BaseApi();
     const result = await b.getAll("units");
     setData(result);
+   
   };
 
   useEffect(() => {
@@ -97,6 +105,7 @@ const UnitList = () => {
     setDeletedId(recordId);
     setModalVisible(true);
   };
+
   const handleCancel = () => {
     setDeletedId(0);
     setModalVisible(false);
@@ -125,13 +134,34 @@ const UnitList = () => {
       }
     } catch (error) {}
   };
-  
-  const handleChoosedRow = (event) => {    
-    console.log('seelcted id :'+event);
-   
-  };
-  
 
+  const handleChoosedRow = (event) => {
+    console.log("selected id :" + event);
+  };
+  // onInputChange = e => {
+  //  setsearchText(e.target.value);
+  // };
+  const OnSearch = e => {
+   // console.log("Table Data : "+ data);
+    console.log("PASS :",  e.target.value );
+    setsearchText(e.target.value);
+    console.log("searchText : "+searchText);
+    const reg = new RegExp(e.target.value, "gi");
+    const filteredData = map(data, record => {
+      const nameMatch = get(record, "name").match(reg);
+      const addressMatch = get(record, "shortName").match(reg);
+      if (!nameMatch && !addressMatch) {
+        return null;
+      }
+      return record;
+    }).filter(record => !!record);
+   setData(e.target.value ? filteredData : data);
+  
+   console.log("Data : "+ data);   
+   
+   setfiltered(!!e.target.value);
+   
+  };  
   return (
     <Grid container spacing={3}>
       {message && (
@@ -169,9 +199,29 @@ const UnitList = () => {
         </Stack>
       </Grid>
       <Grid item xs={12}>
-       
-        <Table rowKey="id"  columns={columns} dataSource={data} bordered ></Table>; 
-         {/* <Table rowKey="id" onRow={(r) => ({
+        <Input.Search
+          style={{ border: "2px solid green", margin: "0 0 10px 0" }}
+          placeholder="Search by..."
+          value={searchText}
+          //enterButton
+         // onSearch={search}
+          onChange={OnSearch}
+        />
+        
+        {/* <Table rowKey="id"  columns={columns} dataSource={data} bordered ></Table>;  */}
+        <Table
+          rowKey="id"
+          onRow={(r) => ({
+            onClick: () => {
+              handleChoosedRow(r);
+            },
+          })}
+          columns={columns}
+          dataSource={data}
+          bordered
+        ></Table>
+        ;
+        {/* <Table rowKey="id" onRow={(r) => ({
             onClick : () => navigate('/unit/edit/'+r.id),
             onDoubleClick : () => navigate('/unit/edit/'+r.id)
           })} columns={columns} dataSource={data} bordered />;  */}

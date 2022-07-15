@@ -4,10 +4,10 @@ import { Link, useParams } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
-//import router from 'umi/router';
+import { checkAlphabets, checkNumbers } from "../../../utility/Common";
+
 const { TextArea } = Input;
 
-//const HsnSacAdd = () => (
 const HsnSacAdd = () => {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -93,6 +93,18 @@ const HsnSacAdd = () => {
             navigate('/hsnsac', { state: { message:'Record is successfully updated.' }})
         }
     };
+    const handleAlphabets = (e) => {
+        return checkAlphabets(e);
+      };
+      const handleNumbers = (e) => {
+        return checkNumbers(e);
+      };
+      const handleChange = (e) => {
+        form.setFieldsValue({
+          shortName: e.target.value,
+        });
+      };
+
 
     return (
         <Form
@@ -135,7 +147,7 @@ const HsnSacAdd = () => {
                             }
                         ]}
                     >
-                        <Input />
+                        <Input onKeyPress={handleAlphabets} onChange={handleChange} />
                     </Form.Item>
                 </Grid>
                 <Grid item xs={3}>
@@ -183,15 +195,15 @@ const HsnSacAdd = () => {
                                 message: 'Please enter percentage value.'
                             },
                             {
-                                pattern:new RegExp(/^[0-9]*$/),
+                                pattern:new RegExp(/^[0-9-.]*$/),
                                 message: "Please enter valid percentage value."
                               }
                         ]}
                     >
-                        <Input />
+                        <Input onKeyPress={handleNumbers} />
                     </Form.Item>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                     <Form.Item
                         label="Description"
                         name="description"

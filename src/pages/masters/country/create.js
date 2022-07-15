@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
-const { TextArea } = Input;
+import { checkAlphabets, checkNumbers } from "../../../utility/Common";
 
 const CountryAdd = () => {
   const navigate = useNavigate();
@@ -87,6 +87,17 @@ const CountryAdd = () => {
       });
     }
   };
+  const handleAlphabets = (e) => {
+    return checkAlphabets(e);
+  };
+  const handleNumbers = (e) => {
+    return checkNumbers(e);
+  };
+  const handleChange = (e) => {
+    form.setFieldsValue({
+      shortName: e.target.value,
+    });
+  };
 
   return (
     <Form
@@ -140,7 +151,7 @@ const CountryAdd = () => {
               },
             ]}
           >
-            <Input />
+           <Input onKeyPress={handleAlphabets} onChange={handleChange} />
           </Form.Item>
         </Grid>
         <Grid item xs={4}>
@@ -160,7 +171,7 @@ const CountryAdd = () => {
                 message: "Please enter a valid  phone code value."
               }
           ]}>
-            <Input />
+             <Input onKeyPress={handleNumbers} />
           </Form.Item>
         </Grid>
        

@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
+import { checkAlphabets, checkNumbers } from "../../../utility/Common";
 
 const TalukaAdd = () => {
   const navigate = useNavigate();
@@ -156,6 +157,18 @@ const TalukaAdd = () => {
     }
   };
 
+  const handleAlphabets = (e) => {
+    return checkAlphabets(e);
+  };
+  const handleNumbers = (e) => {
+    return checkNumbers(e);
+  };
+  const handleChange = (e) => {
+    form.setFieldsValue({
+      shortName: e.target.value,
+    });
+  };
+
   return (
     <Form
       name="frmtaluka"
@@ -208,7 +221,7 @@ const TalukaAdd = () => {
               },
             ]}
           >
-            <Input />
+            <Input onKeyPress={handleAlphabets} onChange={handleChange} />
           </Form.Item>
         </Grid>
         <Grid item xs={4}>
@@ -232,7 +245,7 @@ const TalukaAdd = () => {
               },
             ]}
           >
-            <Input />
+             <Input onKeyPress={handleNumbers} />
           </Form.Item>
         </Grid>
         <Grid item xs={4}>

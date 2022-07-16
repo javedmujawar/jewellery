@@ -64,9 +64,24 @@ const Village = Loadable(lazy(() => import('pages/masters/village/create')));
 const CompanyList = Loadable(lazy(() => import('pages/masters/company/index')));
 const Company = Loadable(lazy(() => import('pages/masters/company/create')));
 
+const CustomerCategoryList = Loadable(lazy(() => import('pages/masters/customercategories/index')));
+const CustomerCategory = Loadable(lazy(() => import('pages/masters/customercategories/create')));
+
+const RateList = Loadable(lazy(() => import('pages/masters/rate/index')));
+const Rate = Loadable(lazy(() => import('pages/masters/rate/create')));
+
+const Product = Loadable(lazy(() => import('pages/masters/product/create')));
+const ProductList = Loadable(lazy(() => import('pages/masters/product/index')));
+
+//// Users Menu ///
+const UserTypeList = Loadable(lazy(() => import('pages/users/usertype/index')));
+const UserType = Loadable(lazy(() => import('pages/users/usertype/create')));
+const UserRegistrationList = Loadable(lazy(() => import('pages/users/userregistration/index')));
+const UserRegistration = Loadable(lazy(() => import('pages/users/userregistration/create')));
 
 
-//PaymentTypeList
+
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -341,6 +356,68 @@ const MainRoutes = {
         {
             path: 'company/edit/:id',
             element: <Company/>
+        },
+        
+
+        {
+            path: 'customer-categories',
+            element: <CustomerCategoryList/>
+        }, 
+        {
+            path: 'customer-categories/add',
+            element: <CustomerCategory/>
+        },
+        {
+            path: 'customer-categories/edit/:id',
+            element: <CustomerCategory/>
+        },
+        {
+            path: 'product',
+            element: <ProductList/>
+        }, 
+        {
+            path: 'product/add',
+            element: <Product/>
+        },
+        {
+            path: 'product/edit/:id',
+            element: <Product/>
+        },
+          {
+             path: 'rate',
+             element: <RateList/>
+        }, 
+         {
+             path: 'rate/add',
+             element: <Rate/>
+         },
+         {
+            path: 'rate/edit/:id',
+            element: <Rate/>
+         },
+         {
+            path: 'user-type',
+            element: <UserTypeList/>
+        }, 
+        {
+            path: 'user-type/add',
+            element: <UserType/>
+        },
+        {
+            path: 'user-type/edit/:id',
+            element: <UserType/>
+        },
+        {
+            path: 'user-registration',
+            element: <UserRegistrationList/>
+        }, 
+        {
+            path: 'user-registration/add',
+            element: <UserRegistration/>
+        },
+        {
+            path: 'user-registration/edit/:id',
+            element: <UserRegistration/>
         },
         {
             path: 'util-color',

@@ -202,7 +202,32 @@ const masters = {
             url: '/company',
             icon: icons.ProfileOutlined,
             target: false
-        }
+        },
+        
+        {
+            id: 'customer-categories',
+            title: 'Customer Categories',
+            type: 'item',
+            url: '/customer-categories',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'product',
+            title: 'Product',
+            type: 'item',
+            url: '/product',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'rate',
+            title: 'Rate',
+           type: 'item',
+           url: '/rate',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
 
 
     ]

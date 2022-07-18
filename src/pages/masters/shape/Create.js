@@ -5,6 +5,7 @@ import { Grid, Stack, Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
 import { checkAlphabets } from "../../../utility/Common";
+import MainCard from 'components/MainCard';
 const { TextArea } = Input;
 
 const ShapeAdd = () => {
@@ -84,6 +85,7 @@ const ShapeAdd = () => {
         });
       };
     return (
+        <MainCard title="Sample Card">
         <Form
             name="frmshape"
             initialValues={{
@@ -138,6 +140,7 @@ const ShapeAdd = () => {
                 </Grid>
             </Grid>
         </Form>
+        </MainCard>
     );
 };
 

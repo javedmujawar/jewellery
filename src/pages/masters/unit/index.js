@@ -21,7 +21,8 @@ const UnitList = () => {
   const [message, setMessage] = useState(
     location.state?.message ? location.state?.message : ""
   );
-  const [data, setData] = useState([]);  
+  const [data, setData] = useState([]); 
+  const [searchData, setSearchData] = useState([]);  
   const [searchText, setsearchText] = useState('');
   const [filtered, setfiltered] = useState(false);
   const [filteredInfo, setfilteredInfo] = useState([null]);
@@ -98,7 +99,7 @@ const UnitList = () => {
     const b = new BaseApi();
     const result = await b.getAll("units");
     setData(result);
-   
+    setSearchData(result); 
   };
 
   useEffect(() => {
@@ -146,24 +147,18 @@ const UnitList = () => {
     setsearchText(e.target.value);
    };
   const OnSearch = e => {
-   // console.log("Table Data : "+ data);
-    console.log("PASS :",  e.target.value); 
-    console.log("searchText : "+ searchText);
-    const reg = new RegExp(e.target.value, "gi");
-    const filteredData = map(data, record => {
-      const nameMatch = get(record, "name").match(reg);
-      const addressMatch = get(record, "shortName").match(reg);
-      if (!nameMatch && !addressMatch) {
-        return null;
-      }
-      return record;
-    }).filter(record => !!record);
     setsearchText(e.target.value);
-    setfiltered(!!e.target.value);
-   setData(e.target.value ? filteredData : data);  
-   console.log("Data : "+ filteredData);      
-  
-   
+   if(e.target.value == "")
+   {
+    setSearchData(data);
+    return true;
+   }
+   const filteredData = data.filter((row)=>
+    row.id.toString().includes(e.target.value) 
+    || row.shortName.includes(e.target.value)
+    || row.name.includes(e.target.value)
+   ) 
+   setSearchData(filteredData);
   };  
  const  handleChange = (pagination, filters, sorter) => {
     console.log("Various parameters", pagination, filters, sorter);    
@@ -227,7 +222,7 @@ const UnitList = () => {
             },
           })}
           columns={columns}
-          dataSource={data}
+          dataSource={searchData}
           bordered
           hange={handleChange}
         ></Table>

@@ -11,7 +11,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid, Stack, Typography } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
-import { map, get } from "lodash";
+import MainCard from "components/MainCard";
+
 
 const Search = Input.Search;
 
@@ -167,7 +168,7 @@ const UnitList = () => {
 
   };
   return (
-    <Grid container spacing={3}>
+    <>
       {message && (
         <Grid item xs={12}>
           <Alert
@@ -181,15 +182,7 @@ const UnitList = () => {
           />
         </Grid>
       )}
-      <Grid item xs={12}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="baseline"
-          sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-        >
-          <Typography variant="h3">Unit List</Typography>
-          <div>
+      <MainCard title="Unit List" secondary={<div>
           <Search
           style={{ width:'250px',marginRight:'10px' }}
           placeholder="Search by..."
@@ -206,9 +199,8 @@ const UnitList = () => {
           >
             Create
           </Button>
-          </div>
-        </Stack>
-      </Grid>
+          </div>}>
+
       <Grid item xs={12}>
         <Table
           rowKey="id"
@@ -228,18 +220,18 @@ const UnitList = () => {
             onDoubleClick : () => navigate('/unit/edit/'+r.id)
           })} columns={columns} dataSource={data} bordered />;  */}
       </Grid>
-
-      <Modal
+       </MainCard>
+       <Modal 
         visible={modalVisible}
-        title="Are you sure delete this record?"
+        title="Delete"
         icon={<ExclamationCircleOutlined />}
         okText="Yes"
         okType="danger"
         cancelText="No"
         onOk={() => handleOk()}
         onCancel={() => handleCancel()}
-      ></Modal>
-    </Grid>
+      ><p>Are you sure delete this record?</p></Modal>
+    </>
   );
 };
 

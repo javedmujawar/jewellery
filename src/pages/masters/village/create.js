@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
+import { checkAlphabets, checkNumbers } from "../../../utility/Common";
 
 const VillageAdd = () => {
   const navigate = useNavigate();
@@ -192,6 +193,18 @@ const VillageAdd = () => {
     }
   };
 
+  const handleAlphabets = (e) => {
+    return checkAlphabets(e);
+  };
+  const handleNumbers = (e) => {
+    return checkNumbers(e);
+  };
+  const handleChange = (e) => {
+    form.setFieldsValue({
+      shortName: e.target.value,
+    });
+  };
+
   return (
     <Form
       name="frmtaluka"
@@ -244,7 +257,7 @@ const VillageAdd = () => {
               },
             ]}
           >
-            <Input />
+           <Input onKeyPress={handleAlphabets} onChange={handleChange} />
           </Form.Item>
         </Grid>
         <Grid item xs={4}>
@@ -268,7 +281,7 @@ const VillageAdd = () => {
               },
             ]}
           >
-            <Input />
+           <Input onKeyPress={handleNumbers} />
           </Form.Item>
         </Grid>
         <Grid item xs={3}>

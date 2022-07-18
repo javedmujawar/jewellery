@@ -19,13 +19,13 @@ import reportWebVitals from './reportWebVitals';
 // ==============================|| MAIN - REACT DOM RENDER  ||============================== //
 
 ReactDOM.render(
-    <StrictMode>
+    //<StrictMode>
         <ReduxProvider store={store}>
             <BrowserRouter basename="/">
                 <App />
             </BrowserRouter>
-        </ReduxProvider>
-    </StrictMode>,
+        </ReduxProvider>,
+   // </StrictMode>,
     document.getElementById('root')
 );
 

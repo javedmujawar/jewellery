@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
+import { checkAlphabets } from "../../../utility/Common";
 const { TextArea } = Input;
 
 const ProductGroupAdd = () => {
@@ -81,6 +82,14 @@ const ProductGroupAdd = () => {
         }
     };
 
+    const handleAlphabets = (e) => {
+        return checkAlphabets(e);
+      };
+      const handleChange = (e) => {
+        form.setFieldsValue({
+          shortName: e.target.value,
+        });
+      };
     return (
         <Form
             name="frmproductgroup"
@@ -122,7 +131,7 @@ const ProductGroupAdd = () => {
                             }
                         ]}
                     >
-                        <Input />
+                        <Input onKeyPress={handleAlphabets} onChange={handleChange} />
                     </Form.Item>
                 </Grid>
                 <Grid item xs={4}>

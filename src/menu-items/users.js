@@ -21,39 +21,27 @@ const icons = {
 // ==============================|| MENU ITEMS - UTILITIES ||============================== //
 
 const users = {
-    id: 'utilities',
-    title: 'Utilities',
+    id: 'users',
+    title: 'Users',
     type: 'group',
     children: [
         {
-            id: 'util-typography',
-            title: 'Typography',
+            id: 'user-type',
+            title: 'User Type',
             type: 'item',
-            url: '/typography',
-            icon: icons.FontSizeOutlined
+            url: '/user-type',
+            icon: icons.ProfileOutlined,
+            target: false
         },
         {
-            id: 'util-color',
-            title: 'Color',
+            id: 'user-registration',
+            title: 'New User',
             type: 'item',
-            url: '/util-color',
-            icon: icons.BgColorsOutlined
-        },
-        {
-            id: 'util-shadow',
-            title: 'Shadow',
-            type: 'item',
-            url: '/shadow',
-            icon: icons.BarcodeOutlined
-        },
-        {
-            id: 'ant-icons',
-            title: 'Ant Icons',
-            type: 'item',
-            url: '/icons/ant',
-            icon: icons.AntDesignOutlined,
-            breadcrumbs: false
+            url: '/user-registration',
+            icon: icons.ProfileOutlined,
+            target: false
         }
+        
     ]
 };
 

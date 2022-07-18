@@ -189,7 +189,13 @@ const UnitList = () => {
           sx={{ mb: { xs: -0.5, sm: 0.5 } }}
         >
           <Typography variant="h3">Unit List</Typography>
-
+          <div>
+          <Search
+          style={{ width:'250px',marginRight:'10px' }}
+          placeholder="Search by..."
+          value={searchText}
+          onChange={OnSearch} 
+        />
           <Button
             type="primary"
             id="btnCreate"
@@ -200,20 +206,10 @@ const UnitList = () => {
           >
             Create
           </Button>
+          </div>
         </Stack>
       </Grid>
       <Grid item xs={12}>
-        <Search
-          style={{ border: "2px solid green", margin: "0 0 10px 0" }}
-          placeholder="Search by..."
-          value={searchText}
-          //enterButton
-         // onSearch={search}
-          onChange={OnSearch}
-          
-        />
-        
-        {/* <Table rowKey="id"  columns={columns} dataSource={data} bordered ></Table>;  */}
         <Table
           rowKey="id"
           onRow={(r) => ({

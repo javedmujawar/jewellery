@@ -11,7 +11,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid, Stack, Typography } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
-import { map, get } from "lodash";
+import MainCard from "components/MainCard";
+
 
 const Search = Input.Search;
 
@@ -21,7 +22,8 @@ const UnitList = () => {
   const [message, setMessage] = useState(
     location.state?.message ? location.state?.message : ""
   );
-  const [data, setData] = useState([]);  
+  const [data, setData] = useState([]); 
+  const [searchData, setSearchData] = useState([]);  
   const [searchText, setsearchText] = useState('');
   const [filtered, setfiltered] = useState(false);
   const [filteredInfo, setfilteredInfo] = useState([null]);
@@ -98,7 +100,7 @@ const UnitList = () => {
     const b = new BaseApi();
     const result = await b.getAll("units");
     setData(result);
-   
+    setSearchData(result); 
   };
 
   useEffect(() => {
@@ -146,24 +148,18 @@ const UnitList = () => {
     setsearchText(e.target.value);
    };
   const OnSearch = e => {
-   // console.log("Table Data : "+ data);
-    console.log("PASS :",  e.target.value); 
-    console.log("searchText : "+ searchText);
-    const reg = new RegExp(e.target.value, "gi");
-    const filteredData = map(data, record => {
-      const nameMatch = get(record, "name").match(reg);
-      const addressMatch = get(record, "shortName").match(reg);
-      if (!nameMatch && !addressMatch) {
-        return null;
-      }
-      return record;
-    }).filter(record => !!record);
     setsearchText(e.target.value);
-    setfiltered(!!e.target.value);
-   setData(e.target.value ? filteredData : data);  
-   console.log("Data : "+ filteredData);      
-  
-   
+   if(e.target.value == "")
+   {
+    setSearchData(data);
+    return true;
+   }
+   const filteredData = data.filter((row)=>
+    row.id.toString().includes(e.target.value) 
+    || row.shortName.includes(e.target.value)
+    || row.name.includes(e.target.value)
+   ) 
+   setSearchData(filteredData);
   };  
  const  handleChange = (pagination, filters, sorter) => {
     console.log("Various parameters", pagination, filters, sorter);    
@@ -172,7 +168,7 @@ const UnitList = () => {
 
   };
   return (
-    <Grid container spacing={3}>
+    <>
       {message && (
         <Grid item xs={12}>
           <Alert
@@ -186,15 +182,13 @@ const UnitList = () => {
           />
         </Grid>
       )}
-      <Grid item xs={12}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="baseline"
-          sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-        >
-          <Typography variant="h3">Unit List</Typography>
-
+      <MainCard title="Unit List" secondary={<div>
+          <Search
+          style={{ width:'250px',marginRight:'10px' }}
+          placeholder="Search by..."
+          value={searchText}
+          onChange={OnSearch} 
+        />
           <Button
             type="primary"
             id="btnCreate"
@@ -205,20 +199,9 @@ const UnitList = () => {
           >
             Create
           </Button>
-        </Stack>
-      </Grid>
+          </div>}>
+
       <Grid item xs={12}>
-        <Search
-          style={{ border: "2px solid green", margin: "0 0 10px 0" }}
-          placeholder="Search by..."
-          value={searchText}
-          //enterButton
-         // onSearch={search}
-          onChange={OnSearch}
-          
-        />
-        
-        {/* <Table rowKey="id"  columns={columns} dataSource={data} bordered ></Table>;  */}
         <Table
           rowKey="id"
           onRow={(r) => ({
@@ -227,7 +210,7 @@ const UnitList = () => {
             },
           })}
           columns={columns}
-          dataSource={data}
+          dataSource={searchData}
           bordered
           hange={handleChange}
         ></Table>
@@ -237,18 +220,18 @@ const UnitList = () => {
             onDoubleClick : () => navigate('/unit/edit/'+r.id)
           })} columns={columns} dataSource={data} bordered />;  */}
       </Grid>
-
-      <Modal
+       </MainCard>
+       <Modal 
         visible={modalVisible}
-        title="Are you sure delete this record?"
+        title="Delete"
         icon={<ExclamationCircleOutlined />}
         okText="Yes"
         okType="danger"
         cancelText="No"
         onOk={() => handleOk()}
         onCancel={() => handleCancel()}
-      ></Modal>
-    </Grid>
+      ><p>Are you sure delete this record?</p></Modal>
+    </>
   );
 };
 

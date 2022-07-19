@@ -5,6 +5,7 @@ import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkAlphabets } from "../../../utility/Common";
+import MainCard from "components/MainCard";
 
 const UnitAdd = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const UnitAdd = () => {
     name: "",
     shortName: "",
   };
-    const getRecordData = async (id) => {
+  const getRecordData = async (id) => {
     const b = new BaseApi();
     const result = await b.getById("units", id);
     initialFormValues.name = result.name;
@@ -94,23 +95,13 @@ const UnitAdd = () => {
       form={form} // Add this!
       layout="vertical"
       labelCol={{ span: 22 }}
-      wrapperCol={{ span: 22 }}      
+      wrapperCol={{ span: 22 }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="baseline"
-            sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-          >
-            <Typography variant="h3">
-              {isAddMode ? "Create Unit" : "Edit Unit"}
-            </Typography>
-            <div>
+      
+        <MainCard title={isAddMode ? "Create Unit" : "Edit Unit"} secondary={ <div>
               <Button
                 type="primary"
                 htmlType="submit"
@@ -121,40 +112,45 @@ const UnitAdd = () => {
               <Link to={"/unit"}>
                 <Button type="danger">Cancel</Button>
               </Link>
-            </div>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={4}>
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please enter name.",
-              },
-            ]}
-          >
-            <Input onKeyPress={handleAlphabets} onChange={handleChange} />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Form.Item
-            label="Short Name"
-            name="shortName"
-            id="shortName"
-            rules={[
-              {
-                required: true,
-                message: "Please enter short name.",
-              },
-            ]}
-          >
-            <Input onKeyPress={handleAlphabets} />
-          </Form.Item>
-        </Grid>
-      </Grid>
+            </div>}>
+          
+           
+          
+          <Typography variant="body2">
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter name.",
+                  },
+                ]}
+              >
+                <Input onKeyPress={handleAlphabets} onChange={handleChange} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Short Name"
+                name="shortName"
+                id="shortName"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter short name.",
+                  },
+                ]}
+              >
+                <Input onKeyPress={handleAlphabets} />
+              </Form.Item>
+            </Grid>
+            </Grid>
+          </Typography>
+        </MainCard>
+      
     </Form>
   );
 };

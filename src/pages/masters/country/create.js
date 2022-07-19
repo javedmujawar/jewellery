@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { Button, Form, Input } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkAlphabets, checkNumbers } from "../../../utility/Common";
+import MainCard from "components/MainCard";
 
 const CountryAdd = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const CountryAdd = () => {
     shortName: "",
     phoneCode: "",
   };
-  //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
+
   const getRecordData = async (id) => {
     const b = new BaseApi();
     const result = await b.getById("countries", id);
@@ -37,10 +38,9 @@ const CountryAdd = () => {
     if (!isAddMode) {
       getRecordData(id);
     }
-  }, [id]);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onFinish = (values) => {
-    //console.log('Success:', values);
     // console.log('Success:', id + isAddMode);
     isAddMode ? insertData(values) : updateData(id, values);
   };
@@ -49,7 +49,6 @@ const CountryAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
-    //  console.log('insert functio is call :', data);
     let postData = {
       id: id,
       name: data.name,
@@ -76,11 +75,7 @@ const CountryAdd = () => {
       updatedBy: 1,
     };
     const baseApi = new BaseApi();
-    const result = await baseApi.request(
-      "countries",
-      postData,
-      "patch"
-    );
+    const result = await baseApi.request("countries", postData, "patch");
     if (result.status === 200) {
       navigate("/country", {
         state: { message: "Record is successfully updated." },
@@ -114,68 +109,66 @@ const CountryAdd = () => {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="baseline"
-            sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-          >
-            <Typography variant="h3">
-              {isAddMode ? "Create Country" : "Edit Country"}
-            </Typography>
-            <div>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: "10px" }}
+      <MainCard
+        title={isAddMode ? "Create Country" : "Edit Country"}
+        secondary={
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "10px" }}
+            >
+              Save
+            </Button>
+            <Link to={"/country"}>
+              <Button type="danger">Cancel</Button>
+            </Link>
+          </div>
+        }
+      >
+        <Typography variant="body2">
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter name.",
+                  },
+                ]}
               >
-                Save
-              </Button>
-              <Link to={"/country"}>
-                <Button type="danger">Cancel</Button>
-              </Link>
-            </div>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={4}>
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please enter name.",
-              },
-            ]}
-          >
-           <Input onKeyPress={handleAlphabets} onChange={handleChange} />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Form.Item label="Short Name" name="shortName" id="shortName">
-            <Input />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Form.Item label="Phone Code" name="phoneCode" id="phoneCode"
-          rules={[
-            {
-              required: true,
-              message: "Please enter Phone code.",
-            },
-            {
-                pattern:new RegExp(/^[0-9]*$/),
-                message: "Please enter a valid  phone code value."
-              }
-          ]}>
-             <Input onKeyPress={handleNumbers} />
-          </Form.Item>
-        </Grid>
-       
-      </Grid>
+                <Input onKeyPress={handleAlphabets} onChange={handleChange} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Form.Item label="Short Name" name="shortName" id="shortName">
+                <Input />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Phone Code"
+                name="phoneCode"
+                id="phoneCode"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter Phone code.",
+                  },
+                  {
+                    pattern: new RegExp(/^[0-9]*$/),
+                    message: "Please enter a valid  phone code value.",
+                  },
+                ]}
+              >
+                <Input onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
+          </Grid>
+        </Typography>
+      </MainCard>
     </Form>
   );
 };

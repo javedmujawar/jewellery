@@ -12,7 +12,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Grid } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
 import MainCard from "components/MainCard";
-
 const Search = Input.Search;
 
 const UnitList = () => {
@@ -28,25 +27,25 @@ const UnitList = () => {
   const [deletedId, setDeletedId] = useState(0);
 
   const columns = [
-    {
-      title: "Sr.No",
-      dataIndex: "id",
-      key: "id",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.id - b.id,
-    },
+    // {
+    //   title: "Sr.No",
+    //   dataIndex: "id",
+    //   key: "id",
+    //   defaultSortOrder: "descend",      
+    //   sorter: (a, b) => a.id - b.id,
+    // },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-
       sorter: (a, b) => a.name.length - b.name.length,
-      defaultSortOrder: "descend",
+      //defaultSortOrder: "descend",
     },
     {
       title: "Short Name",
       dataIndex: "shortName",
       key: "shortName",
+      sorter: (a, b) => a.shortName.length - b.shortName.length,
     },
     {
       title: "Status",

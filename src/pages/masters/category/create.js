@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { Grid, Stack, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
 import { checkAlphabets } from "../../../utility/Common";
 const { TextArea } = Input;
+import MainCard from "components/MainCard";
 
 const CategoryAdd = () => {
     const navigate = useNavigate();
@@ -33,10 +34,9 @@ const CategoryAdd = () => {
         if (!isAddMode) {
             getRecordData(id);
         }
-    },[id]);
+    },[id]);// eslint-disable-line react-hooks/exhaustive-deps
 
-    const onFinish = (values) => {
-        //console.log('Success:', values);
+    const onFinish = (values) => {       
         // console.log('Success:', id + isAddMode);
         isAddMode ? insertData(values) : updateData(id, values);
     };
@@ -44,8 +44,7 @@ const CategoryAdd = () => {
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
-    const insertData = async (data) => {
-        //  console.log('insert functio is call :', data);
+    const insertData = async (data) => {       
         let postData = {
             id: id,
             name: data.name,           
@@ -98,21 +97,25 @@ const CategoryAdd = () => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
-                        <Typography variant="h3">{isAddMode ? 'Create Category' : 'Edit Category'}</Typography>
-                        <div>
-                            <Button type="primary" htmlType="submit" style={{marginRight:'10px'}}>
-                                Save
-                            </Button>
-                            <Link to={'/category'}>
-                                <Button type="danger">Cancel</Button>
-                            </Link>
-                        </div>
-                    </Stack>
-                </Grid>
-
+        <MainCard
+        title={isAddMode ? "Create Category" : "Edit Category"}
+        secondary={
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "10px" }}
+            >
+              Save
+            </Button>
+            <Link to={"/category"}>
+              <Button type="danger">Cancel</Button>
+            </Link>
+          </div>
+        }
+      >
+        <Typography variant="body2">
+            <Grid container spacing={2}>               
                 <Grid item xs={4}>
                     <Form.Item
                         label="Name"
@@ -137,8 +140,9 @@ const CategoryAdd = () => {
                     </Form.Item>
                 </Grid>
             </Grid>
+            </Typography>
+      </MainCard>
         </Form>
     );
 };
-
 export default CategoryAdd;

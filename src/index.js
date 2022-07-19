@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+//import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 

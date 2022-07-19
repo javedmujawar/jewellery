@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Divider, Modal, Alert } from "antd";
+import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -9,8 +9,10 @@ import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid} from "@mui/material";
 import { statusTag } from "../../../utility/Common";
+import MainCard from "components/MainCard";
+const Search = Input.Search;
 
 const RateList = () => {
   const location = useLocation();
@@ -21,40 +23,42 @@ const RateList = () => {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [deletedId, setDeletedId] = useState(0);
+  const [searchData, setSearchData] = useState([]);
+  const [searchText, setsearchText] = useState("");
 
   const columns = [
-    {
-      title: "Sr.No",
-      dataIndex: "id",
-      key: "id",
-      defaultSortOrder: "descend",
-      //defaultSortOrder: "ascend",
-      sorter: (a, b) => a.id - b.id,
-    },
+    // {
+    //   title: "Sr.No",
+    //   dataIndex: "id",
+    //   key: "id",
+    //   defaultSortOrder: "descend",
+    //   //defaultSortOrder: "ascend",
+    //   sorter: (a, b) => a.id - b.id,
+    // },
     {
       title: "rateDate",
       dataIndex: "rateDate",
-      key: "rateDate",
-      sorter: (a, b) => a.name.length - b.name.length,
-      defaultSortOrder: "descend",
+      key: "rateDate",      
     },
 
     {
       title: "Category",
       dataIndex: "categoryName",
       key: "categoryName",
+      sorter: (a, b) => a.categoryName.length - b.categoryName.length,
+      defaultSortOrder: "descend",
     },
     {
       title: "Sub Category Name",
       dataIndex: "subcategoryName",
       key: "subcategoryName",
+      sorter: (a, b) => a.subcategoryName.length - b.subcategoryName.length,
+      defaultSortOrder: "descend",
     },
     {
       title: "Description",
       dataIndex: "description",
-      key: "description",
-      sorter: (a, b) => a.name.length - b.name.length,
-      defaultSortOrder: "descend",
+      key: "description",      
     },
     {
       title: "Status",
@@ -100,6 +104,7 @@ const RateList = () => {
     const b = new BaseApi();
     const result = await b.getJoinList("rates");   
     setData(result);
+    setSearchData(result);
   };
 
   useEffect(() => {
@@ -116,21 +121,18 @@ const RateList = () => {
   };
 
   const handleOk = async () => {
-    try {
-      // console.log('selected id : ', deletedId);
+    try {     
       const b = new BaseApi();
       const postData = {
         isDeleted: true,
         id: deletedId,
         deletedBy: 1,
         deletedDttm: "" + new Date().getTime(),
-      };
-      //console.log('postData=', postData);
+      };      
       const res = await b.request("rates", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
-        setDeletedId(0);
-        //getAllList();
+        setDeletedId(0);       
         navigate("/rate", {
           state: { message: "Record is deleted successfully." },
         });
@@ -138,8 +140,22 @@ const RateList = () => {
       }
     } catch (error) {}
   };
+  const OnSearch = (e) => {
+    setsearchText(e.target.value);
+    if (e.target.value == "") {
+      setSearchData(data);
+      return true;
+    }
+    const filteredData = data.filter(
+      (row) =>
+        row.id.toString().includes(e.target.value) ||
+        row.categoryName.includes(e.target.value) ||      
+        row.subcategoryName.includes(e.target.value) 
+    );
+    setSearchData(filteredData);
+  };
   return (
-    <Grid container spacing={3}>
+    <>
       {message && (
         <Grid item xs={12}>
           <Alert
@@ -147,47 +163,56 @@ const RateList = () => {
             type="success"
             closable
             onClose={() => {
-              setMessage("");
+              setMessage("");                     
             }}
           />
         </Grid>
       )}
-      <Grid item xs={12}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="baseline"
-          sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-        >
-          <Typography variant="h3">Product Rate List</Typography>
-
-          <Button
-            type="primary"
-            id="btnCreate"
-            name="btnCreate"
-            onClick={() => {
-              navigate("/rate/add");
-            }}
-          >
-            Create
-          </Button>
-        </Stack>
-      </Grid>
-      <Grid item xs={12}>
-        <Table rowKey="id" columns={columns} dataSource={data} bordered />;
-      </Grid>
-
+      <MainCard
+        title="Product Rate List"
+        secondary={
+          <div>
+            <Search
+              style={{ width: "250px", marginRight: "10px" }}
+              placeholder="Search by..."
+              value={searchText}
+              onChange={OnSearch}
+            />
+            <Button
+              type="primary"
+              id="btnCreate"
+              name="btnCreate"
+              onClick={() => {
+                navigate("/rate/add");
+              }}
+            >
+              Create
+            </Button>
+          </div>
+        }
+      >
+        <Grid item xs={12}>
+          <Table
+            rowKey="id"
+            columns={columns}
+            dataSource={searchData}
+            bordered
+          ></Table>
+        </Grid>
+      </MainCard>
       <Modal
         visible={modalVisible}
-        title="Are you sure delete this record?"
+        title="Delete"
         icon={<ExclamationCircleOutlined />}
         okText="Yes"
         okType="danger"
         cancelText="No"
         onOk={() => handleOk()}
         onCancel={() => handleCancel()}
-      ></Modal>
-    </Grid>
+      >
+        <p>Are you sure delete this record?</p>
+      </Modal>
+    </>
   );
 };
 export default RateList;

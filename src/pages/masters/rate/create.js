@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Input, Select, DatePicker } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkNumbers } from "../../../utility/Common";
-import moment from 'moment';
+import moment from "moment";
 const { TextArea } = Input;
+import MainCard from "components/MainCard";
 
 const RateAdd = () => {
   const navigate = useNavigate();
@@ -14,26 +15,25 @@ const RateAdd = () => {
   const isAddMode = !id;
   const [form] = Form.useForm();
   const [categoryList, setCategoryList] = useState([]);
-  const [purityList, setPurityList] = useState([]);
-  const [selectedCategoryId, setCategoryId] = useState([0]);
+  const [purityList, setPurityList] = useState([]);  
   const [subcategoryList, setSubCategoryList] = useState([]);
-  const dateFormat = 'YYYY/MM/DD';
+  const dateFormat = "YYYY/MM/DD";
   const initialFormValues = {
     id: null,
-    rateDate: "",    
+    rateDate: "",
     categoryId: "",
     subcategoryId: "",
-    productId : 1,
+    productId: 1,
     purityId: "",
-    rateOne : "",
-    rateTen :"",
+    rateOne: "",
+    rateTen: "",
     description: "",
   };
 
   const getRecordData = async (id) => {
     const b = new BaseApi();
     const result = await b.getById("rates", id);
-    initialFormValues.rateDate = result.rateDate;   
+    initialFormValues.rateDate = result.rateDate;
     initialFormValues.purityId = result.purityId;
     initialFormValues.categoryId = result.categoryId;
     initialFormValues.subcategoryId = result.subcategoryId;
@@ -41,13 +41,13 @@ const RateAdd = () => {
     initialFormValues.rateOne = result.rateOne;
     initialFormValues.rateTen = result.rateTen;
     initialFormValues.description = result.description;
-    changeCategoryHandler(initialFormValues.categoryId);    
+    changeCategoryHandler(result.categoryId);
     form.setFieldsValue({
       rateDate: initialFormValues.rateDate,
       description: initialFormValues.description,
       purityId: initialFormValues.purityId,
       categoryId: initialFormValues.categoryId,
-      subcategoryId: initialFormValues.subcategoryId,      
+      subcategoryId: initialFormValues.subcategoryId,
       rateOne: initialFormValues.rateOne,
       rateTen: initialFormValues.rateTen,
     });
@@ -55,39 +55,37 @@ const RateAdd = () => {
 
   const getCategoryList = async () => {
     const b = new BaseApi();
-    const categoryresult = await b.getListKV("categories");    
+    const categoryresult = await b.getListKV("categories");
     setCategoryList(categoryresult);
   };
   const getPurityList = async () => {
     const b = new BaseApi();
-    const result = await b.getListKV("purities");    
+    const result = await b.getListKV("purities");
     setPurityList(result);
   };
   const getSubCategoryList = async (id) => {
-    const b = new BaseApi();    
+    const b = new BaseApi();
     const result = await b.getListByParentId(
       "subcategories",
       "getListByCategoryId",
       id
-    );   
-    setSubCategoryList(result);  
-   
+    );
+    setSubCategoryList(result);
   };
   useEffect(() => {
     getCategoryList();
     getPurityList();
     if (!isAddMode) {
-      getRecordData(id);      
+      getRecordData(id);
     }
-  }, [id]);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const changeCategoryHandler = (value) => {
-  //  console.log("Selected Country Id :" + value);
-    if (value > 0) { setCategoryId
-        form.setFieldsValue({            
-            subcategoryId: '--- Select ---',
-         });        
-      setCategoryId(value);
+     console.log("Selected Category Id :" + value);
+    if (value > 0) {      
+      form.setFieldsValue({
+        subcategoryId: "--- Select ---",
+      });     
       getSubCategoryList(value);
     }
   };
@@ -101,7 +99,6 @@ const RateAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
-    //  console.log('insert functio is call :', data);
     let postData = {
       id: id,
       rateDate: data.rateDate,
@@ -109,21 +106,21 @@ const RateAdd = () => {
       purityId: data.purityId,
       categoryId: data.categoryId,
       subcategoryId: data.subcategoryId,
-      productId: '1',
+      productId: "1",
       rateOne: data.rateOne,
       rateTen: data.rateTen,
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
     console.log(postData);
-    
-      const baseApi = new BaseApi();
-     const result = await baseApi.request("rates", postData, "post");
-      if (result.status === 200) {
-        navigate("/rate", {
-          state: { message: "Record is successfully created." },
-       });
-      }
+
+    const baseApi = new BaseApi();
+    const result = await baseApi.request("rates", postData, "post");
+    if (result.status === 200) {
+      navigate("/rate", {
+        state: { message: "Record is successfully created." },
+      });
+    }
   };
   const updateData = async (id, data) => {
     let postData = {
@@ -133,7 +130,7 @@ const RateAdd = () => {
       purityId: data.purityId,
       categoryId: data.categoryId,
       subcategoryId: data.subcategoryId,
-      productId: '1',
+      productId: "1",
       rateOne: data.rateOne,
       rateTen: data.rateTen,
       updatedDttm: "" + new Date().getTime(),
@@ -148,198 +145,191 @@ const RateAdd = () => {
     }
   };
 
-  
   const handleNumbers = (e) => {
     return checkNumbers(e);
   };
-  
 
   return (
     <Form
       ratedate="frmrate"
       initialValues={{
-        remember: true       
+        remember: true,
       }}
       form={form} // Add this!
       layout="vertical"
       labelCol={{ span: 22 }}
-      wrapperCol={{ span: 22 }}
-      //onSubmit={handleSubmit}
+      wrapperCol={{ span: 22 }}     
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="baseline"
-            sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-          >
-            <Typography variant="h3">
-              {isAddMode ? "Create Rate" : "Edit Rate"}
-            </Typography>
-            <div>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: "10px" }}
+      <MainCard
+        title={isAddMode ? "Create Product Rate" : "Edit Product Rate"}
+        secondary={
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "10px" }}
+            >
+              Save
+            </Button>
+            <Link to={"/rate"}>
+              <Button type="danger">Cancel</Button>
+            </Link>
+          </div>
+        }
+      >
+        <Typography variant="body2">
+          <Grid container spacing={2}>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Date"
+                name="rateDate"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter date.",
+                  },
+                ]}
               >
-                Save
-              </Button>
-              <Link to={"/rate"}>
-                <Button type="danger">Cancel</Button>
-              </Link>
-            </div>
-          </Stack>
-        </Grid>
+                <DatePicker
+                  defaultValue={moment("2022/04/01", dateFormat)}
+                  format={dateFormat}
+                  selected={rateDate}
+                />
+              </Form.Item>
+            </Grid>
 
-        <Grid item xs={3}>
-          <Form.Item
-            label="Date"
-            name="rateDate"
-            rules={[
-              {
-                required: true,
-                message: "Please enter date.",
-              },
-            ]}
-          >
-            <DatePicker defaultValue={moment('2022/04/01', dateFormat)} format={dateFormat}  selected={rateDate} />
-          </Form.Item>
-        </Grid>        
-       
-        <Grid item xs={3}>
-          <Form.Item
-            label="Category"
-            id="categoryId"
-            name="categoryId"
-            rules={[
-              {
-                required: true,
-                message: "Please select category.",
-              },
-            ]}
-          >
-            <Select
-              placeholder="--- Select ---"
-              onChange={changeCategoryHandler}
-            >
-              {categoryList &&
-                categoryList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
-          </Form.Item>
-        </Grid>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Category"
+                id="categoryId"
+                name="categoryId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select category.",
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="--- Select ---"
+                  onChange={changeCategoryHandler}
+                >
+                  {categoryList &&
+                    categoryList.map((row, index) => {
+                      return (
+                        <option key={index} value={row.id}>
+                          {row.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
 
-        <Grid item xs={3}>
-          <Form.Item
-            label="Sub Category"
-            id="subcategoryId"
-            name="subcategoryId"           
-            rules={[
-              {
-                required: true,
-                message: "Please select sub category.",
-              },
-            ]}
-          >
-            <Select placeholder="--- Select ---">
-               {subcategoryList &&
-                subcategoryList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })} 
-            </Select>
-          </Form.Item>
-        </Grid>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Sub Category"
+                id="subcategoryId"
+                name="subcategoryId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select sub category.",
+                  },
+                ]}
+              >
+                <Select placeholder="--- Select ---">
+                  {subcategoryList &&
+                    subcategoryList.map((row, index) => {
+                      return (
+                        <option key={index} value={row.id}>
+                          {row.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
 
-        <Grid item xs={3}>
-          <Form.Item
-            label="Purity"
-            id="purityId"
-            name="purityId"
-            rules={[
-              {
-                required: true,
-                message: "Please select purity.",
-              },
-            ]}
-          >
-            <Select
-              placeholder="--- Select ---"              
-            >
-              {purityList &&
-                purityList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
-          </Form.Item>
-        </Grid>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Purity"
+                id="purityId"
+                name="purityId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select purity.",
+                  },
+                ]}
+              >
+                <Select placeholder="--- Select ---">
+                  {purityList &&
+                    purityList.map((row, index) => {
+                      return (
+                        <option key={index} value={row.id}>
+                          {row.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
 
-        <Grid item xs={4}>
-                    <Form.Item
-                        label="Rate (1 gm)"
-                        name="rateOne"
-                        id="rateOne"                        
-                        rules={[
-                            {
-                                required: true,                                
-                                message: 'Please enter rate value.'
-                            },
-                            {
-                                pattern:new RegExp(/^[0-9-.]*$/),
-                                message: "Please enter a valid  rate value."
-                              }
-                        ]}
-                    >
-                        <Input onKeyPress={handleNumbers} />
-                    </Form.Item>
-                </Grid>
-                <Grid item xs={4}>
-                    <Form.Item
-                        label="Rate (10 gm)"
-                        name="rateTen"
-                        id="rateTen"
-                        
-                        rules={[
-                            {
-                                required: true,                                
-                                message: 'Please enter rate value.'
-                            },
-                            {
-                                pattern:new RegExp(/^[0-9-.]*$/),
-                                message: "Please enter a valid  rate value."
-                              }
-                        ]}
-                    >
-                        <Input onKeyPress={handleNumbers} />
-                    </Form.Item>
-                </Grid>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Rate (1 gm)"
+                name="rateOne"
+                id="rateOne"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter rate value.",
+                  },
+                  {
+                    pattern: new RegExp(/^[0-9-.]*$/),
+                    message: "Please enter a valid  rate value.",
+                  },
+                ]}
+              >
+                <Input onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Rate (10 gm)"
+                name="rateTen"
+                id="rateTen"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter rate value.",
+                  },
+                  {
+                    pattern: new RegExp(/^[0-9-.]*$/),
+                    message: "Please enter a valid  rate value.",
+                  },
+                ]}
+              >
+                <Input onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
 
-                <Grid item xs={4}>
-                    <Form.Item
-                        label="Description"
-                        name="description"
-                        id ="description"                        
-                    >
-                        <TextArea rows={2} />
-                    </Form.Item>
-                </Grid>
-      </Grid>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Description"
+                name="description"
+                id="description"
+              >
+                <TextArea rows={2} />
+              </Form.Item>
+            </Grid>
+          </Grid>
+        </Typography>
+      </MainCard>
     </Form>
   );
 };

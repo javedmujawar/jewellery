@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Divider, Modal, Alert } from "antd";
+import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -9,8 +9,10 @@ import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
+import MainCard from "components/MainCard";
+const Search = Input.Search;
 
 const StateList = () => {
   const location = useLocation();
@@ -21,27 +23,31 @@ const StateList = () => {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [deletedId, setDeletedId] = useState(0);
-  
+  const [searchData, setSearchData] = useState([]);
+  const [searchText, setsearchText] = useState("");
+
   const columns = [
-    {
-      title: "Sr.No",
-      dataIndex: "id",
-      key: "id",
-      defaultSortOrder: 'descend',
-      //defaultSortOrder: "ascend",
-      sorter: (a, b) => a.id - b.id,
-    },
+    // {
+    //   title: "Sr.No",
+    //   dataIndex: "id",
+    //   key: "id",
+    //   defaultSortOrder: 'descend',
+    //   //defaultSortOrder: "ascend",
+    //   sorter: (a, b) => a.id - b.id,
+    // },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
-      defaultSortOrder: "descend",
+      //defaultSortOrder: "descend",
     },
     {
       title: "Short Name",
       dataIndex: "shortName",
       key: "shortName",
+      sorter: (a, b) => a.shortName.length - b.shortName.length,
+      //defaultSortOrder: "descend",
     },
     {
       title: "Code",
@@ -74,7 +80,7 @@ const StateList = () => {
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"               
+                size="small"
               ></Button>
             </Link>
 
@@ -96,16 +102,16 @@ const StateList = () => {
   const getAllList = async () => {
     const b = new BaseApi();
     const result = await b.getJoinList("states");
-    //  console.log(result);
     setData(result);
+    setSearchData(result);
   };
 
   useEffect(() => {
     getAllList();
   }, []);
-  
+
   const showModal = (recordId) => {
-        setDeletedId(recordId);
+    setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -115,63 +121,99 @@ const StateList = () => {
 
   const handleOk = async () => {
     try {
-      // console.log('selected id : ', deletedId);
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-      //console.log('postData=', postData);     
+      const postData = {
+        isDeleted: true,
+        id: deletedId,
+        deletedBy: 1,
+        deletedDttm: "" + new Date().getTime(),
+      };
+
       const res = await b.request("states", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
-       // getAllList(); 
-       navigate('/state', { state: { message:'Record is deleted successfully.' }}) 
-       window.location.reload();         
-       
+        navigate("/state", {
+          state: { message: "Record is deleted successfully." },
+        });
+        window.location.reload();
       }
-
     } catch (error) {}
   };
+  const OnSearch = (e) => {
+    setsearchText(e.target.value);
+    if (e.target.value == "") {
+      setSearchData(data);
+      return true;
+    }
+    const filteredData = data.filter(
+      (row) =>
+        row.id.toString().includes(e.target.value) ||
+        row.name.includes(e.target.value) ||
+        row.shortName.includes(e.target.value) ||
+        row.countryName.includes(e.target.value)
+    );
+    setSearchData(filteredData);
+  };
   return (
-    <Grid container spacing={3}>
-      {message && <Grid item xs={12}>
-        <Alert message={message} type="success" closable onClose={()=>{setMessage("")}} />
-      </Grid>}
-      <Grid item xs={12}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="baseline"
-          sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-        >
-          <Typography variant="h3">State List</Typography>
-
-          <Button
-            type="primary"
-            id="btnCreate"
-            name="btnCreate"
-            onClick={() => {
-              navigate("/state/add");
+    <>
+      {message && (
+        <Grid item xs={12}>
+          <Alert
+            message={message}
+            type="success"
+            closable
+            onClose={() => {
+              setMessage("");
             }}
-          >
-            Create
-          </Button>
-        </Stack>
-      </Grid>
-      <Grid item xs={12}>
-        <Table rowKey="id" columns={columns} dataSource={data} bordered />;
-      </Grid>
-
+          />
+        </Grid>
+      )}
+      <MainCard
+        title="State List"
+        secondary={
+          <div>
+            <Search
+              style={{ width: "250px", marginRight: "10px" }}
+              placeholder="Search by..."
+              value={searchText}
+              onChange={OnSearch}
+            />
+            <Button
+              type="primary"
+              id="btnCreate"
+              name="btnCreate"
+              onClick={() => {
+                navigate("/state/add");
+              }}
+            >
+              Create
+            </Button>
+          </div>
+        }
+      >
+        <Grid item xs={12}>
+          <Table
+            rowKey="id"
+            columns={columns}
+            dataSource={searchData}
+            bordered
+          ></Table>
+        </Grid>
+      </MainCard>
       <Modal
         visible={modalVisible}
-        title="Are you sure delete this record?"
+        title="Delete"
         icon={<ExclamationCircleOutlined />}
         okText="Yes"
         okType="danger"
         cancelText="No"
         onOk={() => handleOk()}
         onCancel={() => handleCancel()}
-      ></Modal>
-    </Grid>
+      >
+        <p>Are you sure delete this record?</p>
+      </Modal>
+    </>
   );
 };
 export default StateList;

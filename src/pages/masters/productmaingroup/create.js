@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { Button, Form, Input } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkAlphabets } from "../../../utility/Common";
 const { TextArea } = Input;
+import MainCard from "components/MainCard";
 
 const ProductMainGroupAdd = () => {
   const navigate = useNavigate();
@@ -33,15 +34,13 @@ const ProductMainGroupAdd = () => {
     });
   };
 
-  useEffect(() => {
-    // console.log('test by rashid');
+  useEffect(() => {   
     if (!isAddMode) {
       getRecordData(id);
     }
-  }, [id]);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {
-    //console.log('Success:', values);
+  const onFinish = (values) => {   
     // console.log('Success:', id + isAddMode);
     isAddMode ? insertData(values) : updateData(id, values);
   };
@@ -49,8 +48,7 @@ const ProductMainGroupAdd = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const insertData = async (data) => {
-    //  console.log('insert functio is call :', data);
+  const insertData = async (data) => {   
     let postData = {
       id: id,
       name: data.name,
@@ -111,76 +109,71 @@ const ProductMainGroupAdd = () => {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="baseline"
-            sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-          >
-            <Typography variant="h3">
-              {isAddMode ? "Create Main Group" : "Edit Main Group"}
-            </Typography>
-            <div>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: "10px" }}
+      <MainCard
+        title={isAddMode ? "Create Main Group" : "Edit Main Group"}
+        secondary={
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "10px" }}
+            >
+              Save
+            </Button>
+            <Link to={"/product-main-group"}>
+              <Button type="danger">Cancel</Button>
+            </Link>
+          </div>
+        }
+      >
+        <Typography variant="body2">
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter group name.",
+                  },
+                ]}
               >
-                Save
-              </Button>
-              <Link to={"/product-main-group"}>
-                <Button type="danger">Cancel</Button>
-              </Link>
-            </div>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={4}>
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please enter group name.",
-              },
-            ]}
-          >
-            <Input onKeyPress={handleAlphabets} onChange={handleChange} />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Form.Item
-            label="Short Name"
-            name="shortName"
-            id="shortName"
-            rules={[
-              {
-                required: true,
-                message: "Please enter short name.",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Form.Item
-            label="Description"
-            name="description"
-            rules={[
-              {
-                required: true,
-                message: "Please enter description.",
-              },
-            ]}
-          >
-            <TextArea rows={4} />
-          </Form.Item>
-        </Grid>
-      </Grid>
+                <Input onKeyPress={handleAlphabets} onChange={handleChange} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Short Name"
+                name="shortName"
+                id="shortName"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter short name.",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Description"
+                name="description"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter description.",
+                  },
+                ]}
+              >
+                <TextArea rows={4} />
+              </Form.Item>
+            </Grid>
+          </Grid>
+        </Typography>
+      </MainCard>
     </Form>
   );
 };

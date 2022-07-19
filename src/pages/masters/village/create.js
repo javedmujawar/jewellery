@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Input, Select } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid,  Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkAlphabets, checkNumbers } from "../../../utility/Common";
+import MainCard from "components/MainCard";
 
 const VillageAdd = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isAddMode = !id;
   const [form] = Form.useForm();
-  const [countryList, setCountryList] = useState([]);
-  const [selectedCountryId, setCountryId] = useState(0);
-  const [stateList, setStateList] = useState([]);
-  const [selectedStateId, setStateId] = useState(0);
-
+  const [countryList, setCountryList] = useState([]);  
+  const [stateList, setStateList] = useState([]);  
   const [districtList, setDistrictList] = useState(['']);
-  const [selectedDistrictId, setDistrictId] = useState(0);
-
-  const [talukaList, setTalukaList] = useState([]);
+    const [talukaList, setTalukaList] = useState([]);
   const initialFormValues = {
     id: null,
     name: "",
@@ -42,7 +38,7 @@ const VillageAdd = () => {
     initialFormValues.districtId = result.districtId;
     initialFormValues.talukaId = result.talukaId;
 
-    changeCountryHandler(initialFormValues.countryId);
+    changeCountryHandler(result.countryId);
     changeStateHandler(result.stateId);
     changeDistrictHandler(result.districtId);
 
@@ -68,8 +64,7 @@ const VillageAdd = () => {
       "states",
       "getListByCountryId",
       id
-    );
-    //console.log(stateresult);
+    );    
     setStateList(stateresult);
   };
 
@@ -79,8 +74,7 @@ const VillageAdd = () => {
       "districts",
       "getListByStateId",
       id
-    );
-    //console.log(result);
+    );   
     setDistrictList(result);
   };
 
@@ -90,8 +84,7 @@ const VillageAdd = () => {
       "talukas",
       "getListByDistrictId",
       id
-    );
-    console.log(result);
+    );   
     setTalukaList(result);
   };
   useEffect(() => {
@@ -99,18 +92,17 @@ const VillageAdd = () => {
     if (!isAddMode) {
       getRecordData(id);
     }
-  }, [id]);
+  }, [id]);// eslint-disable-line react-hooks/exhaustive-deps
 
   const changeCountryHandler = (value) => {
-    //  console.log("Selected Country Id :" + value);
+    
     if (value > 0) {
       form.setFieldsValue({
         stateId: "--- Select ---",
        districtId: "--- Select ---",
         talukaId: "--- Select ---",
        
-      });
-      setCountryId(value);
+      });     
       setDistrictList('');  
       setTalukaList('');     
       getStateList(value);
@@ -122,8 +114,7 @@ const VillageAdd = () => {
       form.setFieldsValue({
         districtId: "--- Select ---",
         talukaId: "--- Select ---",
-      });
-      setStateId(value);
+      });      
       setTalukaList('');   
       getDistrictList(value);
     }
@@ -134,8 +125,7 @@ const VillageAdd = () => {
     if (value > 0) {
       form.setFieldsValue({
         talukaId: "--- Select ---",
-      });
-      setDistrictId(value);
+      });     
       getTalukaList(value);
     }
   };
@@ -148,8 +138,7 @@ const VillageAdd = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const insertData = async (data) => {
-    //  console.log('insert functio is call :', data);
+  const insertData = async (data) => {    
     let postData = {
       id: id,
       name: data.name,
@@ -207,7 +196,7 @@ const VillageAdd = () => {
 
   return (
     <Form
-      name="frmtaluka"
+      name="frmvillage"
       initialValues={{
         remember: true,
       }}
@@ -220,32 +209,25 @@ const VillageAdd = () => {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="baseline"
-            sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-          >
-            <Typography variant="h3">
-              {isAddMode ? "Create Village" : "Edit Village"}
-            </Typography>
-            <div>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: "10px" }}
-              >
-                Save
-              </Button>
-              <Link to={"/village"}>
-                <Button type="danger">Cancel</Button>
-              </Link>
-            </div>
-          </Stack>
-        </Grid>
-
+       <MainCard
+        title={isAddMode ? "Create Village" : "Edit Village"}
+        secondary={
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "10px" }}
+            >
+              Save
+            </Button>
+            <Link to={"/village"}>
+              <Button type="danger">Cancel</Button>
+            </Link>
+          </div>
+        }
+      >
+        <Typography variant="body2">
+      <Grid container spacing={2}>        
         <Grid item xs={4}>
           <Form.Item
             label="Name"
@@ -387,6 +369,8 @@ const VillageAdd = () => {
           </Form.Item>
         </Grid>
       </Grid>
+      </Typography>
+      </MainCard>
     </Form>
   );
 };

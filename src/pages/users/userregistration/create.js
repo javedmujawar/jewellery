@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkAlphabets, checkNumbers } from "../../../utility/Common";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
+
 
 const UserRegistrationAdd = () => {
   const navigate = useNavigate();

@@ -1,11 +1,10 @@
-import { useEffect, useState, Fragment } from "react";
-import React from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, Input } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { Grid, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
-import Creatable, { useCreatable } from "react-select/creatable";
+import Creatable from "react-select/creatable";
 //import SearchableDropdown from 'react-native-searchable-dropdown';
 const { TextArea } = Input;
 const ProductAdd = () => {

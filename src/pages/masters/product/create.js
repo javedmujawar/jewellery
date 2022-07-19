@@ -51,7 +51,12 @@ const ProductAdd = () => {
   const getCategoryList = async () => {
     const b = new BaseApi();
     const result = await b.getListKV("categories");
-    setCategoryList(result);
+    let list = [];
+    if(result)
+    {
+      list = result.map((row)=>  {return { label: row.name, value: row.id }})
+    }
+    setCategoryList(list);
   };
 
   useEffect(() => {
@@ -207,7 +212,7 @@ const ProductAdd = () => {
               },
             ]}
           >
-            <Creatable options={aquaticCreatures}> 
+            <Creatable options={categoryList}> 
               {/* {categoryList &&
                 categoryList.map((row, index) => {                 
                     <options key={index} value={row.id}>

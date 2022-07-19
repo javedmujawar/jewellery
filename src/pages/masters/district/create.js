@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Input, Select } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkAlphabets, checkNumbers } from "../../../utility/Common";
+import MainCard from "components/MainCard";
 
 const DistrictAdd = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isAddMode = !id;
   const [form] = Form.useForm();
-  const [countryList, setCountryList] = useState([]);
-  const [selectedCountryId, setCountryId] = useState([0]);
+  const [countryList, setCountryList] = useState([]);  
   const [stateList, setStateList] = useState([]);
   const initialFormValues = {
     id: null,
@@ -31,7 +31,7 @@ const DistrictAdd = () => {
     initialFormValues.code = result.code;
     initialFormValues.countryId = result.countryId;
     initialFormValues.stateId = result.stateId;
-    changeCountryHandler(initialFormValues.countryId);    
+    changeCountryHandler(result.countryId);
     form.setFieldsValue({
       name: initialFormValues.name,
       shortName: initialFormValues.shortName,
@@ -43,34 +43,30 @@ const DistrictAdd = () => {
 
   const getCountryList = async () => {
     const b = new BaseApi();
-    const counrtyresult = await b.getListKV("countries");    
+    const counrtyresult = await b.getListKV("countries");
     setCountryList(counrtyresult);
   };
   const getStateList = async (id) => {
-    const b = new BaseApi();    
+    const b = new BaseApi();
     const stateresult = await b.getListByParentId(
       "states",
       "getListByCountryId",
       id
     );
-    //console.log(stateresult);
-    setStateList(stateresult);   
-   
+    setStateList(stateresult);
   };
   useEffect(() => {
     getCountryList();
     if (!isAddMode) {
-      getRecordData(id);      
+      getRecordData(id);
     }
-  }, [id]);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const changeCountryHandler = (value) => {
-  //  console.log("Selected Country Id :" + value);
-    if (value > 0) { 
-        form.setFieldsValue({            
-            stateId: '--- Select ---',
-         });        
-      setCountryId(value);
+    if (value > 0) {
+      form.setFieldsValue({
+        stateId: "--- Select ---",
+      });      
       getStateList(value);
     }
   };
@@ -84,7 +80,6 @@ const DistrictAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
-    //  console.log('insert functio is call :', data);
     let postData = {
       id: id,
       name: data.name,
@@ -139,7 +134,7 @@ const DistrictAdd = () => {
     <Form
       name="frmdistrict"
       initialValues={{
-        remember: true       
+        remember: true,
       }}
       form={form} // Add this!
       layout="vertical"
@@ -150,122 +145,117 @@ const DistrictAdd = () => {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="baseline"
-            sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-          >
-            <Typography variant="h3">
-              {isAddMode ? "Create District" : "Edit District"}
-            </Typography>
-            <div>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: "10px" }}
-              >
-                Save
-              </Button>
-              <Link to={"/district"}>
-                <Button type="danger">Cancel</Button>
-              </Link>
-            </div>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={4}>
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please enter name.",
-              },
-            ]}
-          >
-             <Input onKeyPress={handleAlphabets} onChange={handleChange} />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Form.Item label="Short Name" name="shortName" id="shortName">
-            <Input />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Form.Item
-            label="Code"
-            name="code"
-            id="code"
-            rules={[
-              {
-                required: true,
-                message: "Please enter code.",
-              },
-              {
-                pattern: new RegExp(/^[0-9]*$/),
-                message: "Please enter a valid  code value.",
-              },
-            ]}
-          >
-           <Input onKeyPress={handleNumbers} />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Form.Item
-            label="Country"
-            id="countryId"
-            name="countryId"
-            rules={[
-              {
-                required: true,
-                message: "Please select country.",
-              },
-            ]}
-          >
-            <Select
-              placeholder="--- Select ---"
-              onChange={changeCountryHandler}
+      <MainCard
+        title={isAddMode ? "Create District" : "Edit District"}
+        secondary={
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "10px" }}
             >
-              {countryList &&
-                countryList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
-          </Form.Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Form.Item
-            label="State"
-            id="stateId"
-            name="stateId"           
-            rules={[
-              {
-                required: true,
-                message: "Please select state.",
-              },
-            ]}
-          >
-            <Select placeholder="--- Select ---">
-               {stateList &&
-                stateList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })} 
-            </Select>
-          </Form.Item>
-        </Grid>
-      </Grid>
+              Save
+            </Button>
+            <Link to={"/district"}>
+              <Button type="danger">Cancel</Button>
+            </Link>
+          </div>
+        }
+      >
+        <Typography variant="body2">
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter name.",
+                  },
+                ]}
+              >
+                <Input onKeyPress={handleAlphabets} onChange={handleChange} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Form.Item label="Short Name" name="shortName" id="shortName">
+                <Input />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Code"
+                name="code"
+                id="code"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter code.",
+                  },
+                  {
+                    pattern: new RegExp(/^[0-9]*$/),
+                    message: "Please enter a valid  code value.",
+                  },
+                ]}
+              >
+                <Input onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Form.Item
+                label="Country"
+                id="countryId"
+                name="countryId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select country.",
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="--- Select ---"
+                  onChange={changeCountryHandler}
+                >
+                  {countryList &&
+                    countryList.map((row, index) => {
+                      return (
+                        <option key={index} value={row.id}>
+                          {row.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Form.Item
+                label="State"
+                id="stateId"
+                name="stateId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select state.",
+                  },
+                ]}
+              >
+                <Select placeholder="--- Select ---">
+                  {stateList &&
+                    stateList.map((row, index) => {
+                      return (
+                        <option key={index} value={row.id}>
+                          {row.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
+          </Grid>
+        </Typography>
+      </MainCard>
     </Form>
   );
 };

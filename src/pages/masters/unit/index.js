@@ -9,11 +9,9 @@ import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { statusTag } from "../../../utility/Common";
 import MainCard from "components/MainCard";
-
-
 const Search = Input.Search;
 
 const UnitList = () => {
@@ -22,39 +20,32 @@ const UnitList = () => {
   const [message, setMessage] = useState(
     location.state?.message ? location.state?.message : ""
   );
-  const [data, setData] = useState([]); 
-  const [searchData, setSearchData] = useState([]);  
-  const [searchText, setsearchText] = useState('');
-  const [filtered, setfiltered] = useState(false);
-  const [filteredInfo, setfilteredInfo] = useState([null]);
-  const [sortedInfo, setsortedInfo] = useState([null]);
-
+  const [data, setData] = useState([]);
+  const [searchData, setSearchData] = useState([]);
+  const [searchText, setsearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [deletedId, setDeletedId] = useState(0);
-  const [visible, setVisible] = useState(true);
 
-  
   const columns = [
-    {
-      title: "Sr.No",
-      dataIndex: "id",
-      key: "id",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.id - b.id,
-    },
+    // {
+    //   title: "Sr.No",
+    //   dataIndex: "id",
+    //   key: "id",
+    //   defaultSortOrder: "descend",      
+    //   sorter: (a, b) => a.id - b.id,
+    // },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-     
       sorter: (a, b) => a.name.length - b.name.length,
-      defaultSortOrder: "descend",
+      //defaultSortOrder: "descend",
     },
     {
       title: "Short Name",
       dataIndex: "shortName",
       key: "shortName",
-      
+      sorter: (a, b) => a.shortName.length - b.shortName.length,
     },
     {
       title: "Status",
@@ -100,7 +91,7 @@ const UnitList = () => {
     const b = new BaseApi();
     const result = await b.getAll("units");
     setData(result);
-    setSearchData(result); 
+    setSearchData(result);
   };
 
   useEffect(() => {
@@ -140,33 +131,21 @@ const UnitList = () => {
       }
     } catch (error) {}
   };
-
-  const handleChoosedRow = (event) => {
-    console.log("selected id :" + event);
-  };
-  const onInputChange = e => {
+  const OnSearch = (e) => {
     setsearchText(e.target.value);
-   };
-  const OnSearch = e => {
-    setsearchText(e.target.value);
-   if(e.target.value == "")
-   {
-    setSearchData(data);
-    return true;
-   }
-   const filteredData = data.filter((row)=>
-    row.id.toString().includes(e.target.value) 
-    || row.shortName.includes(e.target.value)
-    || row.name.includes(e.target.value)
-   ) 
-   setSearchData(filteredData);
-  };  
- const  handleChange = (pagination, filters, sorter) => {
-    console.log("Various parameters", pagination, filters, sorter);    
-    setfilteredInfo(filters);
-    setsortedInfo(sorter);
-
+    if (e.target.value == "") {
+      setSearchData(data);
+      return true;
+    }
+    const filteredData = data.filter(
+      (row) =>
+        row.id.toString().includes(e.target.value) ||
+        row.shortName.includes(e.target.value) ||
+        row.name.includes(e.target.value)
+    );
+    setSearchData(filteredData);
   };
+
   return (
     <>
       {message && (
@@ -177,51 +156,48 @@ const UnitList = () => {
             closable
             onClose={() => {
               setMessage("");
-              setVisible(false);
             }}
           />
         </Grid>
       )}
-      <MainCard title="Unit List" secondary={<div>
-          <Search
-          style={{ width:'250px',marginRight:'10px' }}
-          placeholder="Search by..."
-          value={searchText}
-          onChange={OnSearch} 
-        />
-          <Button
-            type="primary"
-            id="btnCreate"
-            name="btnCreate"
-            onClick={() => {
-              navigate("/unit/add");
-            }}
-          >
-            Create
-          </Button>
-          </div>}>
-
-      <Grid item xs={12}>
-        <Table
-          rowKey="id"
-          onRow={(r) => ({
-            onClick: () => {
-              handleChoosedRow();
-            },
-          })}
-          columns={columns}
-          dataSource={searchData}
-          bordered
-          hange={handleChange}
-        ></Table>
-        ;
-        {/* <Table rowKey="id" onRow={(r) => ({
+      <MainCard
+        title="Unit List"
+        secondary={
+          <div>
+            <Search
+              style={{ width: "250px", marginRight: "10px" }}
+              placeholder="Search by..."
+              value={searchText}
+              onChange={OnSearch}
+            />
+            <Button
+              type="primary"
+              id="btnCreate"
+              name="btnCreate"
+              onClick={() => {
+                navigate("/unit/add");
+              }}
+            >
+              Create
+            </Button>
+          </div>
+        }
+      >
+        <Grid item xs={12}>
+          <Table
+            rowKey="id"
+            columns={columns}
+            dataSource={searchData}
+            bordered
+          ></Table>
+          ;
+          {/* <Table rowKey="id" onRow={(r) => ({
             onClick : () => navigate('/unit/edit/'+r.id),
             onDoubleClick : () => navigate('/unit/edit/'+r.id)
           })} columns={columns} dataSource={data} bordered />;  */}
-      </Grid>
-       </MainCard>
-       <Modal 
+        </Grid>
+      </MainCard>
+      <Modal
         visible={modalVisible}
         title="Delete"
         icon={<ExclamationCircleOutlined />}
@@ -230,7 +206,9 @@ const UnitList = () => {
         cancelText="No"
         onOk={() => handleOk()}
         onCancel={() => handleCancel()}
-      ><p>Are you sure delete this record?</p></Modal>
+      >
+        <p>Are you sure delete this record?</p>
+      </Modal>
     </>
   );
 };

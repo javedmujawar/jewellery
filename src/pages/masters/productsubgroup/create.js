@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Input, Select } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkAlphabets } from "../../../utility/Common";
 const { TextArea } = Input;
+import MainCard from "components/MainCard";
 const ProductSubGroupAdd = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -41,14 +42,12 @@ const ProductSubGroupAdd = () => {
   };
   const getMainGroupList = async () => {
     const b = new BaseApi();
-    const mainresult = await b.getListKV("productmaingroups");
-    // console.log(mainresult);
+    const mainresult = await b.getListKV("productmaingroups");    
     setMainGroupList(mainresult);
   };
   const getGroupList = async () => {
     const b = new BaseApi();
-    const groupresult = await b.getListKV("productgroups");
-    // console.log(groupresult);
+    const groupresult = await b.getListKV("productgroups");   
     setGroupList(groupresult);
   };
 
@@ -58,10 +57,9 @@ const ProductSubGroupAdd = () => {
     if (!isAddMode) {
       getRecordData(id);
     }
-  }, [id]);
+  }, [id]);// eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {
-    //console.log('Success:', values);
+  const onFinish = (values) => {    
     // console.log('Success:', id + isAddMode);
     isAddMode ? insertData(values) : updateData(id, values);
   };
@@ -69,8 +67,7 @@ const ProductSubGroupAdd = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const insertData = async (data) => {
-    // console.log('insert functio is call :', data);
+  const insertData = async (data) => {   
     let postData = {
       id: id,
       name: data.name,
@@ -130,33 +127,26 @@ const ProductSubGroupAdd = () => {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
+      <MainCard
+        title={isAddMode ? "Create Sub Group" : "Edit Sub Group"}
+        secondary={
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "10px" }}
+            >
+              Save
+            </Button>
+            <Link to={"/productsubgroup"}>
+              <Button type="danger">Cancel</Button>
+            </Link>
+          </div>
+        }
+      >
+        <Typography variant="body2">
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="baseline"
-            sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-          >
-            <Typography variant="h3">
-              {isAddMode ? "Create Sub Group" : "Edit Sub Group"}
-            </Typography>
-            <div>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: "10px" }}
-              >
-                Save
-              </Button>
-              <Link to={"/productsubgroup"}>
-                <Button type="danger">Cancel</Button>
-              </Link>
-            </div>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={3}>
+          <Grid item xs={3}>
           <Form.Item
             label="Name"
             name="name"
@@ -236,6 +226,8 @@ const ProductSubGroupAdd = () => {
           </Form.Item>
         </Grid>
       </Grid>
+      </Typography>
+      </MainCard>
     </Form>
   );
 };

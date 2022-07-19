@@ -7,8 +7,8 @@ class BaseApi {
     }
     getAll(url) {
         return axios 
-        .get(constant.apiBaseUrl + url + '?' + 'filter=' + '%7B%22where%22%3A%7B%22isDeleted%22%3A0%7D%7D')          
-           // .get(constant.apiBaseUrl + url)
+        //.get(constant.apiBaseUrl + url + '?' + 'filter=' + '%7B%22where%22%3A%7B%22isDeleted%22%3A0%7D%7D')          
+        .get(constant.apiBaseUrl + url + '?' + 'filter={ "where":{"isDeleted":"0"},"order":["id DESC"]}')    
             .then((response) => {
                 //console.log(response.data);
                 return response.data;

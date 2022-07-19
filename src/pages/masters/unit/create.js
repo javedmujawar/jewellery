@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Button, Form, Input } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkAlphabets } from "../../../utility/Common";
@@ -29,11 +29,11 @@ const UnitAdd = () => {
     });
   };
 
-  useEffect(() => {
-    // console.log('test by rashid');
+  useEffect(() => {    
     if (!isAddMode) {
       getRecordData(id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const onFinish = (values) => {

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Input, Select } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkAlphabets, checkNumbers } from "../../../utility/Common";
-
+import MainCard from "components/MainCard";
 
 const StateAdd = () => {
   const navigate = useNavigate();
@@ -17,10 +17,10 @@ const StateAdd = () => {
     id: null,
     name: "",
     shortName: "",
-    countryId : "",
+    countryId: "",
     code: "",
   };
-  
+
   const getRecordData = async (id) => {
     const b = new BaseApi();
     const result = await b.getById("states", id);
@@ -40,7 +40,6 @@ const StateAdd = () => {
   const getCountryList = async () => {
     const b = new BaseApi();
     const counrtyresult = await b.getListKV("countries");
-    //console.log(counrtyresult);
     setCountryList(counrtyresult);
   };
   useEffect(() => {
@@ -48,10 +47,9 @@ const StateAdd = () => {
     if (!isAddMode) {
       getRecordData(id);
     }
-  }, [id]);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onFinish = (values) => {
-    //console.log('Success:', values);
     // console.log('Success:', id + isAddMode);
     isAddMode ? insertData(values) : updateData(id, values);
   };
@@ -60,7 +58,6 @@ const StateAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
-    //  console.log('insert functio is call :', data);
     let postData = {
       id: id,
       name: data.name,
@@ -89,11 +86,7 @@ const StateAdd = () => {
       updatedBy: 1,
     };
     const baseApi = new BaseApi();
-    const result = await baseApi.request(
-      "states",
-      postData,
-      "patch"
-    );
+    const result = await baseApi.request("states", postData, "patch");
     if (result.status === 200) {
       navigate("/state", {
         state: { message: "Record is successfully updated." },
@@ -122,98 +115,95 @@ const StateAdd = () => {
       form={form} // Add this!
       layout="vertical"
       labelCol={{ span: 22 }}
-      wrapperCol={{ span: 22 }}
-      //onSubmit={handleSubmit}
+      wrapperCol={{ span: 22 }}      
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="baseline"
-            sx={{ mb: { xs: -0.5, sm: 0.5 } }}
-          >
-            <Typography variant="h3">
-              {isAddMode ? "Create State" : "Edit State"}
-            </Typography>
-            <div>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: "10px" }}
+      <MainCard
+        title={isAddMode ? "Create State" : "Edit State"}
+        secondary={
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "10px" }}
+            >
+              Save
+            </Button>
+            <Link to={"/state"}>
+              <Button type="danger">Cancel</Button>
+            </Link>
+          </div>
+        }
+      >
+        <Typography variant="body2">
+          <Grid container spacing={2}>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter name.",
+                  },
+                ]}
               >
-                Save
-              </Button>
-              <Link to={"/state"}>
-                <Button type="danger">Cancel</Button>
-              </Link>
-            </div>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={3}>
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please enter name.",
-              },
-            ]}
-          >
-            <Input onKeyPress={handleAlphabets} onChange={handleChange} />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={3}>
-          <Form.Item label="Short Name" name="shortName" id="shortName">
-            <Input />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={3}>
-          <Form.Item label="Code" name="code" id="code"
-          rules={[
-            {
-              required: true,
-              message: "Please enter code.",
-            },
-            {
-                pattern:new RegExp(/^[0-9]*$/),
-                message: "Please enter a valid  code value."
-              }
-          ]}>
-          <Input onKeyPress={handleNumbers} />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={3}>
-          <Form.Item
-            label="Country"
-            id="countryId"
-            name="countryId"
-            rules={[
-              {
-                required: true,
-                message: "Please select country.",
-              },
-            ]}
-          >
-            <Select placeholder="--- Select ---">
-              {countryList &&
-                countryList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
-          </Form.Item>
-        </Grid>
-       
-      </Grid>
+                <Input onKeyPress={handleAlphabets} onChange={handleChange} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={3}>
+              <Form.Item label="Short Name" name="shortName" id="shortName">
+                <Input />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Code"
+                name="code"
+                id="code"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter code.",
+                  },
+                  {
+                    pattern: new RegExp(/^[0-9]*$/),
+                    message: "Please enter a valid  code value.",
+                  },
+                ]}
+              >
+                <Input onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Country"
+                id="countryId"
+                name="countryId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select country.",
+                  },
+                ]}
+              >
+                <Select placeholder="--- Select ---">
+                  {countryList &&
+                    countryList.map((row, index) => {
+                      return (
+                        <option key={index} value={row.id}>
+                          {row.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
+          </Grid>
+        </Typography>
+      </MainCard>
     </Form>
   );
 };

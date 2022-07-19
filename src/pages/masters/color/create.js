@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { Grid, Stack, Typography } from '@mui/material';
+import { Grid,  Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
 import { checkAlphabets } from "../../../utility/Common";
 const { TextArea } = Input;
+import MainCard from "components/MainCard";
 
 const ColorAdd = () => {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ const ColorAdd = () => {
         name: '',        
         description: ''
     };
-    //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
+   
     const getRecordData = async (id) => {
         const b = new BaseApi();
         const result = await b.getById('colors', id);
@@ -34,10 +35,9 @@ const ColorAdd = () => {
         if (!isAddMode) {
             getRecordData(id);
         }
-    },[id]);
+    },[id]);// eslint-disable-line react-hooks/exhaustive-deps
 
-    const onFinish = (values) => {
-        //console.log('Success:', values);
+    const onFinish = (values) => {        
         // console.log('Success:', id + isAddMode);
         isAddMode ? insertData(values) : updateData(id, values);
     };
@@ -46,7 +46,7 @@ const ColorAdd = () => {
         console.log('Failed:', errorInfo);
     };
     const insertData = async (data) => {
-        //  console.log('insert functio is call :', data);
+       
         let postData = {
             id: id,
             name: data.name,            
@@ -92,28 +92,31 @@ const ColorAdd = () => {
             form={form} // Add this!
             layout="vertical"
             labelCol={{ span: 22 }}
-            wrapperCol={{ span: 22 }}
-            //onSubmit={handleSubmit}
+            wrapperCol={{ span: 22 }}           
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
+        <MainCard
+        title={isAddMode ? "Create Color" : "Edit Color"}
+        secondary={
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "10px" }}
+            >
+              Save
+            </Button>
+            <Link to={"/color"}>
+              <Button type="danger">Cancel</Button>
+            </Link>
+          </div>
+        }
+      >
+        <Typography variant="body2">
             <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
-                        <Typography variant="h3">{isAddMode ? 'Create Color' : 'Edit Color'}</Typography>
-                        <div>
-                            <Button type="primary" htmlType="submit" style={{marginRight:'10px'}}>
-                                Save
-                            </Button>
-                            <Link to={'/color'}>
-                                <Button type="danger">Cancel</Button>
-                            </Link>
-                        </div>
-                    </Stack>
-                </Grid>
-
-                <Grid item xs={4}>
+                               <Grid item xs={4}>
                     <Form.Item
                         label="Name"
                         name="name"
@@ -136,7 +139,9 @@ const ColorAdd = () => {
                         <TextArea rows={2} />
                     </Form.Item>
                 </Grid>
-            </Grid>
+            </Grid>            
+            </Typography>
+            </MainCard>
         </Form>
     );
 };

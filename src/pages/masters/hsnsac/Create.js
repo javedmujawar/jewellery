@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { Grid, Stack, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useNavigate   } from 'react-router-dom';
 import BaseApi from 'services/BaseApi';
 import { checkAlphabets, checkNumbers } from "../../../utility/Common";
-
 const { TextArea } = Input;
+import MainCard from "components/MainCard";
 
 const HsnSacAdd = () => {
     const navigate = useNavigate();
@@ -39,15 +39,13 @@ const HsnSacAdd = () => {
         });
     };
 
-    useEffect(() => {
-        // console.log('test by rashid');
+    useEffect(() => {      
         if (!isAddMode) {
             getRecordData(id);
         }
-    },[id]);
+    },[id]);// eslint-disable-line react-hooks/exhaustive-deps
 
-    const onFinish = (values) => {
-       
+    const onFinish = (values) => {       
         // console.log('Success:', id + isAddMode);
         isAddMode ? insertData(values) : updateData(id, values);
     };
@@ -55,8 +53,7 @@ const HsnSacAdd = () => {
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
-    const insertData = async (data) => {
-        //  console.log('insert functio is call :', data);
+    const insertData = async (data) => {       
         let postData = {
             id: id,
             name: data.name,
@@ -66,9 +63,7 @@ const HsnSacAdd = () => {
             description: data.description,
             createdDttm: '' + new Date().getTime(),
             createdBy: 1
-        };
-        //console.log(postData);
-        
+        };        
         const baseApi = new BaseApi();
         const result = await baseApi.request('hsnsacs', postData, 'post');
         if (result.status === 200) {            
@@ -105,7 +100,6 @@ const HsnSacAdd = () => {
         });
       };
 
-
     return (
         <Form
             name="frmhsnsac"
@@ -121,22 +115,26 @@ const HsnSacAdd = () => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
+             <MainCard
+        title={isAddMode ? "Create HSN / SAC" : "Edit HSN / SAC"}
+        secondary={
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "10px" }}
+            >
+              Save
+            </Button>
+            <Link to={"/hsnsac"}>
+              <Button type="danger">Cancel</Button>
+            </Link>
+          </div>
+        }
+      >
+        <Typography variant="body2">
             <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
-                        <Typography variant="h3">{isAddMode ? 'Create HSN / SAC' : 'Edit HSN / SAC'}</Typography>
-                        <div>
-                            <Button type="primary" htmlType="submit" style={{marginRight:'10px'}}>
-                                Save
-                            </Button>
-                            <Link to={'/hsnsac'}>
-                                <Button type="danger">Cancel</Button>
-                            </Link>
-                        </div>
-                    </Stack>
-                </Grid>
-
-                <Grid item xs={3}>
+                                <Grid item xs={3}>
                     <Form.Item
                         label="Name"
                         name="name"
@@ -213,6 +211,8 @@ const HsnSacAdd = () => {
                     </Form.Item>
                 </Grid>
             </Grid>
+            </Typography>
+            </MainCard>
         </Form>
     );
 };

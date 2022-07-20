@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button, Form, Input,Select } from "antd";
+import { Button, Form, Input } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
+import Creatable from "react-select/creatable";
+//import SearchableDropdown from 'react-native-searchable-dropdown';
 import MainCard from "components/MainCard";
-import { checkAlphabets, checkNumbers } from "../../../utility/Common";
 
 const { TextArea } = Input;
 const ProductAdd = () => {
@@ -16,21 +17,25 @@ const ProductAdd = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [subcategoryList, setSubCategoryList] = useState([]);
   const [colorList, setColorList] = useState([]);
-  const [unitList, setUnitList] = useState([]);
-  
+
   const initialFormValues = {
     id: null,
     name: "",
     barcode: "",
     shortName: "",
-    unitId : "",
-    openingStock : "",
     categoryId: "",
     subcategoryId: "",
     colorId : "",
     description: "",
   };
- 
+  const aquaticCreatures = [
+    { label: "Shark", value: "Shark" },
+    { label: "Dolphin", value: "Dolphin" },
+    { label: "Whale", value: "Whale" },
+    { label: "Octopus", value: "Octopus" },
+    { label: "Crab", value: "Crab" },
+    { label: "Lobster", value: "Lobster" },
+  ];
 
   const getRecordData = async (id) => {
     const b = new BaseApi();
@@ -38,19 +43,16 @@ const ProductAdd = () => {
     initialFormValues.name = result.name;
     initialFormValues.barcode = result.barcode;
     initialFormValues.shortName = result.shortName;
-    initialFormValues.unitId = result.unitId;
-    initialFormValues.openingStock = result.openingStock;
     initialFormValues.categoryId = result.categoryId;
     initialFormValues.subcategoryId = result.subcategoryId; 
-    initialFormValues.colorId = result.colorId; 
+    initialFormValues.colorId = result.colorId;   
+
     initialFormValues.description = result.description;
 
     form.setFieldsValue({
       name: initialFormValues.name,
       barcode: initialFormValues.barcode,
       shortName: initialFormValues.shortName,
-      unitId: initialFormValues.unitId,
-      openingStock: initialFormValues.openingStock,
       categoryId: initialFormValues.categoryId,
       subcategoryId: initialFormValues.subcategoryId,
       colorId: initialFormValues.colorId,
@@ -59,59 +61,62 @@ const ProductAdd = () => {
   };
   const getCategoryList = async () => {
     const b = new BaseApi();
-    const result = await b.getListKV("categories");   
-    setCategoryList(result);
+    const result = await b.getListKV("categories");
+    let list = [];
+    if (result) {
+      list = result.map((row) => {
+        return { label: row.name, value: row.id };
+      });
+    }
+    setCategoryList(list);
   };
   const getColorList = async () => {
     const b = new BaseApi();
-    const colorresult = await b.getListKV("colors");   
-    setColorList(colorresult);
-  };
-  const getUnitList = async () => {
-    const b = new BaseApi();
-    const unitresult = await b.getListKV("units");   
-    setUnitList(unitresult);
+    const colorresult = await b.getListKV("colors");    
+    let list = [];
+    if (colorresult) {
+      list = colorresult.map((row) => {
+        return { label: row.name, value: row.id };
+      });
+    }
+    setColorList(list);
   };
   const getSubCategoryList = async (id) => {
     const b = new BaseApi();
-    const sublist = await b.getListByParentId(
+    const result = await b.getListByParentId(
       "subcategories",
       "getListByCategoryId",
       id
     );
+    //console.log(result);
+    let sublist = [];
+    if (result) {
+      sublist = result.map((row) => {
+        return { label: row.name, value: row.id };
+      });
+    }
     setSubCategoryList(sublist);
   };
 
   useEffect(() => {
     getCategoryList();
     getColorList();
-    getUnitList();
-
     if (!isAddMode) {
       getRecordData(id);
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleAlphabets = (e) => {
-    return checkAlphabets(e);
-  };
-  const handleNumbers = (e) => {
-    return checkNumbers(e);
-  };
-  const handleChange = (e) => {
-    form.setFieldsValue({
-      shortName: e.target.value,
-    });
-};
-  const changeCategoryHandler = (opt) => {    
-     if (opt > 0) {
+  const changeCategoryHandler = (opt,meta) => {
+    console.log('Category Id :'+ opt.value + ' Name :'+ opt.label + ' Meta : '+ meta);
+     if (opt.value > 0) {
        form.setFieldsValue({
          subcategoryId: "--- Select ---",
        });      
-       getSubCategoryList(opt);
+       getSubCategoryList(opt.value);
      }
   };
-  const onFinish = (values) => {   
+  const onFinish = (values) => {
+    // console.log('Success:', id + isAddMode);
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -122,12 +127,9 @@ const ProductAdd = () => {
     let postData = {
       id: id,
       name: data.name,
-      shortName: data.shortName,
-      unitId: data.unitId,
-      openingStock: data.openingStock,
-      categoryId: data.categoryId,
-      subcategoryId: data.subcategoryId,
-      colorId: data.colorId,
+      categoryId: data.categoryId.value,
+      subcategoryId: data.subcategoryId.value,
+      colorId: data.colorId.value,
       description: data.description,
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
@@ -153,13 +155,13 @@ console.log(postData);
       updatedDttm: "" + new Date().getTime(),
       updatedBy: 1,
     };
-    // const baseApi = new BaseApi();
-    // const result = await baseApi.request("products", postData, "patch");
-    // if (result.status === 200) {
-    //   navigate("/product", {
-    //     state: { message: "Record is successfully updated." },
-    //   });
-    // }
+    const baseApi = new BaseApi();
+    const result = await baseApi.request("products", postData, "patch");
+    if (result.status === 200) {
+      navigate("/product", {
+        state: { message: "Record is successfully updated." },
+      });
+    }
   };
 
   return (
@@ -196,26 +198,7 @@ console.log(postData);
       >
         <Typography variant="body2">
           <Grid container spacing={2}>
-          <Grid item xs={3}>
-              <Form.Item
-                label="Barcode"
-                name="barcode"
-                id="barcode"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter barcode.",
-                  },
-                  {
-                    pattern: new RegExp(/^[0-9-]*$/),
-                    message: "Please enter a valid  barcode value.",
-                  },
-                ]}
-              >
-                <Input  onKeyPress={handleNumbers} />
-              </Form.Item>
-            </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Form.Item
                 label="Name"
                 name="name"
@@ -226,11 +209,11 @@ console.log(postData);
                   },
                 ]}
               >
-                <Input onKeyPress={handleAlphabets} onChange={handleChange} />
+                <Input />
               </Form.Item>
             </Grid>
 
-            <Grid item xs={2}>
+            <Grid item xs={4}>
               <Form.Item
                 label="Short Name"
                 name="shortName"
@@ -242,52 +225,25 @@ console.log(postData);
                   },
                 ]}
               >
-                <Input onKeyPress={handleAlphabets} />
+                <Input />
               </Form.Item>
             </Grid>
-            <Grid item xs={2}>
+
+            <Grid item xs={4}>
               <Form.Item
-                label="Unit"
-                id="unitId"
-                name="unitId"
+                label="Barcode"
+                name="barcode"
+                id="barcode"
                 rules={[
                   {
                     required: true,
-                    message: "Please select unit.",
+                    message: "Please enter barcode.",
                   },
                 ]}
               >
-            <Select placeholder="--- Select ---">
-              {unitList &&
-                unitList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
+                <Input />
               </Form.Item>
             </Grid>
-            <Grid item xs={2}>
-              <Form.Item
-                label="Opening Stock"
-                name="openingStock"
-                id="openingStock"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter opening stock.",
-                  },
-                  {
-                    pattern: new RegExp(/^[0-9]*$/),
-                    message: "Please enter valid value.",
-                  },
-                ]}
-              >
-                <Input  onKeyPress={handleNumbers} />
-              </Form.Item>
-            </Grid>            
 
             <Grid item xs={6}>
               <Form.Item
@@ -301,16 +257,8 @@ console.log(postData);
                   },
                 ]}
               >
-            <Select placeholder="--- Select ---" onChange={changeCategoryHandler}>
-              {categoryList &&
-                categoryList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
+                <Creatable options={categoryList} onChange={changeCategoryHandler}>                 
+                </Creatable>
               </Form.Item>
             </Grid>
             <Grid item xs={6}>
@@ -325,16 +273,9 @@ console.log(postData);
                   },
                 ]}
               >
-               <Select placeholder="--- Select ---">
-              {subcategoryList &&
-                subcategoryList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
+                <Creatable options={subcategoryList}>
+                  
+                </Creatable>
               </Form.Item>
             </Grid>
             <Grid item xs={6}>
@@ -349,16 +290,9 @@ console.log(postData);
                   },
                 ]}
               >
-               <Select placeholder="--- Select ---">
-              {colorList &&
-                colorList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
+                <Creatable options={colorList} onChange={(opt, meta) => console.log(opt, meta)}>
+                  
+                </Creatable>
               </Form.Item>
             </Grid>
             <Grid item xs={6}>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { Grid,  Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 const { TextArea } = Input;
 import MainCard from "components/MainCard";
+import Creatable from "react-select/creatable";
 
 const SubCategoryAdd = () => {
   const navigate = useNavigate();
@@ -23,8 +24,9 @@ const SubCategoryAdd = () => {
   const getRecordData = async (id) => {
     const b = new BaseApi();
     const result = await b.getById("subcategories", id);
+    console.log(result);
     initialFormValues.name = result.name;
-    initialFormValues.categoryId = result.categoryId;
+    initialFormValues.categoryId = result.categoryId.value;
     initialFormValues.description = result.description;
 
     form.setFieldsValue({
@@ -35,8 +37,14 @@ const SubCategoryAdd = () => {
   };
   const getCategoryList = async () => {
     const b = new BaseApi();
-    const result = await b.getListKV("categories");   
-    setCategoryList(result);
+    const result = await b.getListKV("categories"); 
+    let list = [];
+    if (result) {
+      list = result.map((row) => {
+        return { label: row.name, value: row.id };
+      });
+    }  
+    setCategoryList(list);
   };
 
   useEffect(() => {
@@ -54,25 +62,64 @@ const SubCategoryAdd = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const insertData = async (data) => {    
+  const insertData = async (data) => {  
+    
+    if(data.categoryId.value>0)
+    {
     let postData = {
       id: id,
       name: data.name,
-      categoryId: data.categoryId,
+      categoryId: data.categoryId.value,
       description: data.description,
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
-
-    const baseApi = new BaseApi();
-    const result = await baseApi.request("subcategories", postData, "post");
-    if (result.status === 200) {
-      navigate("/subcategory", {
-        state: { message: "Record is successfully created." },
-      });
+    console.log(postData);
+     const baseApi = new BaseApi();
+     const result = await baseApi.request("subcategories", postData, "post");
+     if (result.status === 200) {
+       navigate("/subcategory", {
+         state: { message: "Record is successfully created." },
+       });
+     }
+  }
+  else
+  {
+    //console.log('New Category Item is Found:');
+    let categoryData = {
+      id: id,
+      name: data.categoryId.value,
+      description: data.categoryId.value,
+      createdDttm: "" + new Date().getTime(),
+      createdBy: 1,
     }
+  
+     const baseApi = new BaseApi();
+     const result = await baseApi.request("categories", categoryData, "post");
+     if (result.status === 200) {
+     
+      let postData = {
+        id: id,
+        name: data.name,
+        categoryId: result.data.id,
+        description: data.description,
+        createdDttm: "" + new Date().getTime(),
+        createdBy: 1,
+      };
+      //console.log(postData);
+       const baseApi = new BaseApi();
+        const newresult = await baseApi.request("subcategories", postData, "post");
+        if (newresult.status === 200) {
+         navigate("/subcategory", {
+           state: { message: "Record is successfully created." },
+        });
+       }      
+     }
+  }
   };
   const updateData = async (id, data) => {
+    if(data.categoryId.value>0)
+    {    
     let postData = {
       id: id,
       name: data.name,
@@ -88,6 +135,40 @@ const SubCategoryAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  }
+  else
+  {
+     console.log('New Category Item is Found:');
+     let categoryData = {
+      id: id,
+      name: data.categoryId.value,
+      description: data.categoryId.value,
+      createdDttm: "" + new Date().getTime(),
+      createdBy: 1,
+    }
+  
+     const baseApi = new BaseApi();
+     const result = await baseApi.request("categories", categoryData, "post");
+     if (result.status === 200) {
+     
+      let postData = {
+        id: id,
+        name: data.name,
+        categoryId: result.data.id,
+        description: data.description,
+        updatedDttm: "" + new Date().getTime(),
+        updatedBy: 1,
+      };
+      //console.log(postData);
+       const baseApi = new BaseApi();
+        const newresult = await baseApi.request("subcategories", postData, "patch");
+        if (newresult.status === 200) {
+         navigate("/subcategory", {
+           state: { message: "Record is successfully updated." },
+        });
+       }      
+     }
+  }
   };
 
   return (
@@ -139,7 +220,7 @@ const SubCategoryAdd = () => {
           </Form.Item>
         </Grid>
 
-        <Grid item xs={4}>
+        {/* <Grid item xs={4}>
           <Form.Item
             label="Category"
             id="categoryId"
@@ -162,7 +243,23 @@ const SubCategoryAdd = () => {
                 })}
             </Select>
           </Form.Item>
-        </Grid>
+        </Grid> */}
+        <Grid item xs={4}>
+              <Form.Item
+                label="Category"
+                id="categoryId"
+                name="categoryId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select category.",
+                  },
+                ]}
+              >
+                <Creatable options={categoryList} >                 
+                </Creatable>
+              </Form.Item>
+            </Grid>
         <Grid item xs={4}>
           <Form.Item label="Description" name="description">
             <TextArea rows={4} />

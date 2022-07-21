@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Button, Form, Input, DatePicker, Select, Checkbox,Upload } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  DatePicker,
+  Select,
+  Checkbox,
+  Upload,
+} from "antd";
 import { Link, useParams } from "react-router-dom";
 import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -8,9 +16,9 @@ const { TextArea } = Input;
 import MainCard from "components/MainCard";
 import { checkAlphabets, checkNumbers } from "../../../utility/Common";
 import moment from "moment";
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined } from "@ant-design/icons";
 
-const CustomerAdd = () => {
+const EmployeeAdd = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isAddMode = !id;
@@ -26,6 +34,11 @@ const CustomerAdd = () => {
 
   const [customertypeList, setCustomerTypeList] = useState([]);
   const [usertypeList, setUserTypeList] = useState([]);
+
+  const [bloodgroupList, setBloodGroupList] = useState([]);
+  const [roleList, setRolList] = useState([]);
+  const [maritalList, setMaritalList] = useState([]);
+
   const [chkSmsFlag, setchkSmsFlag] = useState(0);
   const [chkWsmsFlag, setchkWSmsFlag] = useState(0);
   const initialFormValues = {
@@ -63,7 +76,7 @@ const CustomerAdd = () => {
 
   const getRecordData = async (id) => {
     const b = new BaseApi();
-    const result = await b.getById("customers", id);
+    const result = await b.getById("employees", id);
     initialFormValues.name = result.name;
     initialFormValues.marathiName = result.marathiName;
     initialFormValues.primaryMobile = result.primaryMobile;
@@ -80,7 +93,7 @@ const CustomerAdd = () => {
     initialFormValues.crdrId = result.crdrId;
 
     initialFormValues.countryId = result.countryId;
-    changeCountryHandler(result.countryId);  
+    changeCountryHandler(result.countryId);
     initialFormValues.stateId = result.stateId;
     changeStateHandler(result.stateId);
     initialFormValues.districtId = result.districtId;
@@ -115,7 +128,7 @@ const CustomerAdd = () => {
       primaryMobile: initialFormValues.primaryMobile,
       secondaryMobile: initialFormValues.secondaryMobile,
       address: initialFormValues.address,
-      birthDate: "null",//initialFormValues.birthDate,
+      birthDate: "null", //initialFormValues.birthDate,
 
       genderId: initialFormValues.genderId,
       photo: "null",
@@ -136,8 +149,7 @@ const CustomerAdd = () => {
       adharcardNumber: initialFormValues.adharcardNumber,
       customercategoriesId: initialFormValues.customercategoriesId,
       usertypeId: initialFormValues.usertypeId,
-      registrationDate: "null",//initialFormValues.registrationDate,      
-      
+      registrationDate: "null", //initialFormValues.registrationDate,
     });
   };
   const getGenderList = async () => {
@@ -205,6 +217,23 @@ const CustomerAdd = () => {
     const result = await b.getListKV("usertypes");
     setUserTypeList(result);
   };
+  const getBloodGroupList = async () => {
+    const b = new BaseApi();
+    const bloodresult = await b.getListKV("bloodgroups");
+    setBloodGroupList(bloodresult);
+  };
+  const getRoleList = async () => {
+    const b = new BaseApi();
+    const roleresult = await b.getListKV("roles");
+    setRolList(roleresult);
+  };
+
+  const getMaritalList = async () => {
+    const b = new BaseApi();
+    const result = await b.getListKV("maritalstatuses");
+    setMaritalList(result);
+  };
+  
 
   useEffect(() => {
     getGenderList();
@@ -212,6 +241,9 @@ const CustomerAdd = () => {
     getCountryList();
     getCustomerTypeList();
     getUserTypeList();
+    getBloodGroupList();
+    getRoleList();
+    getMaritalList();
     if (!isAddMode) {
       getRecordData(id);
     }
@@ -221,14 +253,14 @@ const CustomerAdd = () => {
     // console.log('Success:', id + isAddMode);
     isAddMode ? insertData(values) : updateData(id, values);
   };
-  const onSmsChange = (e) => {    
-   //console.log("checked =" + e.target.checked);
+  const onSmsChange = (e) => {
+    //console.log("checked =" + e.target.checked);
     setchkSmsFlag(e.target.checked);
   };
-  const onWsmsChange = (e) => {    
+  const onWsmsChange = (e) => {
     //console.log("checked =" + e.target.checked);
-     setchkWSmsFlag(e.target.checked);
-   };
+    setchkWSmsFlag(e.target.checked);
+  };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -239,7 +271,7 @@ const CustomerAdd = () => {
   const handleNumbers = (e) => {
     return checkNumbers(e);
   };
-  
+
   const changeCountryHandler = (value) => {
     if (value > 0) {
       form.setFieldsValue({
@@ -288,15 +320,13 @@ const CustomerAdd = () => {
   const insertData = async (data) => {
     let smsFlg = 0;
     let wsmsFlg = 0;
-    if(chkSmsFlag===true)
-    {
+    if (chkSmsFlag === true) {
       smsFlg = 1;
     }
-    if(chkWsmsFlag===true)
-    {
+    if (chkWsmsFlag === true) {
       wsmsFlg = 1;
     }
-   
+
     let postData = {
       id: id,
       name: data.name,
@@ -328,30 +358,28 @@ const CustomerAdd = () => {
       customercategoriesId: data.customercategoriesId,
       usertypeId: data.usertypeId,
       registrationDate: "" + new Date().getTime(), //data.registrationDate,
-         
-       sendSms: smsFlg,
+
+      sendSms: smsFlg,
       sendwhatsappSms: wsmsFlg,
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
-     console.log(postData);
-    // const baseApi = new BaseApi();
-    // const result = await baseApi.request("customers", postData, "post");
-    // if (result.status === 200) {
-    //   navigate("/customer", {
-    //     state: { message: "Record is successfully created." },
-    //   });
-    // }
+    //console.log(postData);
+    const baseApi = new BaseApi();
+    const result = await baseApi.request("employees", postData, "post");
+    if (result.status === 200) {
+      navigate("/employee", {
+        state: { message: "Record is successfully created." },
+      });
+    }
   };
   const updateData = async (id, data) => {
     let smsFlg = 0;
     let wsmsFlg = 0;
-    if(chkSmsFlag===true)
-    {
+    if (chkSmsFlag === true) {
       smsFlg = 1;
     }
-    if(chkWsmsFlag===true)
-    {
+    if (chkWsmsFlag === true) {
       wsmsFlg = 1;
     }
     let postData = {
@@ -386,15 +414,15 @@ const CustomerAdd = () => {
       usertypeId: data.usertypeId,
       registrationDate: "" + new Date().getTime(), //data.registrationDate,
       //sendSms: 0,
-      sendSms : smsFlg,
+      sendSms: smsFlg,
       sendwhatsappSms: wsmsFlg,
       updatedDttm: "" + new Date().getTime(),
       updatedBy: 1,
     };
     const baseApi = new BaseApi();
-    const result = await baseApi.request("customers", postData, "patch");
+    const result = await baseApi.request("employees", postData, "patch");
     if (result.status === 200) {
-      navigate("/customer", {
+      navigate("/employee", {
         state: { message: "Record is successfully updated." },
       });
     }
@@ -402,7 +430,7 @@ const CustomerAdd = () => {
 
   return (
     <Form
-      name="frmcustomer"
+      name="frmsupplier"
       initialValues={{
         remember: true,
       }}
@@ -415,7 +443,7 @@ const CustomerAdd = () => {
       autoComplete="off"
     >
       <MainCard
-        title={isAddMode ? "Create Customer" : "Edit Customer"}
+        title={isAddMode ? "Create Employee" : "Edit Employee"}
         secondary={
           <div>
             <Button
@@ -425,7 +453,7 @@ const CustomerAdd = () => {
             >
               Save
             </Button>
-            <Link to={"/customer"}>
+            <Link to={"/employee"}>
               <Button type="danger">Cancel</Button>
             </Link>
           </div>
@@ -462,7 +490,6 @@ const CustomerAdd = () => {
                 label="Primary Mobile"
                 name="primaryMobile"
                 id="primaryMobile"
-               
                 rules={[
                   {
                     required: true,
@@ -474,7 +501,7 @@ const CustomerAdd = () => {
                   },
                 ]}
               >
-                <Input   maxLength = {10} onKeyPress={handleNumbers} />
+                <Input maxLength={10} onKeyPress={handleNumbers} />
               </Form.Item>
             </Grid>
             <Grid item xs={2}>
@@ -482,7 +509,7 @@ const CustomerAdd = () => {
                 label="Secondary Mobile"
                 name="secondaryMobile"
                 id="secondaryMobile"
-                maxLength = {10}
+                maxLength={10}
                 rules={[
                   {
                     pattern: new RegExp(/^[0-9]*$/),
@@ -490,10 +517,10 @@ const CustomerAdd = () => {
                   },
                 ]}
               >
-                <Input  maxLength = {10} onKeyPress={handleNumbers} />
+                <Input maxLength={10} onKeyPress={handleNumbers} />
               </Form.Item>
             </Grid>
-
+           
             <Grid item xs={4}>
               <Form.Item
                 label="Address"
@@ -542,14 +569,13 @@ const CustomerAdd = () => {
                     })}
                 </Select>
               </Form.Item>
-            </Grid>        
-        
-     
+            </Grid>
+
             <Grid item xs={4}>
               <Form.Item label="Photo" name="photo" id="photo">
-              <Upload name="photo"  listType="picture">
-          <Button icon={<UploadOutlined />}>Choose File</Button>
-        </Upload>
+                <Upload name="photo" listType="picture">
+                  <Button icon={<UploadOutlined />}>Choose File</Button>
+                </Upload>
               </Form.Item>
             </Grid>
 
@@ -695,7 +721,7 @@ const CustomerAdd = () => {
 
             <Grid item xs={2}>
               <Form.Item label="Pin Code" name="pinCode" id="pinCode">
-                <Input  maxLength = {6} onKeyPress={handleNumbers} />
+                <Input maxLength={6} onKeyPress={handleNumbers} />
               </Form.Item>
             </Grid>
 
@@ -705,7 +731,7 @@ const CustomerAdd = () => {
                 name="pancardNumber"
                 id="pancardNumber"
               >
-                <Input  maxLength = {10} />
+                <Input maxLength={10} />
               </Form.Item>
             </Grid>
             <Grid item xs={2}>
@@ -714,13 +740,13 @@ const CustomerAdd = () => {
                 name="adharcardNumber"
                 id="adharcardNumber"
               >
-                <Input  maxLength = {12} onKeyPress={handleNumbers} />
+                <Input maxLength={12} onKeyPress={handleNumbers} />
               </Form.Item>
             </Grid>
 
             <Grid item xs={2}>
               <Form.Item
-                label="Customer Type"
+                label="User Type"
                 id="customercategoriesId"
                 name="customercategoriesId"
               >
@@ -766,9 +792,9 @@ const CustomerAdd = () => {
             <Grid item xs={2}>
               <Form.Item label="Send SMS" name="sendSms" id="sendSms">
                 <Checkbox
-                  checked={chkSmsFlag}                  
-                   onChange={onSmsChange}
-                ></Checkbox>                
+                  checked={chkSmsFlag}
+                  onChange={onSmsChange}
+                ></Checkbox>
               </Form.Item>
             </Grid>
 
@@ -779,9 +805,9 @@ const CustomerAdd = () => {
                 id="sendwhatsappSms"
               >
                 <Checkbox
-                   checked={chkWsmsFlag}               
-                   onChange={onWsmsChange}
-                ></Checkbox>                
+                  checked={chkWsmsFlag}
+                  onChange={onWsmsChange}
+                ></Checkbox>
               </Form.Item>
             </Grid>
           </Grid>
@@ -791,4 +817,4 @@ const CustomerAdd = () => {
   );
 };
 
-export default CustomerAdd;
+export default EmployeeAdd;

@@ -14,7 +14,7 @@ import { statusTag } from "../../../utility/Common";
 import MainCard from "components/MainCard";
 const Search = Input.Search;
 
-const ProductList = () => {
+const EmployeeList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [message, setMessage] = useState(
@@ -43,16 +43,36 @@ const ProductList = () => {
       //defaultSortOrder: "descend",
     },
     {
-      title: "Short Name",
-      dataIndex: "shortName",
-      key: "shortName",
-      sorter: (a, b) => a.shortName.length - b.shortName.length,
-     // defaultSortOrder: "descend",
+      title: "Marathi Name",
+      dataIndex: "marathiName",
+      key: "marathiName",
+      sorter: (a, b) => a.marathiName.length - b.marathiName.length,
+      // defaultSortOrder: "descend",
     },
     {
-      title: "Barcode",
-      dataIndex: "barcode",
-      key: "barcode",
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      title: "Mobile No",
+      dataIndex: "primaryMobile",
+      key: "primaryMobile",
+    },
+    {
+      title: "Email Id",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Aadhar No",
+      dataIndex: "adharcardNumber",
+      key: "adharcardNumber",
+    },
+    {
+      title: "PAN No",
+      dataIndex: "pancardNumber",
+      key: "pancardNumber",
     },
     {
       title: "Status",
@@ -69,7 +89,7 @@ const ProductList = () => {
       render: (text, record) => {
         return (
           <span>
-            <Link to={"/product/edit/" + record.id}>
+            <Link to={"/employee/edit/" + record.id}>
               <Button
                 type="primary"
                 id="btnEdit"
@@ -96,7 +116,7 @@ const ProductList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("products");
+    const result = await b.getAll("employees");
     setData(result);
     setSearchData(result);
   };
@@ -124,11 +144,11 @@ const ProductList = () => {
         deletedDttm: "" + new Date().getTime(),
       };
 
-      const res = await b.request("products", postData, "patch");
+      const res = await b.request("employees", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
         setDeletedId(0);
-        navigate("/product", {
+        navigate("/employee", {
           state: { message: "Record is deleted successfully." },
         });
         window.location.reload();
@@ -145,8 +165,7 @@ const ProductList = () => {
       (row) =>
         row.id.toString().includes(e.target.value) ||
         row.name.includes(e.target.value) ||
-        row.shortName.includes(e.target.value) ||
-        row.barcode.includes(e.target.value)
+        row.marathiName.includes(e.target.value)
     );
     setSearchData(filteredData);
   };
@@ -165,7 +184,7 @@ const ProductList = () => {
         </Grid>
       )}
       <MainCard
-        title="Product List"
+        title="Employee List"
         secondary={
           <div>
             <Search
@@ -179,7 +198,7 @@ const ProductList = () => {
               id="btnCreate"
               name="btnCreate"
               onClick={() => {
-                navigate("/product/add");
+                navigate("/employee/add");
               }}
             >
               Create
@@ -212,4 +231,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default EmployeeList;

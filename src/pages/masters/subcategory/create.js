@@ -7,7 +7,7 @@ import BaseApi from "services/BaseApi";
 const { TextArea } = Input;
 import MainCard from "components/MainCard";
 import Creatable from "react-select/creatable";
-
+import { checkAlphabets } from "../../../utility/Common";
 const SubCategoryAdd = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -57,6 +57,9 @@ const SubCategoryAdd = () => {
   const onFinish = (values) => {   
     // console.log('Success:', id + isAddMode);
     isAddMode ? insertData(values) : updateData(id, values);
+  };
+  const handleAlphabets = (e) => {
+    return checkAlphabets(e);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -216,7 +219,7 @@ const SubCategoryAdd = () => {
               },
             ]}
           >
-            <Input />
+            <Input onKeyPress={handleAlphabets} />
           </Form.Item>
         </Grid>
 

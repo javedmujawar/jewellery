@@ -15,7 +15,7 @@ const VillageAdd = () => {
   const [countryList, setCountryList] = useState([]);  
   const [stateList, setStateList] = useState([]);  
   const [districtList, setDistrictList] = useState(['']);
-    const [talukaList, setTalukaList] = useState([]);
+  const [talukaList, setTalukaList] = useState([]);
   const initialFormValues = {
     id: null,
     name: "",

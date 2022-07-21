@@ -14,9 +14,19 @@ const ProductAdd = () => {
   const isAddMode = !id;
   const [form] = Form.useForm();
   const [categoryList, setCategoryList] = useState([]);
-  const [subcategoryList, setSubCategoryList] = useState([]);
-  const [colorList, setColorList] = useState([]);
+  const [subcategoryList, setSubCategoryList] = useState([]);  
   const [unitList, setUnitList] = useState([]);
+  const [purityList, setPurityList] = useState([]);
+  const [maingroupList, setMainGroupList] = useState([]);
+  const [groupList, setGroupList] = useState([]);
+  const [subgroupList, setSubGroupList] = useState([]);
+  const [colorList, setColorList] = useState([]);
+  const [companyList, setCompanyList] = useState([]);
+  const [sizeList, setSizeList] = useState([]);
+  const [shapeList, setShapeList] = useState([]);
+  const [hsnsacList, setHsnSacList] = useState([]);
+  const [gstList, setGstList] = useState([]);
+  const [warehouseList, setwarehouseList] = useState([]);
   
   const initialFormValues = {
     id: null,
@@ -27,7 +37,26 @@ const ProductAdd = () => {
     openingStock : "",
     categoryId: "",
     subcategoryId: "",
+    purityId : "",    
+    maingroupId :  "",
+    groupId :  "",
+    subgroupId : "",
+    companyId :   "",
     colorId : "",
+    sizeId :  "",
+    shapeId:  "",
+    hsnsacId :  "",
+    gstId : "",
+    warehouseId : "",
+    weight : "",
+    hight : "",
+    storageLocation : "",
+    purchaseRate : 0,
+    mrpRate : 0,
+    minsalesRate : 0,
+    salesRate : 0,
+    minstockLevel:0,
+    maxstockLevel : 0,     
     description: "",
   };
  
@@ -41,8 +70,29 @@ const ProductAdd = () => {
     initialFormValues.unitId = result.unitId;
     initialFormValues.openingStock = result.openingStock;
     initialFormValues.categoryId = result.categoryId;
-    initialFormValues.subcategoryId = result.subcategoryId; 
+    changeCategoryHandler(result.categoryId);
+    initialFormValues.subcategoryId = result.subcategoryId;
+    initialFormValues.purityId = result.purityId; 
+    initialFormValues.maingroupId = result.maingroupId; 
+    initialFormValues.groupId = result.groupId; 
+    initialFormValues.subgroupId = result.subgroupId;
+    initialFormValues.companyId = result.companyId;  
     initialFormValues.colorId = result.colorId; 
+    initialFormValues.sizeId = result.sizeId; 
+    initialFormValues.shapeId = result.shapeId;
+    initialFormValues.hsnsacId = result.hsnsacId;
+    initialFormValues.gstId = result.gstId; 
+    initialFormValues.warehouseId = result.warehouseId; 
+    initialFormValues.weight = result.weight;
+    initialFormValues.hight = result.hight;  
+    initialFormValues.storageLocation = result.storageLocation;  
+    initialFormValues.purchaseRate = result.purchaseRate;
+    initialFormValues.mrpRate = result.mrpRate; 
+    initialFormValues.minsalesRate = result.minsalesRate;
+    initialFormValues.salesRate = result.salesRate;
+    initialFormValues.minstockLevel = result.minstockLevel;
+    initialFormValues.maxstockLevel = result.maxstockLevel;  
+
     initialFormValues.description = result.description;
 
     form.setFieldsValue({
@@ -53,7 +103,26 @@ const ProductAdd = () => {
       openingStock: initialFormValues.openingStock,
       categoryId: initialFormValues.categoryId,
       subcategoryId: initialFormValues.subcategoryId,
+      purityId: initialFormValues.purityId,
+      maingroupId: initialFormValues.maingroupId,
+      groupId: initialFormValues.groupId,
+      subgroupId: initialFormValues.subgroupId,
+      companyId: initialFormValues.companyId,
       colorId: initialFormValues.colorId,
+      sizeId: initialFormValues.sizeId,
+      shapeId: initialFormValues.shapeId,
+      hsnsacId: initialFormValues.hsnsacId,
+      gstId: initialFormValues.gstId,
+      warehouseId: initialFormValues.warehouseId,
+      weight: initialFormValues.weight,
+      hight: initialFormValues.hight,
+      storageLocation: initialFormValues.storageLocation,
+      purchaseRate: initialFormValues.purchaseRate,
+      mrpRate: initialFormValues.mrpRate,
+      minsalesRate: initialFormValues.minsalesRate,
+      salesRate: initialFormValues.salesRate,
+      minstockLevel: initialFormValues.minstockLevel,
+      maxstockLevel: initialFormValues.maxstockLevel,
       description: initialFormValues.description,
     });
   };
@@ -72,6 +141,56 @@ const ProductAdd = () => {
     const unitresult = await b.getListKV("units");   
     setUnitList(unitresult);
   };
+  const getPurityList = async () => {
+    const b = new BaseApi();
+    const presult = await b.getListKV("purities");   
+    setPurityList(presult);
+  };
+  const getMainGroupList = async () => {
+    const b = new BaseApi();
+    const pmgresult = await b.getListKV("productmaingroups");   
+    setMainGroupList(pmgresult);
+  };
+  const getGroupList = async () => {
+    const b = new BaseApi();
+    const pgresult = await b.getListKV("productgroups");   
+    setGroupList(pgresult);
+  };
+  const getSubGroupList = async () => {
+    const b = new BaseApi();
+    const psgresult = await b.getListKV("productsubgroups");   
+    setSubGroupList(psgresult);
+  };
+  const getCompanyList = async () => {
+    const b = new BaseApi();
+    const result = await b.getListKV("companies");   
+    setCompanyList(result);
+  };
+  const getSizeList = async () => {
+    const b = new BaseApi();
+    const result = await b.getListKV("sizes");   
+    setSizeList(result);
+  };
+  const getShapeList = async () => {
+    const b = new BaseApi();
+    const result = await b.getListKV("shapes");   
+    setShapeList(result);
+  };
+  const getHsnsacList = async () => {
+    const b = new BaseApi();
+    const result = await b.getListKV("hsnsacs");   
+    setHsnSacList(result);
+  };
+  const getGstList = async () => {
+    const b = new BaseApi();
+    const result = await b.getListKV("gsts");   
+    setGstList(result);
+  };
+  const getWareHouseList = async () => {
+    const b = new BaseApi();
+    const result = await b.getListKV("warehouses");   
+    setwarehouseList(result);
+  };
   const getSubCategoryList = async (id) => {
     const b = new BaseApi();
     const sublist = await b.getListByParentId(
@@ -86,7 +205,16 @@ const ProductAdd = () => {
     getCategoryList();
     getColorList();
     getUnitList();
-
+    getPurityList();
+    getMainGroupList();
+    getGroupList();
+    getSubGroupList();
+    getCompanyList();
+    getSizeList();
+    getShapeList();
+    getHsnsacList();
+    getGstList();
+    getWareHouseList();
     if (!isAddMode) {
       getRecordData(id);
     }
@@ -121,45 +249,92 @@ const ProductAdd = () => {
   const insertData = async (data) => {
     let postData = {
       id: id,
+      barcode : data.barcode,
       name: data.name,
       shortName: data.shortName,
       unitId: data.unitId,
       openingStock: data.openingStock,
       categoryId: data.categoryId,
       subcategoryId: data.subcategoryId,
+      purityId: data.purityId,
+      maingroupId: data.maingroupId,
+      groupId: data.groupId,
+      subgroupId: data.subgroupId,
+      companyId: data.companyId,
       colorId: data.colorId,
+      sizeId: data.sizeId,
+      shapeId: data.shapeId,
+      hsnsacId: data.hsnsacId,
+      gstId: data.gstId,
+
+      warehouseId: data.warehouseId,
+      weight: data.weight,
+      hight: data.hight,
+      storageLocation: data.storageLocation,
+      purchaseRate: data.purchaseRate,
+
+      mrpRate: data.mrpRate,
+      minsalesRate: data.minsalesRate,
+      salesRate: data.salesRate,
+      minstockLevel: data.minstockLevel,
+      maxstockLevel: data.maxstockLevel,
       description: data.description,
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
 console.log(postData);
 
-    // const baseApi = new BaseApi();
-    // const result = await baseApi.request("products", postData, "post");
-    // if (result.status === 200) {
-    //   navigate("/product", {
-    //     state: { message: "Record is successfully created." },
-    //   });
-    // }
+     const baseApi = new BaseApi();
+     const result = await baseApi.request("products", postData, "post");
+     if (result.status === 200) {
+       navigate("/product", {
+         state: { message: "Record is successfully created." },
+       });
+    }
   };
   const updateData = async (id, data) => {
     let postData = {
       id: id,
+      barcode : data.barcode,
       name: data.name,
+      shortName: data.shortName,
+      unitId: data.unitId,
+      openingStock: data.openingStock,
       categoryId: data.categoryId,
       subcategoryId: data.subcategoryId,
+      purityId: data.purityId,
+      maingroupId: data.maingroupId,
+      groupId: data.groupId,
+      subgroupId: data.subgroupId,
+      companyId: data.companyId,
       colorId: data.colorId,
+      sizeId: data.sizeId,
+      shapeId: data.shapeId,
+      hsnsacId: data.hsnsacId,
+      gstId: data.gstId,
+
+      warehouseId: data.warehouseId,
+      weight: data.weight,
+      hight: data.hight,
+      storageLocation: data.storageLocation,
+      purchaseRate: data.purchaseRate,
+
+      mrpRate: data.mrpRate,
+      minsalesRate: data.minsalesRate,
+      salesRate: data.salesRate,
+      minstockLevel: data.minstockLevel,
+      maxstockLevel: data.maxstockLevel,
       description: data.description,
       updatedDttm: "" + new Date().getTime(),
       updatedBy: 1,
     };
-    // const baseApi = new BaseApi();
-    // const result = await baseApi.request("products", postData, "patch");
-    // if (result.status === 200) {
-    //   navigate("/product", {
-    //     state: { message: "Record is successfully updated." },
-    //   });
-    // }
+   const baseApi = new BaseApi();
+     const result = await baseApi.request("products", postData, "patch");
+     if (result.status === 200) {
+       navigate("/product", {
+         state: { message: "Record is successfully updated." },
+       });
+     }
   };
 
   return (
@@ -234,13 +409,7 @@ console.log(postData);
               <Form.Item
                 label="Short Name"
                 name="shortName"
-                id="shortName"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter short name.",
-                  },
-                ]}
+                id="shortName"               
               >
                 <Input onKeyPress={handleAlphabets} />
               </Form.Item>
@@ -274,11 +443,7 @@ console.log(postData);
                 label="Opening Stock"
                 name="openingStock"
                 id="openingStock"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter opening stock.",
-                  },
+                rules={[                  
                   {
                     pattern: new RegExp(/^[0-9]*$/),
                     message: "Please enter valid value.",
@@ -289,7 +454,7 @@ console.log(postData);
               </Form.Item>
             </Grid>            
 
-            <Grid item xs={6}>
+            <Grid item xs={2}>
               <Form.Item
                 label="Category"
                 id="categoryId"
@@ -313,7 +478,7 @@ console.log(postData);
             </Select>
               </Form.Item>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={2}>
               <Form.Item
                 label="Sub Category"
                 id="subcategoryId"
@@ -337,17 +502,103 @@ console.log(postData);
             </Select>
               </Form.Item>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Purity"
+                id="purityId"
+                name="purityId"                
+              >
+               <Select placeholder="--- Select ---">                
+              {purityList &&
+                purityList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Product Main Group"
+                id="maingroupId"
+                name="maingroupId"               
+              >
+               <Select placeholder="--- Select ---">
+              {maingroupList &&
+                maingroupList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Product Group"
+                id="groupId"
+                name="groupId"
+               
+              >
+               <Select placeholder="--- Select ---">
+              {groupList &&
+                groupList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Product Sub Group"
+                id="subgroupId"
+                name="subgroupId"                
+              >
+               <Select placeholder="--- Select ---">
+              {subgroupList &&
+                subgroupList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Company"
+                id="companyId"
+                name="companyId"
+                
+              >
+               <Select placeholder="--- Select ---">
+              {companyList &&
+                companyList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
               <Form.Item
                 label="Color"
                 id="colorId"
-                name="colorId"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select color.",
-                  },
-                ]}
+                name="colorId"               
               >
                <Select placeholder="--- Select ---">
               {colorList &&
@@ -361,9 +612,230 @@ console.log(postData);
             </Select>
               </Form.Item>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Size"
+                id="sizeId"
+                name="sizeId"                
+              >
+               <Select placeholder="--- Select ---">
+              {sizeList &&
+                sizeList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Shape"
+                id="shapeId"
+                name="shapeId"
+               
+              >
+               <Select placeholder="--- Select ---">
+              {shapeList &&
+                shapeList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="HSN / SAC"
+                id="hsnsacId"
+                name="hsnsacId"               
+              >
+               <Select placeholder="--- Select ---">
+              {hsnsacList &&
+                hsnsacList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="GST"
+                id="gsId"
+                name="gsId"               
+              >
+               <Select placeholder="--- Select ---">
+              {gstList &&
+                gstList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Ware House"
+                id="warehouseId"
+                name="warehouseId"               
+              >
+               <Select placeholder="--- Select ---">
+              {warehouseList &&
+                warehouseList.map((row, index) => {
+                  return (
+                    <option key={index} value={row.id}>
+                      {row.name}
+                    </option>
+                  );
+                })}
+            </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Weight"
+                name="weight"
+                id="weight"
+                rules={[                  
+                  {
+                    pattern: new RegExp(/^[0-9-.]*$/),
+                    message: "Please enter valid value.",
+                  },
+                ]}
+              >
+                <Input  onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>   
+            <Grid item xs={2}>
+              <Form.Item
+                label="Hight"
+                name="hight"
+                id="hight"
+                rules={[                  
+                  {
+                    pattern: new RegExp(/^[0-9-.]*$/),
+                    message: "Please enter valid value.",
+                  },
+                ]}
+              >
+                <Input  onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid> 
+            <Grid item xs={2}>
+                    <Form.Item
+                        label="Storage Location"
+                        name="storageLocation"  
+                        id="storageLocation"                       
+                    >
+                       <Input onKeyPress={handleAlphabets}  />
+                    </Form.Item>
+                </Grid>
+                <Grid item xs={2}>
+              <Form.Item
+                label="Purchase Rate"
+                name="purchaseRate"
+                id="purchaseRate"
+                rules={[                  
+                  {
+                    pattern: new RegExp(/^[0-9-.]*$/),
+                    message: "Please enter valid value.",
+                  },
+                ]}
+              >
+                <Input  onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Mrp Rate"
+                name="mrpRate"
+                id="mrpRate"
+                rules={[                  
+                  {
+                    pattern: new RegExp(/^[0-9-.]*$/),
+                    message: "Please enter valid value.",
+                  },
+                ]}
+              >
+                <Input  onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Min Sales Rate"
+                name="minsalesRate"
+                id="minsalesRate"
+                rules={[                  
+                  {
+                    pattern: new RegExp(/^[0-9-.]*$/),
+                    message: "Please enter valid value.",
+                  },
+                ]}
+              >
+                <Input  onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Sales Rate"
+                name="salesRate"
+                id="salesRate"
+                rules={[                  
+                  {
+                    pattern: new RegExp(/^[0-9-.]*$/),
+                    message: "Please enter valid value.",
+                  },
+                ]}
+              >
+                <Input  onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={2}>
+              <Form.Item
+                label="Min Stock Level"
+                name="minstockLevel"
+                id="minstockLevel"
+                rules={[                  
+                  {
+                    pattern: new RegExp(/^[0-9]*$/),
+                    message: "Please enter valid value.",
+                  },
+                ]}
+              >
+                <Input  onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
+
+            <Grid item xs={2}>
+              <Form.Item
+                label="Max Stock Level"
+                name="maxstockLevel"
+                id="maxstockLevel"
+                rules={[                  
+                  {
+                    pattern: new RegExp(/^[0-9]*$/),
+                    message: "Please enter valid value.",
+                  },
+                ]}
+              >
+                <Input  onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={4}>
               <Form.Item label="Description" name="description">
-                <TextArea rows={3} />
+                <TextArea rows={2} />
               </Form.Item>
             </Grid>
           </Grid>

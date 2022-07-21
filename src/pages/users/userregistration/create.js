@@ -129,8 +129,8 @@ const UserRegistrationAdd = () => {
     return checkNumbers(e);
   };
   const onChange = (e) => {
-    console.log("in =");
-    console.log("checked =" + e.target.checked);
+    //console.log("in =");
+   // console.log("checked =" + e.target.checked);
     setchkFlag(e.target.checked);
   };
   return (

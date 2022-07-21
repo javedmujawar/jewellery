@@ -66,6 +66,14 @@ const Company = Loadable(lazy(() => import('pages/masters/company/create')));
 
 const CustomerCategoryList = Loadable(lazy(() => import('pages/masters/customercategories/index')));
 const CustomerCategory = Loadable(lazy(() => import('pages/masters/customercategories/create')));
+const CustomerList = Loadable(lazy(() => import('pages/masters/customer/index')));
+const Customer = Loadable(lazy(() => import('pages/masters/customer/create')));
+
+const SupplierList = Loadable(lazy(() => import('pages/masters/supplier/index')));
+const Supplier = Loadable(lazy(() => import('pages/masters/supplier/create')));
+
+const EmployeeList = Loadable(lazy(() => import('pages/masters/employee/index')));
+const Employee = Loadable(lazy(() => import('pages/masters/employee/create')));
 
 const RateList = Loadable(lazy(() => import('pages/masters/rate/index')));
 const Rate = Loadable(lazy(() => import('pages/masters/rate/create')));
@@ -358,6 +366,44 @@ const MainRoutes = {
             element: <Company/>
         },
         
+        {
+            path: 'customer',
+            element: <CustomerList/>
+        }, 
+        {
+            path: 'customer/add',
+            element: <Customer/>
+        },
+        {
+            path: 'customer/edit/:id',
+            element: <Customer/>
+        },
+        
+        {
+            path: 'supplier',
+            element: <SupplierList/>
+        }, 
+        {
+            path: 'supplier/add',
+            element: <Supplier/>
+        },
+        {
+            path: 'supplier/edit/:id',
+            element: <Supplier/>
+        },
+
+        {
+            path: 'employee',
+            element: <EmployeeList/>
+        }, 
+        {
+            path: 'employee/add',
+            element: <Employee/>
+        },
+        {
+            path: 'employee/edit/:id',
+            element: <Employee/>
+        },
 
         {
             path: 'customer-categories',

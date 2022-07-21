@@ -18,6 +18,22 @@ const masters = {
             icon: icons.ProfileOutlined,
             target: false
         },
+        {
+            id: 'supplier',
+            title: 'Supplier',
+            type: 'item',
+            url: '/supplier',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
+        {
+            id: 'employee',
+            title: 'Employee',
+            type: 'item',
+            url: '/employee',
+            icon: icons.ProfileOutlined,
+            target: false
+        },
         /* {
             id: 'product',
             title: 'Product',

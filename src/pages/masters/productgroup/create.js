@@ -21,6 +21,8 @@ const ProductGroupAdd = () => {
   };
 
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("productgroups", id);
     initialFormValues.name = result.name;
@@ -32,6 +34,7 @@ const ProductGroupAdd = () => {
       shortName: initialFormValues.shortName,
       description: initialFormValues.description,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   useEffect(() => {
@@ -40,8 +43,7 @@ const ProductGroupAdd = () => {
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {    
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -49,6 +51,8 @@ const ProductGroupAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -64,8 +68,10 @@ const ProductGroupAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try{
     let postData = {
       id: id,
       name: data.name,
@@ -81,6 +87,7 @@ const ProductGroupAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const handleAlphabets = (e) => {
@@ -100,8 +107,7 @@ const ProductGroupAdd = () => {
       form={form} // Add this!
       layout="vertical"
       labelCol={{ span: 22 }}
-      wrapperCol={{ span: 22 }}
-      //onSubmit={handleSubmit}
+      wrapperCol={{ span: 22 }}     
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"

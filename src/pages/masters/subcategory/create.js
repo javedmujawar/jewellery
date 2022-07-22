@@ -22,6 +22,8 @@ const SubCategoryAdd = () => {
   };
  
   const getRecordData = async (id) => {
+    try
+    {
     const b = new BaseApi();
     const result = await b.getById("subcategories", id);
     console.log(result);
@@ -34,6 +36,7 @@ const SubCategoryAdd = () => {
       categoryId: initialFormValues.categoryId,
       description: initialFormValues.description,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
   const getCategoryList = async () => {
     const b = new BaseApi();
@@ -54,8 +57,7 @@ const SubCategoryAdd = () => {
     }
   }, [id]);// eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {   
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {      
     isAddMode ? insertData(values) : updateData(id, values);
   };
   const handleAlphabets = (e) => {
@@ -66,7 +68,8 @@ const SubCategoryAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {  
-    
+    try 
+    {
     if(data.categoryId.value>0)
     {
     let postData = {
@@ -77,7 +80,7 @@ const SubCategoryAdd = () => {
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
-    console.log(postData);
+    //console.log(postData);
      const baseApi = new BaseApi();
      const result = await baseApi.request("subcategories", postData, "post");
      if (result.status === 200) {
@@ -119,8 +122,11 @@ const SubCategoryAdd = () => {
        }      
      }
   }
+} catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     if(data.categoryId.value>0)
     {    
     let postData = {
@@ -161,8 +167,7 @@ const SubCategoryAdd = () => {
         description: data.description,
         updatedDttm: "" + new Date().getTime(),
         updatedBy: 1,
-      };
-      //console.log(postData);
+      };      
        const baseApi = new BaseApi();
         const newresult = await baseApi.request("subcategories", postData, "patch");
         if (newresult.status === 200) {
@@ -172,6 +177,7 @@ const SubCategoryAdd = () => {
        }      
      }
   }
+} catch (error) {console.log("Error : "+error);}
   };
 
   return (

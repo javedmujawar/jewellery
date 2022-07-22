@@ -62,6 +62,8 @@ const ProductAdd = () => {
  
 
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("products", id);
     initialFormValues.name = result.name;
@@ -91,7 +93,7 @@ const ProductAdd = () => {
     initialFormValues.minsalesRate = result.minsalesRate;
     initialFormValues.salesRate = result.salesRate;
     initialFormValues.minstockLevel = result.minstockLevel;
-    initialFormValues.maxstockLevel = result.maxstockLevel;  
+    initialFormValues.maxstockLevel = result.maxstockLevel; 
 
     initialFormValues.description = result.description;
 
@@ -125,6 +127,7 @@ const ProductAdd = () => {
       maxstockLevel: initialFormValues.maxstockLevel,
       description: initialFormValues.description,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
   const getCategoryList = async () => {
     const b = new BaseApi();
@@ -233,9 +236,9 @@ const ProductAdd = () => {
 };
   const changeCategoryHandler = (opt) => {    
      if (opt > 0) {
-       form.setFieldsValue({
-         subcategoryId: "--- Select ---",
-       });      
+      //  form.setFieldsValue({
+      //    subcategoryId: "--- Select ---",
+      //  });      
        getSubCategoryList(opt);
      }
   };
@@ -247,6 +250,8 @@ const ProductAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    try 
+    {
     let postData = {
       id: id,
       barcode : data.barcode,
@@ -282,8 +287,7 @@ const ProductAdd = () => {
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
-console.log(postData);
-
+//console.log(postData);
      const baseApi = new BaseApi();
      const result = await baseApi.request("products", postData, "post");
      if (result.status === 200) {
@@ -291,8 +295,11 @@ console.log(postData);
          state: { message: "Record is successfully created." },
        });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try {
+
     let postData = {
       id: id,
       barcode : data.barcode,
@@ -335,6 +342,7 @@ console.log(postData);
          state: { message: "Record is successfully updated." },
        });
      }
+    } catch (error) {console.log("Error : "+error);}
   };
 
   return (

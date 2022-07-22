@@ -65,7 +65,7 @@ const DistrictAdd = () => {
   const changeCountryHandler = (value) => {
     if (value > 0) {
       form.setFieldsValue({
-        stateId: "--- Select ---",
+        //stateId: "--- Select ---",     
       });      
       getStateList(value);
     }
@@ -80,6 +80,8 @@ const DistrictAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -97,8 +99,11 @@ const DistrictAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -116,6 +121,7 @@ const DistrictAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const handleAlphabets = (e) => {

@@ -18,6 +18,8 @@ const UnitAdd = () => {
     shortName: "",
   };
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("units", id);
     initialFormValues.name = result.name;
@@ -27,6 +29,7 @@ const UnitAdd = () => {
       name: initialFormValues.name,
       shortName: initialFormValues.shortName,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   useEffect(() => {    
@@ -44,7 +47,8 @@ const UnitAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
-    //  console.log('insert functio is call :', data);
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -59,8 +63,11 @@ const UnitAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -75,6 +82,7 @@ const UnitAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const handleAlphabets = (e) => {

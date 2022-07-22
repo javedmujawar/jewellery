@@ -19,8 +19,10 @@ const ProductMainGroupAdd = () => {
     shortName: "",
     description: "",
   };
-  //const [currentRecordDetails, setCurrentRecord] = useState(initialFormValues);
+  
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("productmaingroups", id);
     initialFormValues.name = result.name;
@@ -32,6 +34,7 @@ const ProductMainGroupAdd = () => {
       shortName: initialFormValues.shortName,
       description: initialFormValues.description,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   useEffect(() => {   
@@ -40,8 +43,7 @@ const ProductMainGroupAdd = () => {
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {   
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {       
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -49,6 +51,8 @@ const ProductMainGroupAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {   
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -64,8 +68,11 @@ const ProductMainGroupAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -85,6 +92,7 @@ const ProductMainGroupAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const handleAlphabets = (e) => {
     return checkAlphabets(e);

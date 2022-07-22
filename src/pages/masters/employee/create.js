@@ -25,16 +25,14 @@ const EmployeeAdd = () => {
   const [form] = Form.useForm();
   const dateFormat = "YYYY/MM/DD";
   const [genderList, setGenderList] = useState([]);
-  const [crdrList, setCrDrList] = useState([]);
+ 
   const [countryList, setCountryList] = useState([]);
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([""]);
   const [talukaList, setTalukaList] = useState([]);
   const [villageList, setVillageList] = useState([]);
-
-  const [customertypeList, setCustomerTypeList] = useState([]);
+ 
   const [usertypeList, setUserTypeList] = useState([]);
-
   const [bloodgroupList, setBloodGroupList] = useState([]);
   const [roleList, setRolList] = useState([]);
   const [maritalList, setMaritalList] = useState([]);
@@ -52,11 +50,10 @@ const EmployeeAdd = () => {
     genderId: "",
     photo: "",
     email: "",
-    gstNumber: "",
-
-    openingBalance: "",
-    creditLimit: "",
-    crdrId: "",
+    verificationNum: "",
+    dateofjoining: "",
+    maritalstatusId: "",
+    roleId: "",
     countryId: "",
     stateId: "",
     districtId: "",
@@ -66,8 +63,8 @@ const EmployeeAdd = () => {
     pinCode: "",
     pancardNumber: "",
     adharcardNumber: "",
-    customercategoriesId: "",
-
+    bloodgroupId: "",
+    refNumber : "",
     usertypeId: "",
     registrationDate: "",
     sendSms: "",
@@ -87,10 +84,10 @@ const EmployeeAdd = () => {
     initialFormValues.photo = result.photo;
 
     initialFormValues.email = result.email;
-    initialFormValues.gstNumber = result.gstNumber;
-    initialFormValues.openingBalance = result.openingBalance;
-    initialFormValues.creditLimit = result.creditLimit;
-    initialFormValues.crdrId = result.crdrId;
+    initialFormValues.verificationNum = result.verificationNum;
+    initialFormValues.dateofjoining = result.dateofjoining;
+    initialFormValues.maritalstatusId = result.maritalstatusId;
+    initialFormValues.roleId = result.roleId;
 
     initialFormValues.countryId = result.countryId;
     changeCountryHandler(result.countryId);
@@ -105,11 +102,11 @@ const EmployeeAdd = () => {
     initialFormValues.pinCode = result.pinCode;
     initialFormValues.pancardNumber = result.pancardNumber;
     initialFormValues.adharcardNumber = result.adharcardNumber;
-    initialFormValues.customercategoriesId = result.customercategoriesId;
+    initialFormValues.bloodgroupId = result.bloodgroupId;
+    initialFormValues.refNumber = result.refNumber;
     initialFormValues.usertypeId = result.usertypeId;
     initialFormValues.registrationDate = result.registrationDate;
-
-    //initialFormValues.sendSms = result.sendSms;
+   
     if (result.sendSms === 1) {
       setchkSmsFlag(true);
     } else {
@@ -120,8 +117,7 @@ const EmployeeAdd = () => {
     } else {
       setchkWSmsFlag(false);
     }
-    //initialFormValues.sendwhatsappSms = result.sendwhatsappSms;
-
+    
     form.setFieldsValue({
       name: initialFormValues.name,
       marathiName: initialFormValues.marathiName,
@@ -133,11 +129,11 @@ const EmployeeAdd = () => {
       genderId: initialFormValues.genderId,
       photo: "null",
       email: initialFormValues.email,
-      gstNumber: initialFormValues.gstNumber,
-      openingBalance: initialFormValues.openingBalance,
-      creditLimit: initialFormValues.creditLimit,
+      verificationNum: initialFormValues.verificationNum,
+      dateofjoining: initialFormValues.dateofjoining,
+      maritalstatusId: initialFormValues.maritalstatusId,
 
-      crdrId: initialFormValues.crdrId,
+      roleId: initialFormValues.roleId,
       countryId: initialFormValues.countryId,
       stateId: initialFormValues.stateId,
       districtId: initialFormValues.districtId,
@@ -147,7 +143,8 @@ const EmployeeAdd = () => {
       pinCode: initialFormValues.pinCode,
       pancardNumber: initialFormValues.pancardNumber,
       adharcardNumber: initialFormValues.adharcardNumber,
-      customercategoriesId: initialFormValues.customercategoriesId,
+      bloodgroupId: initialFormValues.bloodgroupId,
+      refNumber: initialFormValues.refNumber,
       usertypeId: initialFormValues.usertypeId,
       registrationDate: "null", //initialFormValues.registrationDate,
     });
@@ -157,11 +154,7 @@ const EmployeeAdd = () => {
     const genderresult = await b.getListKV("genders");
     setGenderList(genderresult);
   };
-  const getCrDrList = async () => {
-    const b = new BaseApi();
-    const result = await b.getListKV("crdrs");
-    setCrDrList(result);
-  };
+  
   const getCountryList = async () => {
     const b = new BaseApi();
     const counrtyresult = await b.getListKV("countries");
@@ -206,11 +199,7 @@ const EmployeeAdd = () => {
     );
     setVillageList(result);
   };
-  const getCustomerTypeList = async () => {
-    const b = new BaseApi();
-    const result = await b.getListKV("customercategories");
-    setCustomerTypeList(result);
-  };
+  
 
   const getUserTypeList = async () => {
     const b = new BaseApi();
@@ -236,10 +225,8 @@ const EmployeeAdd = () => {
   
 
   useEffect(() => {
-    getGenderList();
-    getCrDrList();
-    getCountryList();
-    getCustomerTypeList();
+    getGenderList();    
+    getCountryList();   
     getUserTypeList();
     getBloodGroupList();
     getRoleList();
@@ -274,50 +261,53 @@ const EmployeeAdd = () => {
 
   const changeCountryHandler = (value) => {
     if (value > 0) {
-      form.setFieldsValue({
-        stateId: "--- Select ---",
-        districtId: "--- Select ---",
-        talukaId: "--- Select ---",
-        villageId: "--- Select ---",
-      });
+      //  form.setFieldsValue({
+      //   //  stateId: "--- Select ---",
+      //   //  districtId: "--- Select ---",
+      //   // talukaId: "--- Select ---",
+      //   //  villageId: "--- Select ---",     
+        
+      //  });
       setDistrictList("");
       setTalukaList("");
+      setVillageList("");
       getStateList(value);
     }
   };
-  const changeStateHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+  const changeStateHandler = (value) => {   
     if (value > 0) {
-      form.setFieldsValue({
-        districtId: "--- Select ---",
-        talukaId: "--- Select ---",
-        villageId: "--- Select ---",
-      });
+    //    form.setFieldsValue({
+    //      districtId: "",
+    //      talukaId: "",
+    //      villageId: "",
+    //  });
       setTalukaList("");
+      setVillageList("");
       getDistrictList(value);
     }
   };
 
-  const changeDistrictHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+  const changeDistrictHandler = (value) => {   
     if (value > 0) {
-      form.setFieldsValue({
-        talukaId: "--- Select ---",
-        villageId: "--- Select ---",
-      });
+      //  form.setFieldsValue({
+      //    talukaId: "",
+      //    villageId: "",
+      //  });
+      setVillageList("");
       getTalukaList(value);
     }
   };
-  const changeTalukaHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+  const changeTalukaHandler = (value) => {   
     if (value > 0) {
-      form.setFieldsValue({
-        villageId: "--- Select ---",
-      });
+      //  form.setFieldsValue({
+      //    villageId: "",
+      //  });
       getVillageList(value);
     }
   };
   const insertData = async (data) => {
+    try 
+    {
     let smsFlg = 0;
     let wsmsFlg = 0;
     if (chkSmsFlag === true) {
@@ -339,12 +329,11 @@ const EmployeeAdd = () => {
       genderId: data.genderId,
       photo: "null",
       email: data.email,
-      gstNumber: data.gstNumber,
+      verificationNum: data.verificationNum,
 
-      openingBalance: data.openingBalance,
-      creditLimit: data.creditLimit,
-      crdrId: data.crdrId,
-      email: data.email,
+      dateofjoining:  "" + new Date().getTime(),//data.dateofjoining,
+      maritalstatusId: data.maritalstatusId,
+      roleId: data.roleId,      
       countryId: data.countryId,
 
       stateId: data.stateId,
@@ -355,7 +344,8 @@ const EmployeeAdd = () => {
 
       pancardNumber: data.pancardNumber,
       adharcardNumber: data.adharcardNumber,
-      customercategoriesId: data.customercategoriesId,
+      bloodgroupId: data.bloodgroupId,
+      refNumber: data.refNumber,
       usertypeId: data.usertypeId,
       registrationDate: "" + new Date().getTime(), //data.registrationDate,
 
@@ -364,7 +354,7 @@ const EmployeeAdd = () => {
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
-    //console.log(postData);
+    console.log(postData);
     const baseApi = new BaseApi();
     const result = await baseApi.request("employees", postData, "post");
     if (result.status === 200) {
@@ -372,8 +362,11 @@ const EmployeeAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let smsFlg = 0;
     let wsmsFlg = 0;
     if (chkSmsFlag === true) {
@@ -394,11 +387,11 @@ const EmployeeAdd = () => {
       genderId: data.genderId,
       photo: "null",
       email: data.email,
-      gstNumber: data.gstNumber,
+      verificationNum: data.verificationNum,
 
-      openingBalance: data.openingBalance,
-      creditLimit: data.creditLimit,
-      crdrId: data.crdrId,
+      dateofjoining: data.dateofjoining,
+      maritalstatusId: data.maritalstatusId,
+      roleId: data.roleId,
       email: data.email,
       countryId: data.countryId,
 
@@ -410,7 +403,8 @@ const EmployeeAdd = () => {
 
       pancardNumber: data.pancardNumber,
       adharcardNumber: data.adharcardNumber,
-      customercategoriesId: data.customercategoriesId,
+      bloodgroupId: data.bloodgroupId,
+      refNumber: data.refNumber,
       usertypeId: data.usertypeId,
       registrationDate: "" + new Date().getTime(), //data.registrationDate,
       //sendSms: 0,
@@ -426,11 +420,12 @@ const EmployeeAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   return (
     <Form
-      name="frmsupplier"
+      name="frmemployee"
       initialValues={{
         remember: true,
       }}
@@ -481,6 +476,12 @@ const EmployeeAdd = () => {
                 label="Marathi Name"
                 name="marathiName"
                 id="marathiName"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter marathi name.",
+                  },
+                ]}
               >
                 <Input onKeyPress={handleAlphabets} />
               </Form.Item>
@@ -593,18 +594,29 @@ const EmployeeAdd = () => {
                 <Input />
               </Form.Item>
             </Grid>
+            <Grid item xs={2}>
+              <Form.Item label="Marital Status" id="maritalstatusId" name="maritalstatusId">
+                <Select placeholder="--- Select ---">
+                  {maritalList &&
+                    maritalList.map((row, index) => {
+                      return (
+                        <option key={index} value={row.id}>
+                          {row.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
 
             <Grid item xs={3}>
-              <Form.Item label="GST Number" name="gstNumber" id="gstNumber">
-                <Input onKeyPress={handleNumbers} />
-              </Form.Item>
-            </Grid>
-
-            <Grid item xs={2}>
-              <Form.Item
-                label="Opening Balance"
-                name="openingBalance"
-                id="openingBalance"
+              <Form.Item label="Driving Licence" name="verificationNum" id="verificationNum"
+              rules={[
+                {
+                    required: true,
+                    message: 'Please enter driving license number.'
+                },
+            ]}
               >
                 <Input onKeyPress={handleNumbers} />
               </Form.Item>
@@ -612,19 +624,20 @@ const EmployeeAdd = () => {
 
             <Grid item xs={2}>
               <Form.Item
-                label="Credit Limit"
-                name="creditLimit"
-                id="creditLimit"
+                label="Date of Joining"
+                name="dateofjoining"
+                id="dateofjoining"
               >
                 <Input onKeyPress={handleNumbers} />
               </Form.Item>
             </Grid>
+            
 
             <Grid item xs={2}>
-              <Form.Item label="CR DR Type" id="crdrId" name="crdrId">
+              <Form.Item label="Role" id="roleId" name="roleId">
                 <Select placeholder="--- Select ---">
-                  {crdrList &&
-                    crdrList.map((row, index) => {
+                  {roleList &&
+                    roleList.map((row, index) => {
                       return (
                         <option key={index} value={row.id}>
                           {row.name}
@@ -636,7 +649,14 @@ const EmployeeAdd = () => {
             </Grid>
 
             <Grid item xs={2}>
-              <Form.Item label="Country" id="countryId" name="countryId">
+              <Form.Item label="Country" id="countryId" name="countryId"
+               rules={[
+                {
+                  required: true,
+                  message: "Please select country.",
+                },
+              ]}
+              >
                 <Select
                   placeholder="--- Select ---"
                   onChange={changeCountryHandler}
@@ -724,6 +744,27 @@ const EmployeeAdd = () => {
                 <Input maxLength={6} onKeyPress={handleNumbers} />
               </Form.Item>
             </Grid>
+            
+            <Grid item xs={2}>
+              <Form.Item label="Blood Group" id="bloodgroupId" name="bloodgroupId">
+                <Select placeholder="--- Select ---">
+                  {bloodgroupList &&
+                    bloodgroupList.map((row, index) => {
+                      return (
+                        <option key={index} value={row.id}>
+                          {row.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
+
+            <Grid item xs={2}>
+              <Form.Item label="Reference Number" name="refNumber" id="refNumber">
+                <Input maxLength={10} onKeyPress={handleNumbers} />
+              </Form.Item>
+            </Grid>
 
             <Grid item xs={2}>
               <Form.Item
@@ -741,25 +782,6 @@ const EmployeeAdd = () => {
                 id="adharcardNumber"
               >
                 <Input maxLength={12} onKeyPress={handleNumbers} />
-              </Form.Item>
-            </Grid>
-
-            <Grid item xs={2}>
-              <Form.Item
-                label="User Type"
-                id="customercategoriesId"
-                name="customercategoriesId"
-              >
-                <Select placeholder="--- Select ---">
-                  {customertypeList &&
-                    customertypeList.map((row, index) => {
-                      return (
-                        <option key={index} value={row.id}>
-                          {row.name}
-                        </option>
-                      );
-                    })}
-                </Select>
               </Form.Item>
             </Grid>
 

@@ -217,16 +217,15 @@ const CustomerAdd = () => {
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {    
     isAddMode ? insertData(values) : updateData(id, values);
   };
   const onSmsChange = (e) => {    
    //console.log("checked =" + e.target.checked);
     setchkSmsFlag(e.target.checked);
   };
-  const onWsmsChange = (e) => {    
-    //console.log("checked =" + e.target.checked);
+  const onWsmsChange = (e) => {   
+    
      setchkWSmsFlag(e.target.checked);
    };
 
@@ -242,50 +241,51 @@ const CustomerAdd = () => {
   
   const changeCountryHandler = (value) => {
     if (value > 0) {
-      form.setFieldsValue({
-        stateId: "--- Select ---",
-        districtId: "--- Select ---",
-        talukaId: "--- Select ---",
-        villageId: "--- Select ---",
-      });
+      // form.setFieldsValue({
+      //   stateId: "",
+      //   districtId: "",
+      //   talukaId: "",
+      //   villageId: "",
+      // });
       setDistrictList("");
       setTalukaList("");
+      setVillageList("");
       getStateList(value);
     }
   };
-  const changeStateHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+  const changeStateHandler = (value) => {    
     if (value > 0) {
-      form.setFieldsValue({
-        districtId: "--- Select ---",
-        talukaId: "--- Select ---",
-        villageId: "--- Select ---",
-      });
+      // form.setFieldsValue({
+      //   districtId: "",
+      //   talukaId: "",
+      //   villageId: "",
+      // });
       setTalukaList("");
+      setVillageList("");
       getDistrictList(value);
     }
   };
 
-  const changeDistrictHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+  const changeDistrictHandler = (value) => {   
     if (value > 0) {
-      form.setFieldsValue({
-        talukaId: "--- Select ---",
-        villageId: "--- Select ---",
-      });
+      // form.setFieldsValue({
+      //   talukaId: "",
+      //   villageId: "",
+      // });
+      setVillageList("");
       getTalukaList(value);
     }
   };
-  const changeTalukaHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+  const changeTalukaHandler = (value) => {   
     if (value > 0) {
-      form.setFieldsValue({
-        villageId: "--- Select ---",
-      });
+      // form.setFieldsValue({
+      //   villageId: "",
+      // });
       getVillageList(value);
     }
   };
   const insertData = async (data) => {
+    try {
     let smsFlg = 0;
     let wsmsFlg = 0;
     if(chkSmsFlag===true)
@@ -335,15 +335,19 @@ const CustomerAdd = () => {
       createdBy: 1,
     };
      console.log(postData);
-    // const baseApi = new BaseApi();
-    // const result = await baseApi.request("customers", postData, "post");
-    // if (result.status === 200) {
-    //   navigate("/customer", {
-    //     state: { message: "Record is successfully created." },
-    //   });
-    // }
+     const baseApi = new BaseApi();
+     const result = await baseApi.request("customers", postData, "post");
+     if (result.status === 200) {
+       navigate("/customer", {
+         state: { message: "Record is successfully created." },
+       });
+     }
+  } catch (error) {}
   };
   const updateData = async (id, data) => {
+    try 
+    {
+  
     let smsFlg = 0;
     let wsmsFlg = 0;
     if(chkSmsFlag===true)
@@ -398,6 +402,7 @@ const CustomerAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   return (

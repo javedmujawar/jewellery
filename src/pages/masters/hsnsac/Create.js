@@ -22,6 +22,8 @@ const HsnSacAdd = () => {
         description: ''
     };    
     const getRecordData = async (id) => {
+        try 
+        {
         const b = new BaseApi();
         const result = await b.getById('hsnsacs', id);
         initialFormValues.name = result.name;
@@ -37,6 +39,7 @@ const HsnSacAdd = () => {
             percentageValue: initialFormValues.percentageValue,
             description: initialFormValues.description
         });
+    } catch (error) {console.log("Error : "+error);}
     };
 
     useEffect(() => {      
@@ -45,15 +48,16 @@ const HsnSacAdd = () => {
         }
     },[id]);// eslint-disable-line react-hooks/exhaustive-deps
 
-    const onFinish = (values) => {       
-        // console.log('Success:', id + isAddMode);
+    const onFinish = (values) => {        
         isAddMode ? insertData(values) : updateData(id, values);
     };
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
-    const insertData = async (data) => {       
+    const insertData = async (data) => {   
+        try 
+        {    
         let postData = {
             id: id,
             name: data.name,
@@ -69,9 +73,11 @@ const HsnSacAdd = () => {
         if (result.status === 200) {            
             navigate('/hsnsac', { state: { message:'Record is successfully created.' }})
         }
+    } catch (error) {console.log("Error : "+error);}
     };
     const updateData = async (id, data) => {
-      
+      try 
+      {
         let postData = {
             id: id,
             name: data.name,
@@ -87,6 +93,7 @@ const HsnSacAdd = () => {
         if (result.status === 200) {
             navigate('/hsnsac', { state: { message:'Record is successfully updated.' }})
         }
+    } catch (error) {console.log("Error : "+error);}
     };
     const handleAlphabets = (e) => {
         return checkAlphabets(e);
@@ -109,8 +116,7 @@ const HsnSacAdd = () => {
             form={form} // Add this!
             layout="vertical"
             labelCol={{ span: 22 }}
-            wrapperCol={{ span: 22 }}
-            //onSubmit={handleSubmit}
+            wrapperCol={{ span: 22 }}            
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"

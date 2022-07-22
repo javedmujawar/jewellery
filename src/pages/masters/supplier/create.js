@@ -70,6 +70,8 @@ const SupplierAdd = () => {
   };
 
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("suppliers", id);
     initialFormValues.name = result.name;
@@ -146,6 +148,7 @@ const SupplierAdd = () => {
       usertypeId: initialFormValues.usertypeId,
       registrationDate: "null", //initialFormValues.registrationDate,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
   const getGenderList = async () => {
     const b = new BaseApi();
@@ -249,50 +252,54 @@ const SupplierAdd = () => {
 
   const changeCountryHandler = (value) => {
     if (value > 0) {
-      form.setFieldsValue({
-        stateId: "--- Select ---",
-        districtId: "--- Select ---",
-        talukaId: "--- Select ---",
-        villageId: "--- Select ---",
-      });
+      // form.setFieldsValue({
+      //   stateId: "",
+      //   districtId: "",
+      //   talukaId: "",
+      //   villageId: "",
+      // });
       setDistrictList("");
       setTalukaList("");
+      setVillageList("");
       getStateList(value);
     }
   };
   const changeStateHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+    
     if (value > 0) {
-      form.setFieldsValue({
-        districtId: "--- Select ---",
-        talukaId: "--- Select ---",
-        villageId: "--- Select ---",
-      });
+      // form.setFieldsValue({
+      //   districtId: "",
+      //   talukaId: "",
+      //   villageId: "",
+      // });
       setTalukaList("");
+      setVillageList("");
       getDistrictList(value);
     }
   };
 
-  const changeDistrictHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+  const changeDistrictHandler = (value) => {    
     if (value > 0) {
-      form.setFieldsValue({
-        talukaId: "--- Select ---",
-        villageId: "--- Select ---",
-      });
+      // form.setFieldsValue({
+      //   talukaId: "",
+      //   villageId: "",
+      // });
+      setVillageList("");
       getTalukaList(value);
     }
   };
   const changeTalukaHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+    
     if (value > 0) {
-      form.setFieldsValue({
-        villageId: "--- Select ---",
-      });
+      // form.setFieldsValue({
+      //   villageId: "",
+      // });
       getVillageList(value);
     }
   };
   const insertData = async (data) => {
+    try 
+    {
     let smsFlg = 0;
     let wsmsFlg = 0;
     if (chkSmsFlag === true) {
@@ -347,8 +354,11 @@ const SupplierAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let smsFlg = 0;
     let wsmsFlg = 0;
     if (chkSmsFlag === true) {
@@ -401,6 +411,7 @@ const SupplierAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   return (

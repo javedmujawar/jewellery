@@ -20,6 +20,8 @@ const WareHouseAdd = () => {
   };
 
   const getRecordData = async (id) => {
+    try
+    {
     const b = new BaseApi();
     const result = await b.getById("warehouses", id);
     initialFormValues.name = result.name;
@@ -29,6 +31,7 @@ const WareHouseAdd = () => {
       name: initialFormValues.name,
       description: initialFormValues.description,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   useEffect(() => {
@@ -37,8 +40,7 @@ const WareHouseAdd = () => {
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {    
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -46,6 +48,8 @@ const WareHouseAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -60,8 +64,11 @@ const WareHouseAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -76,6 +83,7 @@ const WareHouseAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const handleAlphabets = (e) => {
     return checkAlphabets(e);
@@ -94,8 +102,7 @@ const WareHouseAdd = () => {
       form={form} // Add this!
       layout="vertical"
       labelCol={{ span: 22 }}
-      wrapperCol={{ span: 22 }}
-      //onSubmit={handleSubmit}
+      wrapperCol={{ span: 22 }}     
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"

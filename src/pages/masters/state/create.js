@@ -22,6 +22,8 @@ const StateAdd = () => {
   };
 
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("states", id);
     initialFormValues.name = result.name;
@@ -35,6 +37,7 @@ const StateAdd = () => {
       code: initialFormValues.code,
       countryId: initialFormValues.countryId,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const getCountryList = async () => {
@@ -49,8 +52,7 @@ const StateAdd = () => {
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {    
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -58,6 +60,8 @@ const StateAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -74,8 +78,11 @@ const StateAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -92,6 +99,7 @@ const StateAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const handleAlphabets = (e) => {

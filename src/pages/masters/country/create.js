@@ -20,6 +20,8 @@ const CountryAdd = () => {
   };
 
   const getRecordData = async (id) => {
+    try
+    {
     const b = new BaseApi();
     const result = await b.getById("countries", id);
     initialFormValues.name = result.name;
@@ -31,17 +33,16 @@ const CountryAdd = () => {
       shortName: initialFormValues.shortName,
       phoneCode: initialFormValues.phoneCode,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
-  useEffect(() => {
-    // console.log('test by rashid');
+  useEffect(() => {    
     if (!isAddMode) {
       getRecordData(id);
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {   
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -49,6 +50,8 @@ const CountryAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -64,8 +67,11 @@ const CountryAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+try 
+{
     let postData = {
       id: id,
       name: data.name,
@@ -81,6 +87,7 @@ const CountryAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const handleAlphabets = (e) => {
     return checkAlphabets(e);
@@ -103,8 +110,7 @@ const CountryAdd = () => {
       form={form} // Add this!
       layout="vertical"
       labelCol={{ span: 22 }}
-      wrapperCol={{ span: 22 }}
-      //onSubmit={handleSubmit}
+      wrapperCol={{ span: 22 }}     
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"

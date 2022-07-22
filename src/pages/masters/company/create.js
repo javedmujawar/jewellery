@@ -25,6 +25,8 @@ const CompanyAdd = () => {
   };
 
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("companies", id);
     initialFormValues.name = result.name;
@@ -48,6 +50,7 @@ const CompanyAdd = () => {
       contactPersonName: initialFormValues.contactPersonName,
       contactPersonMobNo: initialFormValues.contactPersonMobNo,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   useEffect(() => {
@@ -56,8 +59,7 @@ const CompanyAdd = () => {
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {   
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -65,7 +67,8 @@ const CompanyAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
-    //  console.log('insert functio is call :', data);
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -87,8 +90,11 @@ const CompanyAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -111,6 +117,7 @@ const CompanyAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   return (

@@ -24,6 +24,8 @@ const ProductSubGroupAdd = () => {
   };
   
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("productsubgroups", id);
     initialFormValues.name = result.name;
@@ -39,6 +41,7 @@ const ProductSubGroupAdd = () => {
       groupId: initialFormValues.groupId,
       description: initialFormValues.description,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
   const getMainGroupList = async () => {
     const b = new BaseApi();
@@ -59,15 +62,16 @@ const ProductSubGroupAdd = () => {
     }
   }, [id]);// eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {    
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {   
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const insertData = async (data) => {   
+  const insertData = async (data) => { 
+    try 
+    {  
     let postData = {
       id: id,
       name: data.name,
@@ -85,8 +89,11 @@ const ProductSubGroupAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -103,6 +110,7 @@ const ProductSubGroupAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const handleAlphabets = (e) => {
     return checkAlphabets(e);

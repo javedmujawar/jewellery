@@ -27,6 +27,8 @@ const TalukaAdd = () => {
   };
 
   const getRecordData = async (id) => {
+    try
+    {
     const b = new BaseApi();
     const result = await b.getById("talukas", id);
     initialFormValues.name = result.name;
@@ -45,6 +47,7 @@ const TalukaAdd = () => {
       stateId: initialFormValues.stateId,
       districtId: initialFormValues.districtId,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const getCountryList = async () => {
@@ -82,8 +85,8 @@ const TalukaAdd = () => {
     //  console.log("Selected Country Id :" + value);
     if (value > 0) {
       form.setFieldsValue({
-        stateId: "--- Select ---",
-        districtId: "--- Select ---",
+        //stateId: "--- Select ---",
+       // districtId: "--- Select ---",
       });
       setDistrictList("");
       getStateList(value);
@@ -93,15 +96,14 @@ const TalukaAdd = () => {
     //console.log("Selected State Id :" + value);
     if (value > 0) {
       form.setFieldsValue({
-        districtId: "--- Select ---",
+        //districtId: "--- Select ---",
       });
 
       getDistrictList(value);
     }
   };
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {   
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -109,6 +111,8 @@ const TalukaAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -127,8 +131,11 @@ const TalukaAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -147,6 +154,7 @@ const TalukaAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const handleAlphabets = (e) => {

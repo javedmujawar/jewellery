@@ -15,6 +15,7 @@ const RateAdd = () => {
   const isAddMode = !id;
   const [form] = Form.useForm();
   const [categoryList, setCategoryList] = useState([]);
+  const [productList, setProductList] = useState([]);
   const [purityList, setPurityList] = useState([]);  
   const [subcategoryList, setSubCategoryList] = useState([]);
   const dateFormat = "YYYY/MM/DD";
@@ -23,7 +24,7 @@ const RateAdd = () => {
     rateDate: "",
     categoryId: "",
     subcategoryId: "",
-    productId: 1,
+    productId: "",
     purityId: "",
     rateOne: "",
     rateTen: "",
@@ -31,8 +32,11 @@ const RateAdd = () => {
   };
 
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("rates", id);
+
     initialFormValues.rateDate = result.rateDate;
     initialFormValues.purityId = result.purityId;
     initialFormValues.categoryId = result.categoryId;
@@ -48,15 +52,22 @@ const RateAdd = () => {
       purityId: initialFormValues.purityId,
       categoryId: initialFormValues.categoryId,
       subcategoryId: initialFormValues.subcategoryId,
+      productId: initialFormValues.productId,
       rateOne: initialFormValues.rateOne,
       rateTen: initialFormValues.rateTen,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const getCategoryList = async () => {
     const b = new BaseApi();
     const categoryresult = await b.getListKV("categories");
     setCategoryList(categoryresult);
+  };
+  const getProductList = async () => {
+    const b = new BaseApi();
+    const presult = await b.getListKV("products");
+    setProductList(presult);
   };
   const getPurityList = async () => {
     const b = new BaseApi();
@@ -75,23 +86,22 @@ const RateAdd = () => {
   useEffect(() => {
     getCategoryList();
     getPurityList();
+    getProductList();
     if (!isAddMode) {
       getRecordData(id);
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const changeCategoryHandler = (value) => {
-     console.log("Selected Category Id :" + value);
+  const changeCategoryHandler = (value) => {   
     if (value > 0) {      
-      form.setFieldsValue({
-        subcategoryId: "--- Select ---",
-      });     
+      // form.setFieldsValue({
+      //   subcategoryId: "--- Select ---",
+      // });     
       getSubCategoryList(value);
     }
   };
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {  
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -99,38 +109,42 @@ const RateAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    try 
+    {
     let postData = {
       id: id,
-      rateDate: data.rateDate,
+      rateDate:"" + new Date().getTime(),// data.rateDate,
       description: data.description,
       purityId: data.purityId,
       categoryId: data.categoryId,
       subcategoryId: data.subcategoryId,
-      productId: "1",
+      productId: data.productId,
       rateOne: data.rateOne,
       rateTen: data.rateTen,
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
-    console.log(postData);
-
-    const baseApi = new BaseApi();
+    //console.log(postData);
+        const baseApi = new BaseApi();
     const result = await baseApi.request("rates", postData, "post");
     if (result.status === 200) {
       navigate("/rate", {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
-      rateDate: data.rateDate,
+      rateDate: "" + new Date().getTime(),//data.rateDate,
       description: data.description,
       purityId: data.purityId,
       categoryId: data.categoryId,
       subcategoryId: data.subcategoryId,
-      productId: "1",
+      productId: data.productId,
       rateOne: data.rateOne,
       rateTen: data.rateTen,
       updatedDttm: "" + new Date().getTime(),
@@ -143,6 +157,7 @@ const RateAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const handleNumbers = (e) => {
@@ -182,26 +197,27 @@ const RateAdd = () => {
       >
         <Typography variant="body2">
           <Grid container spacing={2}>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Form.Item
                 label="Date"
                 name="rateDate"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Please enter date.",
                   },
                 ]}
               >
-                <DatePicker
+                {/* <DatePicker
                   defaultValue={moment("2022/04/01", dateFormat)}
                   format={dateFormat}
                   selected={rateDate}
-                />
+                /> */}
+                <Input onKeyPress={handleNumbers} />
               </Form.Item>
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Form.Item
                 label="Category"
                 id="categoryId"
@@ -253,8 +269,32 @@ const RateAdd = () => {
                 </Select>
               </Form.Item>
             </Grid>
-
             <Grid item xs={3}>
+              <Form.Item
+                label="Product"
+                id="productId"
+                name="productId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select product.",
+                  },
+                ]}
+              >
+                <Select placeholder="--- Select ---">
+                  {productList &&
+                    productList.map((row, index) => {
+                      return (
+                        <option key={index} value={row.id}>
+                          {row.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
+
+            <Grid item xs={2}>
               <Form.Item
                 label="Purity"
                 id="purityId"
@@ -279,7 +319,7 @@ const RateAdd = () => {
               </Form.Item>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={2}>
               <Form.Item
                 label="Rate (1 gm)"
                 name="rateOne"
@@ -298,7 +338,7 @@ const RateAdd = () => {
                 <Input onKeyPress={handleNumbers} />
               </Form.Item>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={2}>
               <Form.Item
                 label="Rate (10 gm)"
                 name="rateTen"

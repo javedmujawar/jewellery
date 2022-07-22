@@ -19,6 +19,8 @@ const PurityAdd = () => {
   };
 
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("purities", id);
     initialFormValues.name = result.name;
@@ -28,6 +30,7 @@ const PurityAdd = () => {
       name: initialFormValues.name,
       description: initialFormValues.description,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   useEffect(() => {
@@ -36,8 +39,7 @@ const PurityAdd = () => {
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {    
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -45,6 +47,8 @@ const PurityAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -59,8 +63,11 @@ const PurityAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -75,6 +82,7 @@ const PurityAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   return (

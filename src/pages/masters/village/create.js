@@ -28,6 +28,8 @@ const VillageAdd = () => {
   };
 
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("villages", id);
     initialFormValues.name = result.name;
@@ -51,6 +53,7 @@ const VillageAdd = () => {
       districtId: initialFormValues.districtId,
       talukaId: initialFormValues.talukaId,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const getCountryList = async () => {
@@ -98,9 +101,9 @@ const VillageAdd = () => {
     
     if (value > 0) {
       form.setFieldsValue({
-        stateId: "--- Select ---",
-       districtId: "--- Select ---",
-        talukaId: "--- Select ---",
+        //stateId: "--- Select ---",
+       //districtId: "--- Select ---",
+        //talukaId: "--- Select ---",
        
       });     
       setDistrictList('');  
@@ -109,36 +112,36 @@ const VillageAdd = () => {
     }
   };
   const changeStateHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+    
     if (value > 0) {
       form.setFieldsValue({
-        districtId: "--- Select ---",
-        talukaId: "--- Select ---",
+        //districtId: "--- Select ---",
+        //talukaId: "--- Select ---",
       });      
       setTalukaList('');   
       getDistrictList(value);
     }
   };
 
-  const changeDistrictHandler = (value) => {
-    //console.log("Selected State Id :" + value);
+  const changeDistrictHandler = (value) => {    
     if (value > 0) {
       form.setFieldsValue({
-        talukaId: "--- Select ---",
+        //talukaId: "--- Select ---",
       });     
       getTalukaList(value);
     }
   };
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {   
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const insertData = async (data) => {    
+  const insertData = async (data) => { 
+    try 
+    {   
     let postData = {
       id: id,
       name: data.name,
@@ -159,8 +162,11 @@ const VillageAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -180,6 +186,7 @@ const VillageAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
 
   const handleAlphabets = (e) => {

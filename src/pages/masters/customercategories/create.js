@@ -19,6 +19,8 @@ const CustomerCategoriesAdd = () => {
     description: "",
   };
   const getRecordData = async (id) => {
+    try 
+    {
     const b = new BaseApi();
     const result = await b.getById("customercategories", id);
     initialFormValues.name = result.name;
@@ -30,6 +32,7 @@ const CustomerCategoriesAdd = () => {
       shortName: initialFormValues.shortName,
       description: initialFormValues.description,
     });
+  } catch (error) {console.log("Error : "+error);}
   };
 
   useEffect(() => {
@@ -38,8 +41,7 @@ const CustomerCategoriesAdd = () => {
     }
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {
-    // console.log('Success:', id + isAddMode);
+  const onFinish = (values) => {    
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
@@ -47,6 +49,8 @@ const CustomerCategoriesAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -65,8 +69,11 @@ const CustomerCategoriesAdd = () => {
         state: { message: "Record is successfully created." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
+    try 
+    {
     let postData = {
       id: id,
       name: data.name,
@@ -85,6 +92,7 @@ const CustomerCategoriesAdd = () => {
         state: { message: "Record is successfully updated." },
       });
     }
+  } catch (error) {console.log("Error : "+error);}
   };
   const handleAlphabets = (e) => {
     return checkAlphabets(e);

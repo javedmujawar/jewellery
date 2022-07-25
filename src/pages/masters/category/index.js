@@ -1,17 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef  } from "react";
 import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined
+  
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import { statusTag,exportPDFData } from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from 'react-to-print';
+import {CSVLink} from "react-csv"
 const Search = Input.Search;
 
 const CategoryList = () => {
@@ -25,6 +30,7 @@ const CategoryList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
+  const componentRef = useRef();
   
   const columns = [
     // {
@@ -41,12 +47,8 @@ const CategoryList = () => {
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       //defaultSortOrder: "descend",
-    },    
-    // {
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   key: "description",
-    // },
+    },   
+   
     {
       title: "Status",
       dataIndex: "status",
@@ -80,7 +82,7 @@ const CategoryList = () => {
               size="small"
               icon={<DeleteOutlined />}
               onClick={() => showModal(record.id)}
-            ></Button>
+            ></Button>             
           </span>
         );
       },
@@ -136,6 +138,38 @@ const CategoryList = () => {
     );
     setSearchData(filteredData);
   };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    // const unit = "pt";
+    // const size = "A4"; // Use A1, A2, A3 or A4
+    // const orientation = "portrait"; // portrait or landscape
+
+    // const marginLeft = 40;
+    // const doc = new jsPDF(orientation, unit, size);
+    // doc.setFontSize(15);
+
+    // const title = "Sub Category Report";
+    // const headers = [["Name", "categoryName","Status"]];
+    // const tdata = data.map(elt=> [elt.name, elt.categoryName,elt.status]);    
+    // console.log("tdata :" + tdata);
+    // let content = {
+    //   startY: 50,
+    //   head: headers,
+    //   body: tdata
+    // };
+
+    // doc.text(title, marginLeft, 40);
+    // doc.autoTable(content);
+    // doc.save("subcategory.pdf")
+
+    const title = "Category Report";
+    const headers = [["Name"]];
+    const tdata = data.map(elt=> [elt.name]); 
+    exportPDFData(title,headers,tdata);
+
+  };
   return (
     <>
       {message && (
@@ -170,16 +204,39 @@ const CategoryList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button onClick={handlePDF} type="primary" id="btnPdf" name="btnPdf" ><FilePdfOutlined /> PDF </Button>
+            <Divider type="vertical" />
+            <Button onClick={handlePrint} type="primary" id="btnPrint" name="btnPrint" ><PrinterOutlined /> Print </Button>
+            <Divider type="vertical" />
+            
+           <CSVLink
+              filename={"Expense_Table.csv"}
+              data={data}
+              className="btn btn-primary"
+              onClick={()=>{
+                message.success("The file is downloading")
+              }}
+            >
+              CSV
+            </CSVLink> 
+         
           </div>
+          
+         
+          
         }
+       
       >
         <Grid item xs={12}>
+        <div ref={componentRef}>
           <Table
             rowKey="id"
             columns={columns}
             dataSource={searchData}
             bordered
           ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

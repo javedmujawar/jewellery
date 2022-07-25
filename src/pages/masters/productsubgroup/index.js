@@ -1,17 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Table, Button, Divider, Modal, Alert,Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import { statusTag, exportPDFData } from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from 'react-to-print';
 const Search = Input.Search;
 
 const ProductSubGroupList = () => {
@@ -25,6 +28,7 @@ const ProductSubGroupList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
+  const componentRef = useRef();
   const columns = [
     // {
     //   title: "Sr.No",
@@ -56,12 +60,7 @@ const ProductSubGroupList = () => {
         title: "Group Name",
         dataIndex: "groupName",
         key: "groupName",
-      },
-    // {
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   key: "description",
-    // },
+      },    
     {
       title: "Status",
       dataIndex: "status",
@@ -123,11 +122,10 @@ const ProductSubGroupList = () => {
   };
 
   const handleOk = async () => {
-    try {
-      // console.log('selected id : ', deletedId);
+    try {     
       const b = new BaseApi();
       const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-      //console.log('postData=', postData);     
+         
       const res = await b.request("productsubgroups", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
@@ -154,6 +152,15 @@ const ProductSubGroupList = () => {
         
     );
     setSearchData(filteredData);
+  };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    const title = "Sub Group List";
+    const headers = [["Name","Short Name","Main Group Name","Group Name", "Status"]];
+    const tdata = data.map(elt=> [elt.name, elt.shortName, elt.maingroupName,elt.groupName, elt.status]); 
+    exportPDFData(title,headers,tdata);
   };
   return (
     <>
@@ -189,16 +196,22 @@ const ProductSubGroupList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button onClick={handlePDF} type="primary" id="btnPdf" name="btnPdf" ><FilePdfOutlined /> PDF </Button>
+            <Divider type="vertical" />
+            <Button onClick={handlePrint} type="primary" id="btnPrint" name="btnPrint" ><PrinterOutlined /> Print </Button>
           </div>
         }
       >
         <Grid item xs={12}>
+        <div ref={componentRef}>
           <Table
             rowKey="id"
             columns={columns}
             dataSource={searchData}
             bordered
           ></Table>
+           </div>
         </Grid>
       </MainCard>
       <Modal

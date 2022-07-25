@@ -36,7 +36,7 @@ const RateAdd = () => {
     {
     const b = new BaseApi();
     const result = await b.getById("rates", id);
-    initialFormValues.rateDate =  moment(new Date(result.rateDate) * 1000).format("DD-MM-YYYY") ;//result.rateDate;
+   // initialFormValues.rateDate =  moment(new Date(result.rateDate) * 1000).format("DD-MM-YYYY") ;//result.rateDate;
     initialFormValues.purityId = result.purityId;
     initialFormValues.categoryId = result.categoryId;
     initialFormValues.subcategoryId = result.subcategoryId;
@@ -83,8 +83,10 @@ const RateAdd = () => {
     setSubCategoryList(result);
   };
   useEffect(() => {
-    let  newDate = moment(new Date(1658557940837) * 1000).format("MM/DD/YYYY") ;
-    console.log(newDate);
+   //let  createdDttm =  "" + new Date().toLocaleString();
+ //  console.log("createdDttm : " +createdDttm);
+   //let  newDate = moment(new Date(createdDttm) * 1000).format("MM/DD/YYYY") ;
+  //console.log("New Date :"+newDate);
     
     getCategoryList();
     getPurityList();
@@ -116,8 +118,8 @@ const RateAdd = () => {
     {
     let postData = {
       id: id,
-      rateDate:"" + new Date(data.rateDate).getTime(),
-     // rateDate: data.rateDate,// data.rateDate,
+      //rateDate:"" + new Date(data.rateDate).getTime(),
+      rateDate: data.rateDate,// data.rateDate,
       description: data.description,
       purityId: data.purityId,
       categoryId: data.categoryId,
@@ -128,17 +130,17 @@ const RateAdd = () => {
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
-    console.log(postData);
-    let  newDate = moment(new Date(data.rateDate) * 1000).format("MM/DD/YYYY") ;
-  console.log(newDate);
+   console.log(postData);
+   // let  newDate = moment(new Date(data.rateDate) * 1000).format("MM/DD/YYYY") ;
+  //console.log(newDate);
   
-    // const baseApi = new BaseApi();
-    // const result = await baseApi.request("rates", postData, "post");
-    // if (result.status === 200) {
-    //   navigate("/rate", {
-    //     state: { message: "Record is successfully created." },
-    //   });
-    // }
+     const baseApi = new BaseApi();
+     const result = await baseApi.request("rates", postData, "post");
+     if (result.status === 200) {
+       navigate("/rate", {
+         state: { message: "Record is successfully created." },
+     });
+     }
   } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {

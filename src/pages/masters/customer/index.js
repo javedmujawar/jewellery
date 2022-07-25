@@ -158,8 +158,8 @@ const CustomertList = () => {
   });
   const handlePDF = () => {
     const title = "Customer Report";
-    const headers = [["Name", "Marathi Name","Address"]];
-    const tdata = data.map(elt=> [elt.name, elt.marathiName, elt.address]); 
+    const headers = [["Name", "Marathi Name","Address","Status"]];
+    const tdata = data.map(elt=> [elt.name, elt.marathiName, elt.address,elt.status]); 
     exportPDFData(title,headers,tdata);
   };
   return (

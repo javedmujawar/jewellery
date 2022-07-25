@@ -1,22 +1,23 @@
-import { useState, useEffect, useRef  } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
   FilePdfOutlined,
-  PrinterOutlined
-  
+  PrinterOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag,exportPDFData } from "../../../utility/Common";
+import { statusTag, exportPDFData } from "../../../utility/Common";
 import MainCard from "components/MainCard";
-import { useReactToPrint } from 'react-to-print';
-import {CSVLink} from "react-csv"
+import { useReactToPrint } from "react-to-print";
+import { CSVLink } from "react-csv";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 const Search = Input.Search;
 
 const CategoryList = () => {
@@ -31,7 +32,7 @@ const CategoryList = () => {
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
   const componentRef = useRef();
-  
+
   const columns = [
     // {
     //   title: "Sr.No",
@@ -47,8 +48,8 @@ const CategoryList = () => {
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       //defaultSortOrder: "descend",
-    },   
-   
+    },
+
     {
       title: "Status",
       dataIndex: "status",
@@ -70,7 +71,7 @@ const CategoryList = () => {
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"               
+                size="small"
               ></Button>
             </Link>
 
@@ -82,7 +83,7 @@ const CategoryList = () => {
               size="small"
               icon={<DeleteOutlined />}
               onClick={() => showModal(record.id)}
-            ></Button>             
+            ></Button>
           </span>
         );
       },
@@ -91,7 +92,7 @@ const CategoryList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("categories");    
+    const result = await b.getAll("categories");
     setData(result);
     setSearchData(result);
   };
@@ -99,7 +100,7 @@ const CategoryList = () => {
   useEffect(() => {
     getAllList();
   }, []);
-  
+
   const showModal = (recordId) => {
     setDeletedId(recordId);
     setModalVisible(true);
@@ -110,19 +111,24 @@ const CategoryList = () => {
   };
 
   const handleOk = async () => {
-    try {     
+    try {
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-          
+      const postData = {
+        isDeleted: true,
+        id: deletedId,
+        deletedBy: 1,
+        deletedDttm: "" + new Date().getTime(),
+      };
+
       const res = await b.request("categories", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
-        setDeletedId(0);       
-        navigate('/category', { state: { message:'Record is deleted successfully.' }}) 
-        window.location.reload();       
-       
+        setDeletedId(0);
+        navigate("/category", {
+          state: { message: "Record is deleted successfully." },
+        });
+        window.location.reload();
       }
-
     } catch (error) {}
   };
   const OnSearch = (e) => {
@@ -134,7 +140,7 @@ const CategoryList = () => {
     const filteredData = data.filter(
       (row) =>
         row.id.toString().includes(e.target.value) ||
-        row.name.includes(e.target.value)        
+        row.name.includes(e.target.value)
     );
     setSearchData(filteredData);
   };
@@ -152,7 +158,7 @@ const CategoryList = () => {
 
     // const title = "Sub Category Report";
     // const headers = [["Name", "categoryName","Status"]];
-    // const tdata = data.map(elt=> [elt.name, elt.categoryName,elt.status]);    
+    // const tdata = data.map(elt=> [elt.name, elt.categoryName,elt.status]);
     // console.log("tdata :" + tdata);
     // let content = {
     //   startY: 50,
@@ -165,11 +171,25 @@ const CategoryList = () => {
     // doc.save("subcategory.pdf")
 
     const title = "Category Report";
-    const headers = [["Name"]];
-    const tdata = data.map(elt=> [elt.name]); 
-    exportPDFData(title,headers,tdata);
-
+    const headers = [["Name", "Status"]];
+    const tdata = data.map((elt) => [elt.name, elt.status]);
+    exportPDFData(title, headers, tdata);
   };
+  const handleExcell = ()=>
+  {
+    const fileType =
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+  const fileExtension = ".xlsx";
+  //const exportToCSV = (apiData, fileName) => {
+    const fileName = "test"
+    const apiData = data.map((elt) => [elt.name, elt.status]);
+    console.log("apiData: " + apiData);
+    const ws = XLSX.utils.json_to_sheet(apiData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);  
+};
   return (
     <>
       {message && (
@@ -179,7 +199,7 @@ const CategoryList = () => {
             type="success"
             closable
             onClose={() => {
-              setMessage("");                     
+              setMessage("");
             }}
           />
         </Grid>
@@ -205,37 +225,54 @@ const CategoryList = () => {
               Create
             </Button>
             <Divider type="vertical" />
-            <Button onClick={handlePDF} type="primary" id="btnPdf" name="btnPdf" ><FilePdfOutlined /> PDF </Button>
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF{" "}
+            </Button>
             <Divider type="vertical" />
-            <Button onClick={handlePrint} type="primary" id="btnPrint" name="btnPrint" ><PrinterOutlined /> Print </Button>
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print{" "}
+            </Button>
             <Divider type="vertical" />
-            
-           <CSVLink
+
+            <CSVLink
               filename={"Expense_Table.csv"}
-              data={data}
-              className="btn btn-primary"
-              onClick={()=>{
-                message.success("The file is downloading")
+              data={data}              
+              onClick={() => {
+                message.success("The file is downloading");
               }}
             >
               CSV
-            </CSVLink> 
-         
+            </CSVLink>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <PrinterOutlined /> Excell{" "}
+            </Button>
           </div>
-          
-         
-          
         }
-       
       >
         <Grid item xs={12}>
-        <div ref={componentRef}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
           </div>
         </Grid>
       </MainCard>

@@ -1,17 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
-import { Grid} from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import { Grid } from "@mui/material";
+import { statusTag, exportPDFData } from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
 
 const UserTypeList = () => {
@@ -25,7 +28,7 @@ const UserTypeList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
-
+  const componentRef = useRef();
   const columns = [
     // {
     //   title: "Sr.No",
@@ -42,12 +45,7 @@ const UserTypeList = () => {
       sorter: (a, b) => a.name.length - b.name.length,
       //defaultSortOrder: "descend",
     },
-    
-    // {
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   key: "description",
-    // },
+
     {
       title: "Status",
       dataIndex: "status",
@@ -69,7 +67,7 @@ const UserTypeList = () => {
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"               
+                size="small"
               ></Button>
             </Link>
 
@@ -90,7 +88,7 @@ const UserTypeList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("usertypes");   
+    const result = await b.getAll("usertypes");
     setData(result);
     setSearchData(result);
   };
@@ -98,9 +96,9 @@ const UserTypeList = () => {
   useEffect(() => {
     getAllList();
   }, []);
-  
+
   const showModal = (recordId) => {
-        setDeletedId(recordId);
+    setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -109,19 +107,24 @@ const UserTypeList = () => {
   };
 
   const handleOk = async () => {
-    try {      
+    try {
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-       
+      const postData = {
+        isDeleted: true,
+        id: deletedId,
+        deletedBy: 1,
+        deletedDttm: "" + new Date().getTime(),
+      };
+
       const res = await b.request("usertypes", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
-        setDeletedId(0);       
-       navigate('/user-type', { state: { message:'Record is deleted successfully.' }}) 
-       window.location.reload();      
-       
+        setDeletedId(0);
+        navigate("/user-type", {
+          state: { message: "Record is deleted successfully." },
+        });
+        window.location.reload();
       }
-
     } catch (error) {}
   };
   const OnSearch = (e) => {
@@ -133,9 +136,18 @@ const UserTypeList = () => {
     const filteredData = data.filter(
       (row) =>
         row.id.toString().includes(e.target.value) ||
-        row.name.includes(e.target.value)        
+        row.name.includes(e.target.value)
     );
     setSearchData(filteredData);
+  };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    const title = "User Type List";
+    const headers = [["Name", "Status"]];
+    const tdata = data.map((elt) => [elt.name, elt.status]);
+    exportPDFData(title, headers, tdata);
   };
   return (
     <>
@@ -146,7 +158,7 @@ const UserTypeList = () => {
             type="success"
             closable
             onClose={() => {
-              setMessage("");                     
+              setMessage("");
             }}
           />
         </Grid>
@@ -171,16 +183,36 @@ const UserTypeList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+            <FilePdfOutlined /> PDF{" "}
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print{" "}
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

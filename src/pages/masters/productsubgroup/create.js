@@ -120,6 +120,9 @@ const ProductSubGroupAdd = () => {
       shortName: e.target.value,
     });
   };
+  const onSearch = (value) => {
+   // console.log('search:', value);
+  };
   return (
     <Form
       name="frmproductsubgroup"
@@ -187,7 +190,10 @@ const ProductSubGroupAdd = () => {
             ]}
           >
             <Select
-              placeholder="--- Select ---"              
+              placeholder="--- Select ---" 
+              showSearch
+              showArrow={false}
+              onSearch={onSearch}          
             >
               {maingroupList &&
                 maingroupList.map((row, index) => {

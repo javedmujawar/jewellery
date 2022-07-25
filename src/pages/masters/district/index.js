@@ -1,17 +1,20 @@
-import { useState, useEffect } from "react";
-import { Table, Button, Divider, Modal, Alert,Input } from "antd";
+import { useState, useEffect, useRef } from "react";
+import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
-import { Grid} from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import { Grid } from "@mui/material";
+import { statusTag, exportPDFData } from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
 
 const DistrictList = () => {
@@ -25,7 +28,7 @@ const DistrictList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
-
+  const componentRef = useRef();
   const columns = [
     // {
     //   title: "Sr.No",
@@ -47,7 +50,7 @@ const DistrictList = () => {
       dataIndex: "shortName",
       key: "shortName",
       sorter: (a, b) => a.shortName.length - b.shortName.length,
-     // defaultSortOrder: "descend",
+      // defaultSortOrder: "descend",
     },
     {
       title: "Code",
@@ -60,10 +63,10 @@ const DistrictList = () => {
       key: "countryName",
     },
     {
-        title: "State",
-        dataIndex: "stateName",
-        key: "stateName",
-      },
+      title: "State",
+      dataIndex: "stateName",
+      key: "stateName",
+    },
     {
       title: "Status",
       dataIndex: "status",
@@ -106,7 +109,7 @@ const DistrictList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getJoinList("districts");    
+    const result = await b.getJoinList("districts");
     setData(result);
     setSearchData(result);
   };
@@ -125,19 +128,21 @@ const DistrictList = () => {
   };
 
   const handleOk = async () => {
-    try {      
+    try {
       const b = new BaseApi();
       const postData = {
         isDeleted: true,
         id: deletedId,
         deletedBy: 1,
         deletedDttm: "" + new Date().getTime(),
-      };     
+      };
       const res = await b.request("district", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
-        setDeletedId(0);        
-        navigate('/district', { state: { message:'Record is deleted successfully.' }}) 
+        setDeletedId(0);
+        navigate("/district", {
+          state: { message: "Record is deleted successfully." },
+        });
         window.location.reload();
       }
     } catch (error) {}
@@ -154,9 +159,27 @@ const DistrictList = () => {
         row.name.includes(e.target.value) ||
         row.shortName.includes(e.target.value) ||
         row.countryName.includes(e.target.value) ||
-        row.stateName.includes(e.target.value) 
+        row.stateName.includes(e.target.value)
     );
     setSearchData(filteredData);
+  };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    const title = "District List";
+    const headers = [
+      ["Name", "Short Name", "Code", "Country", "State", "Status"],
+    ];
+    const tdata = data.map((elt) => [
+      elt.name,
+      elt.shortName,
+      elt.code,
+      elt.countryName,
+      elt.stateName,
+      elt.status,
+    ]);
+    exportPDFData(title, headers, tdata);
   };
   return (
     <>
@@ -192,16 +215,36 @@ const DistrictList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF{" "}
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print{" "}
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

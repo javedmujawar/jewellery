@@ -151,9 +151,9 @@ const SubCategoryList = () => {
     content: () => componentRef.current,
   });
   const handlePDF = () => {
-    const title = "Sub Category Report";
-    const headers = [["Name", "Category Name"]];
-    const tdata = data.map(elt=> [elt.name, elt.categoryName]); 
+    const title = "Sub Category List";
+    const headers = [["Name", "Category Name","Status"]];
+    const tdata = data.map(elt=> [elt.name, elt.categoryName,elt.status]); 
     exportPDFData(title,headers,tdata);
   };
 

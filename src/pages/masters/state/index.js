@@ -1,17 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import { statusTag, exportPDFData } from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
 
 const StateList = () => {
@@ -25,7 +28,7 @@ const StateList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
-
+  const componentRef = useRef();
   const columns = [
     // {
     //   title: "Sr.No",
@@ -155,6 +158,21 @@ const StateList = () => {
     );
     setSearchData(filteredData);
   };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    const title = "State List";
+    const headers = [["Name", "Short Name", "Code", "Country", "Status"]];
+    const tdata = data.map((elt) => [
+      elt.name,
+      elt.shortName,
+      elt.code,
+      elt.countryName,
+      elt.status,
+    ]);
+    exportPDFData(title, headers, tdata);
+  };
   return (
     <>
       {message && (
@@ -189,16 +207,36 @@ const StateList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF{" "}
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print{" "}
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

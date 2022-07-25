@@ -177,8 +177,8 @@ const SupplierList = () => {
   });
   const handlePDF = () => {
     const title = "Supplier Report";
-    const headers = [["Name", "Marathi Name","Address","Mobile No","Email","Aadhar No"]];
-    const tdata = data.map(elt=> [elt.name, elt.marathiName, elt.address,elt.primaryMobile,elt.email,elt.adharcardNumber]); 
+    const headers = [["Name", "Marathi Name","Address","Mobile No","Email","Aadhar No","Status"]];
+    const tdata = data.map(elt=> [elt.name, elt.marathiName, elt.address,elt.primaryMobile,elt.email,elt.adharcardNumber,elt.status]); 
     exportPDFData(title,headers,tdata);
   };
   return (

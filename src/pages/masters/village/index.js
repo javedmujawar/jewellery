@@ -6,13 +6,18 @@ import {
   ExclamationCircleOutlined,
   FilePdfOutlined,
   PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag, exportPDFData } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
 import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
@@ -180,30 +185,52 @@ const VillageList = () => {
     content: () => componentRef.current,
   });
   const handlePDF = () => {
-    const title = "Village List";
-    const headers = [
-      [
-        "Name",
-        "Short Name",
-        "Code",
-        "Country",
-        "State",
-        "District",
-        "Taluka",
-        "Status",
-      ],
-    ];
-    const tdata = data.map((elt) => [
-      elt.name,
-      elt.shortName,
-      elt.code,
-      elt.countryName,
-      elt.stateName,
-      elt.districtName,
-      elt.talukaName,
-      elt.status,
-    ]);
-    exportPDFData(title, headers, tdata);
+    try {
+      const title = "Village List";
+      const headers = [
+        [
+          "Name",
+          "Short Name",
+          "Code",
+          "Country",
+          "State",
+          "District",
+          "Taluka",
+          "Status",
+        ],
+      ];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.shortName,
+        elt.code,
+        elt.countryName,
+        elt.stateName,
+        elt.districtName,
+        elt.talukaName,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "Village List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        ShortName: item.shortName,
+        Code: item.code,
+        Country: item.countryName,
+        State: item.stateName,
+        District: item.districtName,
+        Taluka: item.talukaName,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
   };
   return (
     <>
@@ -246,7 +273,7 @@ const VillageList = () => {
               id="btnPdf"
               name="btnPdf"
             >
-              <FilePdfOutlined /> PDF{" "}
+              <FilePdfOutlined /> PDF
             </Button>
             <Divider type="vertical" />
             <Button
@@ -255,7 +282,16 @@ const VillageList = () => {
               id="btnPrint"
               name="btnPrint"
             >
-              <PrinterOutlined /> Print{" "}
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
             </Button>
           </div>
         }

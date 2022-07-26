@@ -6,18 +6,21 @@ import {
   ExclamationCircleOutlined,
   FilePdfOutlined,
   PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag, exportPDFData } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
 import { useReactToPrint } from "react-to-print";
-import { CSVLink } from "react-csv";
-import * as FileSaver from "file-saver";
-import * as XLSX from "xlsx";
+//import { CSVLink } from "react-csv";
 const Search = Input.Search;
 
 const CategoryList = () => {
@@ -148,48 +151,52 @@ const CategoryList = () => {
     content: () => componentRef.current,
   });
   const handlePDF = () => {
-    // const unit = "pt";
-    // const size = "A4"; // Use A1, A2, A3 or A4
-    // const orientation = "portrait"; // portrait or landscape
+    try {
+      // const unit = "pt";
+      // const size = "A4"; // Use A1, A2, A3 or A4
+      // const orientation = "portrait"; // portrait or landscape
 
-    // const marginLeft = 40;
-    // const doc = new jsPDF(orientation, unit, size);
-    // doc.setFontSize(15);
+      // const marginLeft = 40;
+      // const doc = new jsPDF(orientation, unit, size);
+      // doc.setFontSize(15);
 
-    // const title = "Sub Category Report";
-    // const headers = [["Name", "categoryName","Status"]];
-    // const tdata = data.map(elt=> [elt.name, elt.categoryName,elt.status]);
-    // console.log("tdata :" + tdata);
-    // let content = {
-    //   startY: 50,
-    //   head: headers,
-    //   body: tdata
-    // };
+      // const title = "Sub Category Report";
+      // const headers = [["Name", "categoryName","Status"]];
+      // const tdata = data.map(elt=> [elt.name, elt.categoryName,elt.status]);
+      // console.log("tdata :" + tdata);
+      // let content = {
+      //   startY: 50,
+      //   head: headers,
+      //   body: tdata
+      // };
 
-    // doc.text(title, marginLeft, 40);
-    // doc.autoTable(content);
-    // doc.save("subcategory.pdf")
+      // doc.text(title, marginLeft, 40);
+      // doc.autoTable(content);
+      // doc.save("subcategory.pdf")
 
-    const title = "Category Report";
-    const headers = [["Name", "Status"]];
-    const tdata = data.map((elt) => [elt.name, elt.status]);
-    exportPDFData(title, headers, tdata);
+      const title = "Category List";
+      const headers = [["Name", "Status"]];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
   };
-  const handleExcell = ()=>
-  {
-    const fileType =
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-  const fileExtension = ".xlsx";
-  //const exportToCSV = (apiData, fileName) => {
-    const fileName = "test"
-    const apiData = data.map((elt) => [elt.name, elt.status]);
-    console.log("apiData: " + apiData);
-    const ws = XLSX.utils.json_to_sheet(apiData);
-    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, fileName + fileExtension);  
-};
+  const handleExcell = () => {
+    try {
+      const fileName = "Category List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
   return (
     <>
       {message && (
@@ -231,7 +238,7 @@ const CategoryList = () => {
               id="btnPdf"
               name="btnPdf"
             >
-              <FilePdfOutlined /> PDF{" "}
+              <FilePdfOutlined /> PDF
             </Button>
             <Divider type="vertical" />
             <Button
@@ -240,9 +247,9 @@ const CategoryList = () => {
               id="btnPrint"
               name="btnPrint"
             >
-              <PrinterOutlined /> Print{" "}
+              <PrinterOutlined /> Print
             </Button>
-            <Divider type="vertical" />
+            {/* <Divider type="vertical" />
 
             <CSVLink
               filename={"Expense_Table.csv"}
@@ -252,7 +259,7 @@ const CategoryList = () => {
               }}
             >
               CSV
-            </CSVLink>
+            </CSVLink> */}
             <Divider type="vertical" />
             <Button
               onClick={handleExcell}
@@ -260,7 +267,7 @@ const CategoryList = () => {
               id="btnExcell"
               name="btnExcell"
             >
-              <PrinterOutlined /> Excell{" "}
+              <FileExcelOutlined /> Excell
             </Button>
           </div>
         }

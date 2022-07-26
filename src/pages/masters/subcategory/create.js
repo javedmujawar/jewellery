@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Input } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { Grid,  Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 const { TextArea } = Input;
@@ -17,36 +17,40 @@ const SubCategoryAdd = () => {
   const initialFormValues = {
     id: null,
     name: "",
-    categoryId: "",   
+    categoryId: "",
     description: "",
   };
- 
-  const getRecordData = async (id) => {
-    try
-    {
-    const b = new BaseApi();
-    const result = await b.getById("subcategories", id);
-    console.log(result);
-    initialFormValues.name = result.name;
-    initialFormValues.categoryId = result.categoryId.value;
-    initialFormValues.description = result.description;
 
-    form.setFieldsValue({
-      name: initialFormValues.name,
-      categoryId: initialFormValues.categoryId,
-      description: initialFormValues.description,
-    });
-  } catch (error) {console.log("Error : "+error);}
+  const getRecordData = async (id) => {
+    try {
+      const b = new BaseApi();
+      const result = await b.getById("subcategories", id);
+      //console.log(result);
+      initialFormValues.name = result.name;
+      initialFormValues.categoryId = result.categoryId;
+      console.log(
+        "initialFormValues.categoryId : " + initialFormValues.categoryId
+      );
+      initialFormValues.description = result.description;
+
+      form.setFieldsValue({
+        name: initialFormValues.name,
+        categoryId: initialFormValues.categoryId,
+        description: initialFormValues.description,
+      });
+    } catch (error) {
+      console.log("Error : " + error);
+    }
   };
   const getCategoryList = async () => {
     const b = new BaseApi();
-    const result = await b.getListKV("categories"); 
+    const result = await b.getListKV("categories");
     let list = [];
     if (result) {
       list = result.map((row) => {
         return { label: row.name, value: row.id };
       });
-    }  
+    }
     setCategoryList(list);
   };
 
@@ -55,9 +59,9 @@ const SubCategoryAdd = () => {
     if (!isAddMode) {
       getRecordData(id);
     }
-  }, [id]);// eslint-disable-line react-hooks/exhaustive-deps
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {      
+  const onFinish = (values) => {
     isAddMode ? insertData(values) : updateData(id, values);
   };
   const handleAlphabets = (e) => {
@@ -67,117 +71,131 @@ const SubCategoryAdd = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const insertData = async (data) => {  
-    try 
-    {
-    if(data.categoryId.value>0)
-    {
-    let postData = {
-      id: id,
-      name: data.name,
-      categoryId: data.categoryId.value,
-      description: data.description,
-      createdDttm: "" + new Date().getTime(),
-      createdBy: 1,
-    };
-    //console.log(postData);
-     const baseApi = new BaseApi();
-     const result = await baseApi.request("subcategories", postData, "post");
-     if (result.status === 200) {
-       navigate("/subcategory", {
-         state: { message: "Record is successfully created." },
-       });
-     }
-  }
-  else
-  {
-    //console.log('New Category Item is Found:');
-    let categoryData = {
-      id: id,
-      name: data.categoryId.value,
-      description: data.categoryId.value,
-      createdDttm: "" + new Date().getTime(),
-      createdBy: 1,
+  const insertData = async (data) => {
+    try {
+      if (data.categoryId.value > 0) {
+        let postData = {
+          id: id,
+          name: data.name,
+          categoryId: data.categoryId.value,
+          description: data.description,
+          createdDttm: "" + new Date().getTime(),
+          createdBy: 1,
+        };
+        //console.log(postData);
+        const baseApi = new BaseApi();
+        const result = await baseApi.request("subcategories", postData, "post");
+        if (result.status === 200) {
+          navigate("/subcategory", {
+            state: { message: "Record is successfully created." },
+          });
+        }
+      } else {
+        //console.log('New Category Item is Found:');
+        let categoryData = {
+          id: id,
+          name: data.categoryId.value,
+          description: data.categoryId.value,
+          createdDttm: "" + new Date().getTime(),
+          createdBy: 1,
+        };
+
+        const baseApi = new BaseApi();
+        const result = await baseApi.request(
+          "categories",
+          categoryData,
+          "post"
+        );
+        if (result.status === 200) {
+          let postData = {
+            id: id,
+            name: data.name,
+            categoryId: result.data.id,
+            description: data.description,
+            createdDttm: "" + new Date().getTime(),
+            createdBy: 1,
+          };
+          //console.log(postData);
+          const baseApi = new BaseApi();
+          const newresult = await baseApi.request(
+            "subcategories",
+            postData,
+            "post"
+          );
+          if (newresult.status === 200) {
+            navigate("/subcategory", {
+              state: { message: "Record is successfully created." },
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.log("Error : " + error);
     }
-  
-     const baseApi = new BaseApi();
-     const result = await baseApi.request("categories", categoryData, "post");
-     if (result.status === 200) {
-     
-      let postData = {
-        id: id,
-        name: data.name,
-        categoryId: result.data.id,
-        description: data.description,
-        createdDttm: "" + new Date().getTime(),
-        createdBy: 1,
-      };
-      //console.log(postData);
-       const baseApi = new BaseApi();
-        const newresult = await baseApi.request("subcategories", postData, "post");
-        if (newresult.status === 200) {
-         navigate("/subcategory", {
-           state: { message: "Record is successfully created." },
-        });
-       }      
-     }
-  }
-} catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
-    try 
-    {
-    if(data.categoryId.value>0)
-    {    
-    let postData = {
-      id: id,
-      name: data.name,
-      categoryId: data.categoryId,
-      description: data.description,
-      updatedDttm: "" + new Date().getTime(),
-      updatedBy: 1,
-    };
-    const baseApi = new BaseApi();
-    const result = await baseApi.request("subcategories", postData, "patch");
-    if (result.status === 200) {
-      navigate("/subcategory", {
-        state: { message: "Record is successfully updated." },
-      });
+    try {
+      if (data.categoryId.value > 0) {
+        let postData = {
+          id: id,
+          name: data.name,
+          categoryId: data.categoryId,
+          description: data.description,
+          updatedDttm: "" + new Date().getTime(),
+          updatedBy: 1,
+        };
+        const baseApi = new BaseApi();
+        const result = await baseApi.request(
+          "subcategories",
+          postData,
+          "patch"
+        );
+        if (result.status === 200) {
+          navigate("/subcategory", {
+            state: { message: "Record is successfully updated." },
+          });
+        }
+      } else {
+        console.log("New Category Item is Found:");
+        let categoryData = {
+          id: id,
+          name: data.categoryId.value,
+          description: data.categoryId.value,
+          createdDttm: "" + new Date().getTime(),
+          createdBy: 1,
+        };
+
+        const baseApi = new BaseApi();
+        const result = await baseApi.request(
+          "categories",
+          categoryData,
+          "post"
+        );
+        if (result.status === 200) {
+          let postData = {
+            id: id,
+            name: data.name,
+            categoryId: result.data.id,
+            description: data.description,
+            updatedDttm: "" + new Date().getTime(),
+            updatedBy: 1,
+          };
+          const baseApi = new BaseApi();
+          const newresult = await baseApi.request(
+            "subcategories",
+            postData,
+            "patch"
+          );
+          if (newresult.status === 200) {
+            navigate("/subcategory", {
+              state: { message: "Record is successfully updated." },
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.log("Error : " + error);
     }
-  }
-  else
-  {
-     console.log('New Category Item is Found:');
-     let categoryData = {
-      id: id,
-      name: data.categoryId.value,
-      description: data.categoryId.value,
-      createdDttm: "" + new Date().getTime(),
-      createdBy: 1,
-    }
-  
-     const baseApi = new BaseApi();
-     const result = await baseApi.request("categories", categoryData, "post");
-     if (result.status === 200) {
-     
-      let postData = {
-        id: id,
-        name: data.name,
-        categoryId: result.data.id,
-        description: data.description,
-        updatedDttm: "" + new Date().getTime(),
-        updatedBy: 1,
-      };      
-       const baseApi = new BaseApi();
-        const newresult = await baseApi.request("subcategories", postData, "patch");
-        if (newresult.status === 200) {
-         navigate("/subcategory", {
-           state: { message: "Record is successfully updated." },
-        });
-       }      
-     }
-  }
-} catch (error) {console.log("Error : "+error);}
   };
 
   return (
@@ -195,7 +213,7 @@ const SubCategoryAdd = () => {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-       <MainCard
+      <MainCard
         title={isAddMode ? "Create Sub Categry" : "Edit Sub Category"}
         secondary={
           <div>
@@ -213,23 +231,23 @@ const SubCategoryAdd = () => {
         }
       >
         <Typography variant="body2">
-      <Grid container spacing={2}>
+          <Grid container spacing={2}>
             <Grid item xs={4}>
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please enter name.",
-              },
-            ]}
-          >
-            <Input onKeyPress={handleAlphabets} />
-          </Form.Item>
-        </Grid>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter name.",
+                  },
+                ]}
+              >
+                <Input onKeyPress={handleAlphabets} />
+              </Form.Item>
+            </Grid>
 
-        {/* <Grid item xs={4}>
+            {/* <Grid item xs={4}>
           <Form.Item
             label="Category"
             id="categoryId"
@@ -253,7 +271,7 @@ const SubCategoryAdd = () => {
             </Select>
           </Form.Item>
         </Grid> */}
-        <Grid item xs={4}>
+            <Grid item xs={4}>
               <Form.Item
                 label="Category"
                 id="categoryId"
@@ -265,17 +283,25 @@ const SubCategoryAdd = () => {
                   },
                 ]}
               >
-                <Creatable options={categoryList} >                 
-                </Creatable>
+                <Creatable
+                  value= {categoryList.map((row) => {
+                    if(row.id===initialFormValues.categoryId)
+                    {
+                    return { label: row.name, value: row.id };
+                    }
+                    //return  row.value ===initialFormValues.categoryId ;
+                  })}
+                  options={categoryList}
+                ></Creatable>
               </Form.Item>
             </Grid>
-        <Grid item xs={4}>
-          <Form.Item label="Description" name="description">
-            <TextArea rows={4} />
-          </Form.Item>
-        </Grid>
-      </Grid>
-      </Typography>
+            <Grid item xs={4}>
+              <Form.Item label="Description" name="description">
+                <TextArea rows={4} />
+              </Form.Item>
+            </Grid>
+          </Grid>
+        </Typography>
       </MainCard>
     </Form>
   );

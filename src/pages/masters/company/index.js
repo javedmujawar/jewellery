@@ -6,13 +6,18 @@ import {
   ExclamationCircleOutlined,
   FilePdfOutlined,
   PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag, exportPDFData } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
 import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
@@ -177,30 +182,52 @@ const CompanyList = () => {
     content: () => componentRef.current,
   });
   const handlePDF = () => {
-    const title = "Company List";
-    const headers = [
-      [
-        "Name",
-        "Head Office",
-        "Service Center",
-        "Center Name",
-        "Center Address",
-        "Contact Number",
-        "Service Center No",
-        "Status",
-      ],
-    ];
-    const tdata = data.map((elt) => [
-      elt.name,
-      elt.headOffice,
-      elt.serviceCenter,
-      elt.centerName,
-      elt.centerAddress,
-      elt.contactNumber,
-      elt.serviceCenterMobNo,
-      elt.status,
-    ]);
-    exportPDFData(title, headers, tdata);
+    try {
+      const title = "Company List";
+      const headers = [
+        [
+          "Name",
+          "Head Office",
+          "Service Center",
+          "Center Name",
+          "Center Address",
+          "Contact Number",
+          "Service Center No",
+          "Status",
+        ],
+      ];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.headOffice,
+        elt.serviceCenter,
+        elt.centerName,
+        elt.centerAddress,
+        elt.contactNumber,
+        elt.serviceCenterMobNo,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "Company List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        HeadOffice: item.headOffice,
+        ServiceCenter: item.serviceCenter,
+        CenterName: item.centerName,
+        CenterAddress: item.centerAddress,
+        ContactNo: item.contactNumber,
+        ServiceCenterNo: item.serviceCenterMobNo,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
   };
   return (
     <>
@@ -243,7 +270,7 @@ const CompanyList = () => {
               id="btnPdf"
               name="btnPdf"
             >
-              <FilePdfOutlined /> PDF{" "}
+              <FilePdfOutlined /> PDF
             </Button>
             <Divider type="vertical" />
             <Button
@@ -252,7 +279,16 @@ const CompanyList = () => {
               id="btnPrint"
               name="btnPrint"
             >
-              <PrinterOutlined /> Print{" "}
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
             </Button>
           </div>
         }

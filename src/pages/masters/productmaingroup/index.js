@@ -1,20 +1,25 @@
-import { useState, useEffect,useRef } from "react";
-import { Table, Button, Divider, Modal, Alert, Input  } from "antd";
+import { useState, useEffect, useRef } from "react";
+import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
   FilePdfOutlined,
-  PrinterOutlined 
+  PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag,exportPDFData } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
-import { useReactToPrint } from 'react-to-print';
+import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
 
 const ProductMainGroupList = () => {
@@ -36,7 +41,7 @@ const ProductMainGroupList = () => {
     //   key: "id",
     //   width: -1,
     //   hidden: true,
-    //   defaultSortOrder: 'descend',     
+    //   defaultSortOrder: 'descend',
     //   sorter: (a, b) => a.id - b.id,
     // },
     {
@@ -44,7 +49,7 @@ const ProductMainGroupList = () => {
       dataIndex: "name",
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
-     // defaultSortOrder: "descend",
+      // defaultSortOrder: "descend",
     },
     {
       title: "Short Name",
@@ -53,7 +58,7 @@ const ProductMainGroupList = () => {
       sorter: (a, b) => a.shortName.length - b.shortName.length,
       //defaultSortOrder: "descend",
     },
-    
+
     {
       title: "Status",
       dataIndex: "status",
@@ -75,7 +80,7 @@ const ProductMainGroupList = () => {
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"               
+                size="small"
               ></Button>
             </Link>
 
@@ -96,7 +101,7 @@ const ProductMainGroupList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("productmaingroups");   
+    const result = await b.getAll("productmaingroups");
     setData(result);
     setSearchData(result);
   };
@@ -104,9 +109,9 @@ const ProductMainGroupList = () => {
   useEffect(() => {
     getAllList();
   }, []);
-  
+
   const showModal = (recordId) => {
-        setDeletedId(recordId);
+    setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -115,21 +120,26 @@ const ProductMainGroupList = () => {
   };
 
   const handleOk = async () => {
-    try {     
+    try {
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-       
+      const postData = {
+        isDeleted: true,
+        id: deletedId,
+        deletedBy: 1,
+        deletedDttm: "" + new Date().getTime(),
+      };
+
       const res = await b.request("productmaingroups", postData, "patch");
       if (res.status === 200) {
-        setModalVisible(false);        
-        setDeletedId(0);          
-        navigate('/product-main-group', { state: { message:'Record is deleted successfully.' }}) 
-        window.location.reload();     
-       
+        setModalVisible(false);
+        setDeletedId(0);
+        navigate("/product-main-group", {
+          state: { message: "Record is deleted successfully." },
+        });
+        window.location.reload();
       }
-
     } catch (error) {}
-  };  
+  };
   const OnSearch = (e) => {
     setsearchText(e.target.value);
     if (e.target.value == "") {
@@ -138,7 +148,7 @@ const ProductMainGroupList = () => {
     }
     const filteredData = data.filter(
       (row) =>
-        row.id.toString().includes(e.target.value) ||       
+        row.id.toString().includes(e.target.value) ||
         row.name.includes(e.target.value) ||
         row.shortName.includes(e.target.value)
     );
@@ -148,10 +158,31 @@ const ProductMainGroupList = () => {
     content: () => componentRef.current,
   });
   const handlePDF = () => {
-    const title = "Main Group List";
-    const headers = [["Name", "Short Name","Status"]];
-    const tdata = data.map(elt=> [elt.name, elt.shortName,elt.status]); 
-    exportPDFData(title,headers,tdata);
+    try {
+      const title = "Main Group List";
+      const headers = [["Name", "Short Name", "Status"]];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.shortName,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "Main Group List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        ShortName: item.shortName,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
   };
   return (
     <>
@@ -163,7 +194,7 @@ const ProductMainGroupList = () => {
             closable
             onClose={() => {
               setMessage("");
-              message("");             
+              message("");
             }}
           />
         </Grid>
@@ -189,20 +220,43 @@ const ProductMainGroupList = () => {
               Create
             </Button>
             <Divider type="vertical" />
-            <Button onClick={handlePDF} type="primary" id="btnPdf" name="btnPdf" ><FilePdfOutlined /> PDF </Button>
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF
+            </Button>
             <Divider type="vertical" />
-            <Button onClick={handlePrint} type="primary" id="btnPrint" name="btnPrint" ><PrinterOutlined /> Print </Button>
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-        <div ref={componentRef}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
           </div>
         </Grid>
       </MainCard>

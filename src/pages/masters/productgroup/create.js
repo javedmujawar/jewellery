@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Button, Form, Input } from "antd";
+import { useEffect,useState } from "react";
+import { Button, Form, Input, Select } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -13,10 +13,12 @@ const ProductGroupAdd = () => {
   const { id } = useParams();
   const isAddMode = !id;
   const [form] = Form.useForm();
+  const [maingroupList, setMainGroupList] = useState([]);
   const initialFormValues = {
     id: null,
     name: "",
     shortName: "",
+    maingroupId: "",
     description: "",
   };
 
@@ -27,17 +29,25 @@ const ProductGroupAdd = () => {
     const result = await b.getById("productgroups", id);
     initialFormValues.name = result.name;
     initialFormValues.shortName = result.shortName;
+    initialFormValues.maingroupId = result.maingroupId;
     initialFormValues.description = result.description;
 
     form.setFieldsValue({
       name: initialFormValues.name,
       shortName: initialFormValues.shortName,
+      maingroupId: initialFormValues.maingroupId,
       description: initialFormValues.description,
     });
   } catch (error) {console.log("Error : "+error);}
   };
+  const getMainGroupList = async () => {
+    const b = new BaseApi();
+    const mainresult = await b.getListKV("productmaingroups");
+    setMainGroupList(mainresult);
+  };
 
   useEffect(() => {
+    getMainGroupList();
     if (!isAddMode) {
       getRecordData(id);
     }
@@ -57,6 +67,7 @@ const ProductGroupAdd = () => {
       id: id,
       name: data.name,
       shortName: data.shortName,
+      maingroupId: data.maingroupId,
       description: data.description,
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
@@ -76,6 +87,7 @@ const ProductGroupAdd = () => {
       id: id,
       name: data.name,
       shortName: data.shortName,
+      maingroupId: data.maingroupId,
       description: data.description,
       updatedDttm: "" + new Date().getTime(),
       updatedBy: 1,
@@ -131,7 +143,7 @@ const ProductGroupAdd = () => {
       >
         <Typography variant="body2">
           <Grid container spacing={2}>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <Form.Item
                 label="Name"
                 name="name"
@@ -145,7 +157,7 @@ const ProductGroupAdd = () => {
                 <Input onKeyPress={handleAlphabets} onChange={handleChange} />
               </Form.Item>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <Form.Item
                 label="Short Name"
                 name="shortName"
@@ -160,7 +172,33 @@ const ProductGroupAdd = () => {
                 <Input />
               </Form.Item>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Main Group"
+                id="maingroupId"
+                name="maingroupId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select main group.",
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="--- Select ---"                 
+                >
+                  {maingroupList &&
+                    maingroupList.map((row, index) => {
+                      return (
+                        <Option key={index} value={row.id}>
+                          {row.name}
+                        </Option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={3}>
               <Form.Item
                 label="Description"
                 name="description"

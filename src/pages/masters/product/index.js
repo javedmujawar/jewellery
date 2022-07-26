@@ -6,13 +6,18 @@ import {
   ExclamationCircleOutlined,
   FilePdfOutlined,
   PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag, exportPDFData } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
 import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
@@ -157,15 +162,33 @@ const ProductList = () => {
     content: () => componentRef.current,
   });
   const handlePDF = () => {
-    const title = "Product List";
-    const headers = [["Name", "Short Name", "Barcode", "Status"]];
-    const tdata = data.map((elt) => [
-      elt.name,
-      elt.shortName,
-      elt.barcode,
-      elt.status,
-    ]);
-    exportPDFData(title, headers, tdata);
+    try {
+      const title = "Product List";
+      const headers = [["Name", "Short Name", "Barcode", "Status"]];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.shortName,
+        elt.barcode,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "Product List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        ShortName: item.shortName,
+        Barcode: item.barcode,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
   };
   return (
     <>
@@ -208,7 +231,7 @@ const ProductList = () => {
               id="btnPdf"
               name="btnPdf"
             >
-              <FilePdfOutlined /> PDF{" "}
+              <FilePdfOutlined /> PDF
             </Button>
             <Divider type="vertical" />
             <Button
@@ -217,7 +240,16 @@ const ProductList = () => {
               id="btnPrint"
               name="btnPrint"
             >
-              <PrinterOutlined /> Print{" "}
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
             </Button>
           </div>
         }

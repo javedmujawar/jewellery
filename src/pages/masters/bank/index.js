@@ -1,17 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from "react-to-print";
+
 const Search = Input.Search;
 const BankList = () => {
   const location = useLocation();
@@ -24,7 +33,7 @@ const BankList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
-
+  const componentRef = useRef();
   const columns = [
     // {
     //   title: "Sr.No",
@@ -39,14 +48,14 @@ const BankList = () => {
       dataIndex: "name",
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
-     // defaultSortOrder: "descend",
+      // defaultSortOrder: "descend",
     },
     {
       title: "Short Name",
       dataIndex: "shortName",
       key: "shortName",
       sorter: (a, b) => a.shortName.length - b.shortName.length,
-     // defaultSortOrder: "descend",
+      // defaultSortOrder: "descend",
     },
     {
       title: "Address",
@@ -148,6 +157,38 @@ const BankList = () => {
     );
     setSearchData(filteredData);
   };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    try {
+      const title = "Bank List";
+      const headers = [["Name", "Short Name", "Address", "Status"]];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.shortName,
+        elt.address,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "Bank List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        ShortName: item.shortName,
+        Address: item.address,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
   return (
     <>
       {message && (
@@ -182,16 +223,45 @@ const BankList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

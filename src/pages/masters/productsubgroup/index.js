@@ -1,17 +1,25 @@
-import { useState, useEffect } from "react";
-import { Table, Button, Divider, Modal, Alert,Input } from "antd";
+import { useState, useEffect, useRef } from "react";
+import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
 
 const ProductSubGroupList = () => {
@@ -25,12 +33,13 @@ const ProductSubGroupList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
+  const componentRef = useRef();
   const columns = [
     // {
     //   title: "Sr.No",
     //   dataIndex: "id",
     //   key: "id",
-    //   defaultSortOrder: 'descend',     
+    //   defaultSortOrder: 'descend',
     //   sorter: (a, b) => a.id - b.id,
     // },
     {
@@ -38,30 +47,25 @@ const ProductSubGroupList = () => {
       dataIndex: "name",
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
-     // defaultSortOrder: "descend",
+      // defaultSortOrder: "descend",
     },
     {
       title: "Short Name",
       dataIndex: "shortName",
       key: "shortName",
       sorter: (a, b) => a.shortName.length - b.shortName.length,
-     // defaultSortOrder: "descend",
+      // defaultSortOrder: "descend",
     },
     {
-        title: "Main Group Name",
-        dataIndex: "maingroupName",
-        key: "maingroupName",
-      },
-      {
-        title: "Group Name",
-        dataIndex: "groupName",
-        key: "groupName",
-      },
-    // {
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   key: "description",
-    // },
+      title: "Main Group Name",
+      dataIndex: "maingroupName",
+      key: "maingroupName",
+    },
+    {
+      title: "Group Name",
+      dataIndex: "groupName",
+      key: "groupName",
+    },
     {
       title: "Status",
       dataIndex: "status",
@@ -83,7 +87,7 @@ const ProductSubGroupList = () => {
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"               
+                size="small"
               ></Button>
             </Link>
 
@@ -104,7 +108,7 @@ const ProductSubGroupList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getJoinList("productsubgroups");    
+    const result = await b.getJoinList("productsubgroups");
     setData(result);
     setSearchData(result);
   };
@@ -112,9 +116,9 @@ const ProductSubGroupList = () => {
   useEffect(() => {
     getAllList();
   }, []);
-  
+
   const showModal = (recordId) => {
-        setDeletedId(recordId);
+    setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -124,19 +128,23 @@ const ProductSubGroupList = () => {
 
   const handleOk = async () => {
     try {
-      // console.log('selected id : ', deletedId);
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-      //console.log('postData=', postData);     
+      const postData = {
+        isDeleted: true,
+        id: deletedId,
+        deletedBy: 1,
+        deletedDttm: "" + new Date().getTime(),
+      };
+
       const res = await b.request("productsubgroups", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
-        setDeletedId(0);           
-        navigate('/productsubgroup', { state: { message:'Record is deleted successfully.' }}) 
-       window.location.reload();      
-       
+        setDeletedId(0);
+        navigate("/productsubgroup", {
+          state: { message: "Record is deleted successfully." },
+        });
+        window.location.reload();
       }
-
     } catch (error) {}
   };
   const OnSearch = (e) => {
@@ -150,10 +158,45 @@ const ProductSubGroupList = () => {
         row.id.toString().includes(e.target.value) ||
         row.name.includes(e.target.value) ||
         row.maingroupName.includes(e.target.value) ||
-        row.groupName.includes(e.target.value) 
-        
+        row.groupName.includes(e.target.value)
     );
     setSearchData(filteredData);
+  };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    try {
+      const title = "Sub Group List";
+      const headers = [
+        ["Name", "Short Name", "Main Group Name", "Group Name", "Status"],
+      ];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.shortName,
+        elt.maingroupName,
+        elt.groupName,
+        elt.status,
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "Sub Group List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        ShortName: item.shortName,
+        MainGroupName: item.maingroupName,
+        GroupName: item.groupName,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
   };
   return (
     <>
@@ -164,7 +207,7 @@ const ProductSubGroupList = () => {
             type="success"
             closable
             onClose={() => {
-              setMessage("");                     
+              setMessage("");
             }}
           />
         </Grid>
@@ -189,16 +232,45 @@ const ProductSubGroupList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

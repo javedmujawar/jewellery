@@ -1,17 +1,25 @@
-import { useState, useEffect } from "react";
-import { Table, Button, Divider, Modal, Alert,Input } from "antd";
+import { useState, useEffect, useRef } from "react";
+import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
 
 const WareHouseList = () => {
@@ -25,7 +33,7 @@ const WareHouseList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
-
+  const componentRef = useRef();
   const columns = [
     // {
     //   title: "Sr.No",
@@ -42,11 +50,6 @@ const WareHouseList = () => {
       sorter: (a, b) => a.name.length - b.name.length,
       //defaultSortOrder: "descend",
     },
-    // {
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   key: "description",
-    // },
     {
       title: "Status",
       dataIndex: "status",
@@ -89,7 +92,7 @@ const WareHouseList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("warehouses");   
+    const result = await b.getAll("warehouses");
     setData(result);
     setSearchData(result);
   };
@@ -108,20 +111,22 @@ const WareHouseList = () => {
   };
 
   const handleOk = async () => {
-    try {     
+    try {
       const b = new BaseApi();
       const postData = {
         isDeleted: true,
         id: deletedId,
         deletedBy: 1,
         deletedDttm: "" + new Date().getTime(),
-      };     
+      };
       const res = await b.request("warehouses", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
-        setDeletedId(0);       
-        navigate('/warehouse', { state: { message:'Record is deleted successfully.' }}) 
-       window.location.reload();  
+        setDeletedId(0);
+        navigate("/warehouse", {
+          state: { message: "Record is deleted successfully." },
+        });
+        window.location.reload();
       }
     } catch (error) {}
   };
@@ -134,9 +139,38 @@ const WareHouseList = () => {
     const filteredData = data.filter(
       (row) =>
         row.id.toString().includes(e.target.value) ||
-        row.name.includes(e.target.value) 
+        row.name.includes(e.target.value)
     );
     setSearchData(filteredData);
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    try {
+      const title = "WareHouse List";
+      const headers = [["Name", "Status"]];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "WareHouse List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
   };
   return (
     <>
@@ -147,7 +181,7 @@ const WareHouseList = () => {
             type="success"
             closable
             onClose={() => {
-              setMessage("");                     
+              setMessage("");
             }}
           />
         </Grid>
@@ -172,16 +206,45 @@ const WareHouseList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

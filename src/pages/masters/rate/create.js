@@ -18,7 +18,7 @@ const RateAdd = () => {
   const [productList, setProductList] = useState([]);
   const [purityList, setPurityList] = useState([]);  
   const [subcategoryList, setSubCategoryList] = useState([]);
-  const dateFormat = "YYYY/MM/DD";
+  const dateFormat = "DD/MM/YYYY";
   const initialFormValues = {
     id: null,
     rateDate: "",
@@ -36,8 +36,7 @@ const RateAdd = () => {
     {
     const b = new BaseApi();
     const result = await b.getById("rates", id);
-
-    initialFormValues.rateDate = result.rateDate;
+   // initialFormValues.rateDate =  moment(new Date(result.rateDate) * 1000).format("DD-MM-YYYY") ;//result.rateDate;
     initialFormValues.purityId = result.purityId;
     initialFormValues.categoryId = result.categoryId;
     initialFormValues.subcategoryId = result.subcategoryId;
@@ -47,7 +46,7 @@ const RateAdd = () => {
     initialFormValues.description = result.description;
     changeCategoryHandler(result.categoryId);
     form.setFieldsValue({
-      rateDate: initialFormValues.rateDate,
+     // rateDate: initialFormValues.rateDate,
       description: initialFormValues.description,
       purityId: initialFormValues.purityId,
       categoryId: initialFormValues.categoryId,
@@ -84,6 +83,11 @@ const RateAdd = () => {
     setSubCategoryList(result);
   };
   useEffect(() => {
+   //let  createdDttm =  "" + new Date().toLocaleString();
+ //  console.log("createdDttm : " +createdDttm);
+   //let  newDate = moment(new Date(createdDttm) * 1000).format("MM/DD/YYYY") ;
+  //console.log("New Date :"+newDate);
+    
     getCategoryList();
     getPurityList();
     getProductList();
@@ -109,11 +113,13 @@ const RateAdd = () => {
     console.log("Failed:", errorInfo);
   };
   const insertData = async (data) => {
+    
     try 
     {
     let postData = {
       id: id,
-      rateDate:"" + new Date().getTime(),// data.rateDate,
+      //rateDate:"" + new Date(data.rateDate).getTime(),
+      rateDate: data.rateDate,// data.rateDate,
       description: data.description,
       purityId: data.purityId,
       categoryId: data.categoryId,
@@ -124,14 +130,17 @@ const RateAdd = () => {
       createdDttm: "" + new Date().getTime(),
       createdBy: 1,
     };
-    //console.log(postData);
-        const baseApi = new BaseApi();
-    const result = await baseApi.request("rates", postData, "post");
-    if (result.status === 200) {
-      navigate("/rate", {
-        state: { message: "Record is successfully created." },
-      });
-    }
+   console.log(postData);
+   // let  newDate = moment(new Date(data.rateDate) * 1000).format("MM/DD/YYYY") ;
+  //console.log(newDate);
+  
+     const baseApi = new BaseApi();
+     const result = await baseApi.request("rates", postData, "post");
+     if (result.status === 200) {
+       navigate("/rate", {
+         state: { message: "Record is successfully created." },
+     });
+     }
   } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
@@ -139,7 +148,8 @@ const RateAdd = () => {
     {
     let postData = {
       id: id,
-      rateDate: "" + new Date().getTime(),//data.rateDate,
+     // rateDate: "" + new Date().getTime(),//data.rateDate,
+      rateDate: data.rateDate,
       description: data.description,
       purityId: data.purityId,
       categoryId: data.categoryId,
@@ -208,12 +218,11 @@ const RateAdd = () => {
                   },
                 ]}
               >
-                {/* <DatePicker
-                  defaultValue={moment("2022/04/01", dateFormat)}
+                 <DatePicker                  
                   format={dateFormat}
-                  selected={rateDate}
-                /> */}
-                <Input onKeyPress={handleNumbers} />
+                  //value={rateDate}
+                /> 
+                {/* <Input onKeyPress={handleNumbers} /> */}
               </Form.Item>
             </Grid>
 

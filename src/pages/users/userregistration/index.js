@@ -1,17 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
 
 const UserRegistrationList = () => {
@@ -25,7 +33,7 @@ const UserRegistrationList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
-
+  const componentRef = useRef();
   const columns = [
     // {
     //   title: "Sr.No",
@@ -150,6 +158,38 @@ const UserRegistrationList = () => {
     );
     setSearchData(filteredData);
   };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    try {
+      const title = "New User List";
+      const headers = [["UserName", "User Type", "Mobile Number", "Status"]];
+      const tdata = data.map((elt) => [
+        elt.userName,
+        elt.userType,
+        elt.mobileNumber,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "New User List";
+      const apiData = data.map((item) => ({
+        Name: item.userName,
+        UserType: item.userType,
+        MobileNo: item.mobileNumber,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
   return (
     <>
       {message && (
@@ -184,16 +224,45 @@ const UserRegistrationList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

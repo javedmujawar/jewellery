@@ -1,17 +1,25 @@
-import { useState, useEffect } from "react";
-import { Table, Button, Divider, Modal, Alert,Input } from "antd";
+import { useState, useEffect, useRef } from "react";
+import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
 
 const ColorList = () => {
@@ -25,7 +33,7 @@ const ColorList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
-  
+  const componentRef = useRef();
 
   const columns = [
     // {
@@ -42,12 +50,8 @@ const ColorList = () => {
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       //defaultSortOrder: "descend",
-    },    
-    // {
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   key: "description",
-    // },
+    },
+
     {
       title: "Status",
       dataIndex: "status",
@@ -69,7 +73,7 @@ const ColorList = () => {
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"               
+                size="small"
               ></Button>
             </Link>
 
@@ -90,7 +94,7 @@ const ColorList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("colors");   
+    const result = await b.getAll("colors");
     setData(result);
     setSearchData(result);
   };
@@ -98,9 +102,9 @@ const ColorList = () => {
   useEffect(() => {
     getAllList();
   }, []);
-  
+
   const showModal = (recordId) => {
-        setDeletedId(recordId);
+    setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -110,19 +114,23 @@ const ColorList = () => {
 
   const handleOk = async () => {
     try {
-      
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-         
+      const postData = {
+        isDeleted: true,
+        id: deletedId,
+        deletedBy: 1,
+        deletedDttm: "" + new Date().getTime(),
+      };
+
       const res = await b.request("colors", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
-        setDeletedId(0);     
-      navigate('/color', { state: { message:'Record is deleted successfully.' }}) 
-      window.location.reload();    
-       
+        setDeletedId(0);
+        navigate("/color", {
+          state: { message: "Record is deleted successfully." },
+        });
+        window.location.reload();
       }
-
     } catch (error) {}
   };
   const OnSearch = (e) => {
@@ -134,9 +142,38 @@ const ColorList = () => {
     const filteredData = data.filter(
       (row) =>
         row.id.toString().includes(e.target.value) ||
-        row.name.includes(e.target.value) 
-            );
+        row.name.includes(e.target.value)
+    );
     setSearchData(filteredData);
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    try {
+      const title = "Color List";
+      const headers = [["Name", "Status"]];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "Color List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
   };
   return (
     <>
@@ -147,7 +184,7 @@ const ColorList = () => {
             type="success"
             closable
             onClose={() => {
-              setMessage("");                     
+              setMessage("");
             }}
           />
         </Grid>
@@ -172,16 +209,45 @@ const ColorList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

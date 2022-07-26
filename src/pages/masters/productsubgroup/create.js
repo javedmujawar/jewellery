@@ -13,7 +13,8 @@ const ProductSubGroupAdd = () => {
   const isAddMode = !id;
   const [form] = Form.useForm();
   const [maingroupList, setMainGroupList] = useState([]);
-  const [groupList, setGroupList] = useState([]);  
+  const [groupList, setGroupList] = useState([]);
+  const { Option } = Select;
   const initialFormValues = {
     id: null,
     name: "",
@@ -22,95 +23,119 @@ const ProductSubGroupAdd = () => {
     groupId: "",
     description: "",
   };
-  
-  const getRecordData = async (id) => {
-    try 
-    {
-    const b = new BaseApi();
-    const result = await b.getById("productsubgroups", id);
-    initialFormValues.name = result.name;
-    initialFormValues.shortName = result.shortName;
-    initialFormValues.maingroupId = result.maingroupId;
-    initialFormValues.groupId = result.groupId;
-    initialFormValues.description = result.description;
 
-    form.setFieldsValue({
-      name: initialFormValues.name,
-      shortName: initialFormValues.shortName,
-      maingroupId: initialFormValues.maingroupId,
-      groupId: initialFormValues.groupId,
-      description: initialFormValues.description,
-    });
-  } catch (error) {console.log("Error : "+error);}
+  const getRecordData = async (id) => {
+    try {
+      const b = new BaseApi();
+      const result = await b.getById("productsubgroups", id);
+      initialFormValues.name = result.name;
+      initialFormValues.shortName = result.shortName;
+      initialFormValues.maingroupId = result.maingroupId;
+      changeMainGroupHandler(result.maingroupId);
+      initialFormValues.groupId = result.groupId;
+      initialFormValues.description = result.description;
+
+      form.setFieldsValue({
+        name: initialFormValues.name,
+        shortName: initialFormValues.shortName,
+        maingroupId: initialFormValues.maingroupId,
+        groupId: initialFormValues.groupId,
+        description: initialFormValues.description,
+      });
+    } catch (error) {
+      console.log("Error : " + error);
+    }
   };
   const getMainGroupList = async () => {
     const b = new BaseApi();
-    const mainresult = await b.getListKV("productmaingroups");    
+    const mainresult = await b.getListKV("productmaingroups");
     setMainGroupList(mainresult);
   };
-  const getGroupList = async () => {
+  const getGroupList = async (id) => {
+    // const b = new BaseApi();
+    // const groupresult = await b.getListKV("productgroups");
+    // setGroupList(groupresult);
     const b = new BaseApi();
-    const groupresult = await b.getListKV("productgroups");   
-    setGroupList(groupresult);
+    const result = await b.getListByParentId(
+      "productgroups",
+      "getListByMainGroupId",
+      id
+    );
+    setGroupList(result);
   };
 
   useEffect(() => {
     getMainGroupList();
-    getGroupList();
+   // getGroupList();
     if (!isAddMode) {
       getRecordData(id);
     }
-  }, [id]);// eslint-disable-line react-hooks/exhaustive-deps
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onFinish = (values) => {   
+  const changeMainGroupHandler = (value) => {
+    if (value > 0) {           
+      getGroupList(value);
+    }
+  };
+  const onFinish = (values) => {
     isAddMode ? insertData(values) : updateData(id, values);
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const insertData = async (data) => { 
-    try 
-    {  
-    let postData = {
-      id: id,
-      name: data.name,
-      maingroupId: data.maingroupId,
-      groupId: data.groupId,
-      description: data.description,
-      createdDttm: "" + new Date().getTime(),
-      createdBy: 1,
-    };
+  const insertData = async (data) => {
+    try {
+      let postData = {
+        id: id,
+        name: data.name,
+        maingroupId: data.maingroupId,
+        groupId: data.groupId,
+        description: data.description,
+        createdDttm: "" + new Date().getTime(),
+        createdBy: 1,
+      };
 
-    const baseApi = new BaseApi();
-    const result = await baseApi.request("productsubgroups", postData, "post");
-    if (result.status === 200) {
-      navigate("/productsubgroup", {
-        state: { message: "Record is successfully created." },
-      });
+      const baseApi = new BaseApi();
+      const result = await baseApi.request(
+        "productsubgroups",
+        postData,
+        "post"
+      );
+      if (result.status === 200) {
+        navigate("/productsubgroup", {
+          state: { message: "Record is successfully created." },
+        });
+      }
+    } catch (error) {
+      console.log("Error : " + error);
     }
-  } catch (error) {console.log("Error : "+error);}
   };
   const updateData = async (id, data) => {
-    try 
-    {
-    let postData = {
-      id: id,
-      name: data.name,
-      maingroupId: data.maingroupId,
-      groupId: data.groupId,
-      description: data.description,
-      updatedDttm: "" + new Date().getTime(),
-      updatedBy: 1,
-    };
-    const baseApi = new BaseApi();
-    const result = await baseApi.request("productsubgroups", postData, "patch");
-    if (result.status === 200) {
-      navigate("/productsubgroup", {
-        state: { message: "Record is successfully updated." },
-      });
+    try {
+      let postData = {
+        id: id,
+        name: data.name,
+        maingroupId: data.maingroupId,
+        groupId: data.groupId,
+        description: data.description,
+        updatedDttm: "" + new Date().getTime(),
+        updatedBy: 1,
+      };
+      const baseApi = new BaseApi();
+      const result = await baseApi.request(
+        "productsubgroups",
+        postData,
+        "patch"
+      );
+      if (result.status === 200) {
+        navigate("/productsubgroup", {
+          state: { message: "Record is successfully updated." },
+        });
+      }
+    } catch (error) {
+      console.log("Error : " + error);
     }
-  } catch (error) {console.log("Error : "+error);}
   };
   const handleAlphabets = (e) => {
     return checkAlphabets(e);
@@ -120,6 +145,7 @@ const ProductSubGroupAdd = () => {
       shortName: e.target.value,
     });
   };
+  
   return (
     <Form
       name="frmproductsubgroup"
@@ -153,88 +179,97 @@ const ProductSubGroupAdd = () => {
         }
       >
         <Typography variant="body2">
-      <Grid container spacing={2}>
-          <Grid item xs={3}>
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please enter name.",
-              },
-            ]}
-          >
-             <Input onKeyPress={handleAlphabets} onChange={handleChange} />
-          </Form.Item>
-        </Grid>
-        <Grid item xs={3}>
-          <Form.Item label="Short Name" name="shortName">
-            <Input />
-          </Form.Item>
-        </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter name.",
+                  },
+                ]}
+              >
+                <Input onKeyPress={handleAlphabets} onChange={handleChange} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={3}>
+              <Form.Item label="Short Name" name="shortName">
+                <Input />
+              </Form.Item>
+            </Grid>
 
-        <Grid item xs={3}>
-          <Form.Item
-            label="Main Group"
-            id="maingroupId"
-            name="maingroupId"
-            rules={[
-              {
-                required: true,
-                message: "Please select main group.",
-              },
-            ]}
-          >
-            <Select
-              placeholder="--- Select ---"              
-            >
-              {maingroupList &&
-                maingroupList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
-          </Form.Item>
-        </Grid>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Main Group"
+                id="maingroupId"
+                name="maingroupId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select main group.",
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="--- Select ---"
+                  showSearch
+                  showArrow={true}
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option.children.includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    optionA.children
+                      .toLowerCase()
+                      .localeCompare(optionB.children.toLowerCase())
+                  }
+                  onChange={changeMainGroupHandler}
+                >
+                  {maingroupList &&
+                    maingroupList.map((row, index) => {
+                      return (
+                        <Option key={index} value={row.id}>
+                          {row.name}
+                        </Option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
 
-        
-        <Grid item xs={3}>
-          <Form.Item
-            label="Group"
-            id="groupId"
-            name="groupId"
-            rules={[
-              {
-                required: true,
-                message: "Please select group.",
-              },
-            ]}
-          >
-            <Select
-              placeholder="--- Select ---"              
-            >
-              {groupList &&
-                groupList.map((row, index) => {
-                  return (
-                    <option key={index} value={row.id}>
-                      {row.name}
-                    </option>
-                  );
-                })}
-            </Select>
-          </Form.Item>
-        </Grid>
-        <Grid item xs={6}>
-          <Form.Item label="Description" name="description">
-            <TextArea rows={4} />
-          </Form.Item>
-        </Grid>
-      </Grid>
-      </Typography>
+            <Grid item xs={3}>
+              <Form.Item
+                label="Group"
+                id="groupId"
+                name="groupId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select group.",
+                  },
+                ]}
+              >
+                <Select placeholder="--- Select ---">
+                  {groupList &&
+                    groupList.map((row, index) => {
+                      return (
+                        <option key={index} value={row.id}>
+                          {row.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={6}>
+              <Form.Item label="Description" name="description">
+                <TextArea rows={4} />
+              </Form.Item>
+            </Grid>
+          </Grid>
+        </Typography>
       </MainCard>
     </Form>
   );

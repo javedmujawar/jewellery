@@ -1,17 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
 
 const GstList = () => {
@@ -25,7 +33,7 @@ const GstList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
-
+  const componentRef = useRef();
 
   const columns = [
     // {
@@ -50,27 +58,27 @@ const GstList = () => {
       sorter: (a, b) => a.shortName.length - b.shortName.length,
       //defaultSortOrder: "descend",
     },
-    
-      {
-        title: "Percantage",
-        dataIndex: "percentageValue",
-        key: "percentageValue",
-      },
+
+    {
+      title: "Percantage",
+      dataIndex: "percentageValue",
+      key: "percentageValue",
+    },
     {
       title: "IGST Value",
       dataIndex: "igstValue",
       key: "igstValue",
     },
     {
-        title: "CGST Value",
-        dataIndex: "cgstValue",
-        key: "cgstValue",
-      },
-      {
-        title: "SGST Value",
-        dataIndex: "sgstValue",
-        key: "sgstValue",
-      },
+      title: "CGST Value",
+      dataIndex: "cgstValue",
+      key: "cgstValue",
+    },
+    {
+      title: "SGST Value",
+      dataIndex: "sgstValue",
+      key: "sgstValue",
+    },
     {
       title: "Status",
       dataIndex: "status",
@@ -92,7 +100,7 @@ const GstList = () => {
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"               
+                size="small"
               ></Button>
             </Link>
 
@@ -113,7 +121,7 @@ const GstList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("gsts");    
+    const result = await b.getAll("gsts");
     setData(result);
     setSearchData(result);
   };
@@ -121,9 +129,9 @@ const GstList = () => {
   useEffect(() => {
     getAllList();
   }, []);
-  
+
   const showModal = (recordId) => {
-        setDeletedId(recordId);
+    setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -132,19 +140,24 @@ const GstList = () => {
   };
 
   const handleOk = async () => {
-    try {     
+    try {
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-      
+      const postData = {
+        isDeleted: true,
+        id: deletedId,
+        deletedBy: 1,
+        deletedDttm: "" + new Date().getTime(),
+      };
+
       const res = await b.request("gsts", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
-        setDeletedId(0);        
-        navigate('/gst', { state: { message:'Record is deleted successfully.' }}) 
-        window.location.reload();       
-       
+        setDeletedId(0);
+        navigate("/gst", {
+          state: { message: "Record is deleted successfully." },
+        });
+        window.location.reload();
       }
-
     } catch (error) {}
   };
   const OnSearch = (e) => {
@@ -161,6 +174,54 @@ const GstList = () => {
     );
     setSearchData(filteredData);
   };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    try {
+      const title = "GST List";
+      const headers = [
+        [
+          "Name",
+          "Short Name",
+          "Percentage",
+          "IGST Value",
+          "CGST Value",
+          "SGST Value",
+          "Status",
+        ],
+      ];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.shortName,
+        elt.percentageValue,
+        elt.igstValue,
+        elt.cgstValue,
+        elt.sgstValue,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "GST List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        ShortName: item.shortName,
+        Percentage: item.percentageValue,
+        IGST: item.igstValue,
+        CGST: item.cgstValue,
+        SGST: item.sgstValue,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
   return (
     <>
       {message && (
@@ -170,7 +231,7 @@ const GstList = () => {
             type="success"
             closable
             onClose={() => {
-              setMessage("");                     
+              setMessage("");
             }}
           />
         </Grid>
@@ -195,16 +256,45 @@ const GstList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

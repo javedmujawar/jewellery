@@ -1,17 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Table, Button, Divider, Modal, Alert, Input } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FilePdfOutlined,
+  PrinterOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { useNavigate, useLocation } from "react-router-dom";
 // material-ui
 import { Grid } from "@mui/material";
-import { statusTag } from "../../../utility/Common";
+import {
+  statusTag,
+  exportPDFData,
+  exportToExcell,
+} from "../../../utility/Common";
 import MainCard from "components/MainCard";
+import { useReactToPrint } from "react-to-print";
 const Search = Input.Search;
 
 const HsnSacList = () => {
@@ -25,7 +33,7 @@ const HsnSacList = () => {
   const [deletedId, setDeletedId] = useState(0);
   const [searchData, setSearchData] = useState([]);
   const [searchText, setsearchText] = useState("");
-
+  const componentRef = useRef();
   const columns = [
     // {
     //   title: "Sr.No",
@@ -50,20 +58,15 @@ const HsnSacList = () => {
       //defaultSortOrder: "descend",
     },
     {
-        title: "Code",
-        dataIndex: "code",
-        key: "code",
-      },
-      {
-        title: "Percantage",
-        dataIndex: "percentageValue",
-        key: "percentageValue",
-      },
-    // {
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   key: "description",
-    // },
+      title: "Code",
+      dataIndex: "code",
+      key: "code",
+    },
+    {
+      title: "Percantage",
+      dataIndex: "percentageValue",
+      key: "percentageValue",
+    },
     {
       title: "Status",
       dataIndex: "status",
@@ -85,7 +88,7 @@ const HsnSacList = () => {
                 id="btnEdit"
                 name="btnEdit"
                 icon={<EditOutlined />}
-                size="small"               
+                size="small"
               ></Button>
             </Link>
 
@@ -106,7 +109,7 @@ const HsnSacList = () => {
 
   const getAllList = async () => {
     const b = new BaseApi();
-    const result = await b.getAll("hsnsacs");    
+    const result = await b.getAll("hsnsacs");
     setData(result);
     setSearchData(result);
   };
@@ -114,9 +117,9 @@ const HsnSacList = () => {
   useEffect(() => {
     getAllList();
   }, []);
-  
+
   const showModal = (recordId) => {
-        setDeletedId(recordId);
+    setDeletedId(recordId);
     setModalVisible(true);
   };
   const handleCancel = () => {
@@ -125,18 +128,23 @@ const HsnSacList = () => {
   };
 
   const handleOk = async () => {
-    try {      
+    try {
       const b = new BaseApi();
-      const postData = { isDeleted: true, id: deletedId ,deletedBy: 1 , deletedDttm:'' + new Date().getTime()};
-        const res = await b.request("hsnsacs", postData, "patch");
+      const postData = {
+        isDeleted: true,
+        id: deletedId,
+        deletedBy: 1,
+        deletedDttm: "" + new Date().getTime(),
+      };
+      const res = await b.request("hsnsacs", postData, "patch");
       if (res.status === 200) {
         setModalVisible(false);
-        setDeletedId(0);       
-        navigate('/hsnsac', { state: { message:'Record is deleted successfully.' }}) 
-        window.location.reload();       
-       
+        setDeletedId(0);
+        navigate("/hsnsac", {
+          state: { message: "Record is deleted successfully." },
+        });
+        window.location.reload();
       }
-
     } catch (error) {}
   };
   const OnSearch = (e) => {
@@ -153,6 +161,40 @@ const HsnSacList = () => {
     );
     setSearchData(filteredData);
   };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  const handlePDF = () => {
+    try {
+      const title = "HSN / SAC List";
+      const headers = [["Name", "Short Name", "Code", "Percentage", "Status"]];
+      const tdata = data.map((elt) => [
+        elt.name,
+        elt.shortName,
+        elt.code,
+        elt.percentageValue,
+        elt.status === "A" ? "Active" : "Inactive",
+      ]);
+      exportPDFData(title, headers, tdata);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
+  const handleExcell = () => {
+    try {
+      const fileName = "HSN / SAC List";
+      const apiData = data.map((item) => ({
+        Name: item.name,
+        ShortName: item.shortName,
+        Code: item.code,
+        Percentage: item.percentageValue,
+        Status: item.status === "A" ? "Active" : "Inactive",
+      }));
+      exportToExcell(apiData, fileName);
+    } catch (error) {
+      console.log("Error : " + error);
+    }
+  };
   return (
     <>
       {message && (
@@ -162,7 +204,7 @@ const HsnSacList = () => {
             type="success"
             closable
             onClose={() => {
-              setMessage("");                     
+              setMessage("");
             }}
           />
         </Grid>
@@ -187,16 +229,45 @@ const HsnSacList = () => {
             >
               Create
             </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePDF}
+              type="primary"
+              id="btnPdf"
+              name="btnPdf"
+            >
+              <FilePdfOutlined /> PDF
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handlePrint}
+              type="primary"
+              id="btnPrint"
+              name="btnPrint"
+            >
+              <PrinterOutlined /> Print
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={handleExcell}
+              type="primary"
+              id="btnExcell"
+              name="btnExcell"
+            >
+              <FileExcelOutlined /> Excell
+            </Button>
           </div>
         }
       >
         <Grid item xs={12}>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={searchData}
-            bordered
-          ></Table>
+          <div ref={componentRef}>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={searchData}
+              bordered
+            ></Table>
+          </div>
         </Grid>
       </MainCard>
       <Modal

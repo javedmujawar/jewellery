@@ -46,7 +46,7 @@ const RateAdd = () => {
     initialFormValues.description = result.description;
     changeCategoryHandler(result.categoryId);
     form.setFieldsValue({
-     // rateDate: initialFormValues.rateDate,
+     rateDate: initialFormValues.rateDate,
       description: initialFormValues.description,
       purityId: initialFormValues.purityId,
       categoryId: initialFormValues.categoryId,
@@ -82,11 +82,11 @@ const RateAdd = () => {
     );
     setSubCategoryList(result);
   };
-  useEffect(() => {
-   //let  createdDttm =  "" + new Date().toLocaleString();
- //  console.log("createdDttm : " +createdDttm);
-   //let  newDate = moment(new Date(createdDttm) * 1000).format("MM/DD/YYYY") ;
-  //console.log("New Date :"+newDate);
+  useEffect(() => {  
+   let  newDate = new Date(2147483647).getdate;
+   //let  newDate = Date.parse('2147483647') ;
+
+  console.log("New Date :"+newDate);
     
     getCategoryList();
     getPurityList();
@@ -118,8 +118,8 @@ const RateAdd = () => {
     {
     let postData = {
       id: id,
-      //rateDate:"" + new Date(data.rateDate).getTime(),
-      rateDate: data.rateDate,// data.rateDate,
+      rateDate: new Date(data.rateDate).getTime(),
+     // rateDate: data.rateDate,// data.rateDate,
       description: data.description,
       purityId: data.purityId,
       categoryId: data.categoryId,
@@ -148,8 +148,7 @@ const RateAdd = () => {
     {
     let postData = {
       id: id,
-     // rateDate: "" + new Date().getTime(),//data.rateDate,
-      rateDate: data.rateDate,
+      rateDate: new Date(data.rateDate).getTime(),//data.rateDate,      
       description: data.description,
       purityId: data.purityId,
       categoryId: data.categoryId,

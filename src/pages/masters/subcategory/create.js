@@ -51,6 +51,7 @@ const SubCategoryAdd = () => {
         return { label: row.name, value: row.id };
       });
     }
+    console.log(list);
     setCategoryList(list);
   };
 
@@ -284,13 +285,8 @@ const SubCategoryAdd = () => {
                 ]}
               >
                 <Creatable
-                  value= {categoryList.map((row) => {
-                    if(row.id===initialFormValues.categoryId)
-                    {
-                    return { label: row.name, value: row.id };
-                    }
-                    //return  row.value ===initialFormValues.categoryId ;
-                  })}
+                  defaultValue= {initialFormValues.categoryId} 
+                  value =   {initialFormValues.categoryId}                  
                   options={categoryList}
                 ></Creatable>
               </Form.Item>

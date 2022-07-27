@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button, Form, Input, Select, Checkbox } from "antd";
+import { Button, Form, Input, Select, Checkbox, Upload ,message } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BaseApi from "services/BaseApi";
 import { checkAlphabets, checkNumbers } from "../../../utility/Common";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { EyeInvisibleOutlined, EyeTwoTone,UploadOutlined  } from "@ant-design/icons";
 import MainCard from "components/MainCard";
 
 const UserRegistrationAdd = () => {
@@ -184,6 +184,20 @@ const UserRegistrationAdd = () => {
    // console.log("checked =" + e.target.checked);
     setchkFlag(e.target.checked);
   };
+  const props = {
+    beforeUpload: (file) => {
+      const isPNG = file.type === 'image/png';
+  
+      if (!isPNG) {
+        message.error(`${file.name} is not a png file`);
+      }
+  
+      return isPNG || Upload.LIST_IGNORE;
+    },
+    onChange: (info) => {
+      console.log("File Name :"+info.name);
+    },
+  };
   return (
     <Form
       name="frmuserregistration"
@@ -307,7 +321,10 @@ const UserRegistrationAdd = () => {
                 name="photo"
                 id="photo"               
               >
-                <Input onKeyPress={handleAlphabets} />
+                {/* <Input onKeyPress={handleAlphabets} /> */}
+                <Upload {...props}>
+    <Button icon={<UploadOutlined />}>Upload</Button>
+  </Upload>
               </Form.Item>
             </Grid>
 

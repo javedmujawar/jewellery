@@ -87,6 +87,10 @@ const UserType = Loadable(lazy(() => import('pages/users/usertype/create')));
 const UserRegistrationList = Loadable(lazy(() => import('pages/users/userregistration/index')));
 const UserRegistration = Loadable(lazy(() => import('pages/users/userregistration/create')));
 
+// Sale menu //
+const NewInvoice = Loadable(lazy(() => import('pages/sales/newinvoice/create')));
+/// Utilities ///
+const Calculator = Loadable(lazy(() => import('pages/utilities/calculator')));
 
 
 
@@ -469,10 +473,12 @@ const MainRoutes = {
             path: 'util-color',
             element: <UtilColor />
         },
+
         {
-            path: 'util-color',
-            element: <UtilColor />
+            path: 'newinvoice',
+            element: <NewInvoice/>
         },
+        
         
         {
             path: 'dashboard',
@@ -498,7 +504,11 @@ const MainRoutes = {
         {
             path: 'icons/ant',
             element: <AntIcons />
-        }
+        },
+        {
+            path: 'util-calculator',
+            element: <Calculator />
+        },
     ]
 };
 

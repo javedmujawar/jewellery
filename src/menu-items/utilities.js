@@ -52,6 +52,16 @@ const utilities = {
             type: 'item',
             url: '/icons/ant',
             icon: icons.AntDesignOutlined,
+
+            breadcrumbs: false
+        },
+        {
+            id: 'util-calculator',
+            title: 'Calculator',
+            type: 'item',
+            url: 'util-calculator',
+            icon: icons.AntDesignOutlined,
+            target: true,
             breadcrumbs: false
         }
     ]

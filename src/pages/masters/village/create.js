@@ -97,8 +97,7 @@ const VillageAdd = () => {
     }
   }, [id]);// eslint-disable-line react-hooks/exhaustive-deps
 
-  const changeCountryHandler = (value) => {
-    
+  const changeCountryHandler = (value) => {    
     if (value > 0) {
       form.setFieldsValue({
         //stateId: "--- Select ---",

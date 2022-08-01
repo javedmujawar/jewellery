@@ -65,6 +65,7 @@ const CategoryList = () => {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      fixed: 'right',
       render: (text, record) => {
         return (
           <span>
@@ -279,6 +280,7 @@ const CategoryList = () => {
               columns={columns}
               dataSource={searchData}
               bordered
+              pagination={{  showSizeChanger: true }}
             ></Table>
           </div>
         </Grid>

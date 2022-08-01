@@ -18,6 +18,7 @@ const sales = {
             icon: icons.ProfileOutlined,
             target: false
         },
+        
         {
             id: 'salereturn',
             title: 'Sale Return',

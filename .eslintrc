@@ -23,6 +23,8 @@
     "plugins": ["prettier", "react", "react-hooks"],
     "rules": {
         "react/jsx-filename-extension": 0,
+        "jsx-a11y/click-events-have-key-events": "off",
+        "vuejs-accessibility/click-events-have-key-events": "off",
         "no-param-reassign": 0,
         "react/prop-types": 1,
         "react/require-default-props": 0,
@@ -41,5 +43,18 @@
             }
         ],
         "prettier/prettier": 0
-    }
+    },
+    // "jsx-a11y/no-static-element-interactions": [  
+    //     {      
+    //       "handlers": [
+    //         "onClick",
+    //         "onMouseDown",
+    //         "onMouseUp",
+    //         "onKeyPress",
+    //         "onKeyDown",
+    //         "onKeyUp"
+    //       ],
+    //       "allowExpressionValues": true
+    //     }
+    //   ]    
 }

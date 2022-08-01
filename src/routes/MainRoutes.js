@@ -89,6 +89,7 @@ const UserRegistration = Loadable(lazy(() => import('pages/users/userregistratio
 
 // Sale menu //
 const NewInvoice = Loadable(lazy(() => import('pages/sales/newinvoice/create')));
+const NewInvoiceDemo = Loadable(lazy(() => import('pages/sales/newinvoice/index')));
 /// Utilities ///
 const Calculator = Loadable(lazy(() => import('pages/utilities/calculator')));
 
@@ -478,6 +479,12 @@ const MainRoutes = {
             path: 'newinvoice',
             element: <NewInvoice/>
         },
+
+        {
+            path: 'invoicedemo',
+            element: <NewInvoiceDemo/>
+        },
+        
         
         
         {
